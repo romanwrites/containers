@@ -4,10 +4,38 @@
 namespace ft {
 	template<class T>
 	struct v_iterator {
+		v_iterator(T* p) {
+			ptr = p;
+		}
+		v_iterator &operator++() {
+			ptr++;
+			return *this;
+		}
+
+		v_iterator operator++(int) {
+			v_iterator it = *this;
+			++(*this);
+			return it;
+		}
+
+		v_iterator &operator--() {
+			ptr--;
+			return *this;
+		}
+
+		v_iterator operator--(int) {
+			v_iterator it = *this;
+			--(*this);
+			return it;
+		}
+
+		T*	ptr;
 	};
 
 	template<class T> // pass any type and compiler auto generate Vector parametrized with this type
 	class Vector {
+	public:
+		typedef v_iterator<Vector<T> > iterator;
 	public:
 		Vector() {
 			data = nullptr;
@@ -24,7 +52,14 @@ namespace ft {
 		~Vector() {
 			clear();
 			::operator delete(data, capacity * sizeof(T)); // to not call any destructors
-//    	delete[] data;
+		}
+
+		iterator	begin() {
+			return iterator(data);
+		}
+
+		iterator	end() {
+			return iterator(data + currentSize);
 		}
 
 		void push_back(const T& val) throw() {
