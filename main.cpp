@@ -2,7 +2,7 @@
 #include <iostream>
 
 template<typename T>
-void PrintVector(const ft::Vector<T>& v) {
+void PrintVector(const T& v) {
 	for (size_t i = 0; i < v.size(); i++) {
 		std::cout << v[i] << " ";
 	}
@@ -19,7 +19,11 @@ int main() {
 	PrintVector(v);
 	v.pop_back();
 	PrintVector(v);
-	v.clear();
-	PrintVector(v);
+	ft::Vector<std::string>::iterator it = v.begin();
+	std::cout <<  "---------test iterators-------\n";
+	while (it != v.end()) {
+		std::cout << *it << " ";
+		it++;
+	}
     return 0;
 }

@@ -4,29 +4,51 @@
 namespace ft {
 	template<class T>
 	struct v_iterator {
+	public:
+		typedef T* pointer;
+		typedef T& reference;
+		typedef v_iterator iterator;
+
+		v_iterator() {
+			ptr = nullptr;
+		}
+
 		v_iterator(T* p) {
 			ptr = p;
 		}
-		v_iterator &operator++() {
+
+		iterator &operator++() {
 			ptr++;
 			return *this;
 		}
 
-		v_iterator operator++(int) {
+		iterator operator++(int) {
 			v_iterator it = *this;
 			++(*this);
 			return it;
 		}
 
-		v_iterator &operator--() {
+		iterator &operator--() {
 			ptr--;
 			return *this;
 		}
 
-		v_iterator operator--(int) {
-			v_iterator it = *this;
+		iterator operator--(int) {
+			iterator it = *this;
 			--(*this);
 			return it;
+		}
+
+		reference operator*() const {
+			return *ptr;
+		}
+
+		reference operator[](int idx) const {
+			return ptr[idx];
+		}
+
+		bool operator!=(iterator rhs) const {
+			return ptr != rhs.ptr;
 		}
 
 		T*	ptr;
@@ -35,7 +57,7 @@ namespace ft {
 	template<class T> // pass any type and compiler auto generate Vector parametrized with this type
 	class Vector {
 	public:
-		typedef v_iterator<Vector<T> > iterator;
+		typedef v_iterator<T> iterator;
 	public:
 		Vector() {
 			data = nullptr;
