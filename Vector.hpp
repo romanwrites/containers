@@ -7,6 +7,8 @@ namespace ft {
 	public:
 		typedef T* pointer;
 		typedef T& reference;
+		typedef const T* const_pointer;
+		typedef const T& const_reference;
 		typedef V_iterator iterator;
 
 		V_iterator() throw() {
@@ -70,6 +72,43 @@ namespace ft {
 			return ptr != rhs.ptr;
 		}
 
+		iterator operator+(int n) throw() {
+			iterator ret(ptr + n);
+			return ret;
+		}
+
+		iterator operator-(int n) throw() {
+			iterator ret(ptr - n);
+			return ret;
+		}
+
+		iterator operator+=(int n) throw() {
+			ptr += n;
+			return *this;
+		}
+
+		iterator operator-=(int n) throw() {
+			ptr -= n;
+			return *this;
+		}
+
+		bool operator<(iterator const &rhs) {
+			return ptr < rhs.ptr;
+		}
+
+		bool operator>(iterator const &rhs) {
+			return ptr > rhs.ptr;
+		}
+
+		bool operator<=(iterator const &rhs) {
+			return ptr <= rhs.ptr;
+		}
+
+		bool operator>=(iterator const &rhs) {
+			return ptr >= rhs.ptr;
+		}
+
+	private:
 		T*	ptr;
 	};
 

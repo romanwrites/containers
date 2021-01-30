@@ -31,8 +31,21 @@ void testAssign() {
 	PrintVector(v);
 }
 
+void testIterator() {
+	std::cout << "---------Test iterators--------" << std::endl;
+	ft::Vector<int>		v;
+	for (int i = 1, j = 0; j < 16; i*=2, j++)
+		v.push_back(i);
+	ft::Vector<int>::iterator it = v.begin();
+	while (it != v.end()) {
+		std::cout << *it << "\t";
+		it++;
+	}
+}
+
 int main() {
 	testPushPop();
 	testAssign();
+	testIterator();
     return 0;
 }
