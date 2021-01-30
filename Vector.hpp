@@ -129,7 +129,21 @@ namespace ft {
 				data[i] = arr[i];
 			}
 		}
-		~Vector() throw() {
+		Vector(Vector const &obj) throw() {
+			*this = obj;
+		}
+		Vector &operator=(Vector const &obj) throw() {
+			clear();
+			if (data && capacity) {
+				::operator delete(data, capacity * sizeof(T));
+			}
+			Realloc(obj.capacity);
+			for (int i = 0; i < obj.currentSize; i++) {
+				data[i] = obj.data[i];
+			}
+			currentSize = obj.currentSize;
+		}
+		virtual ~Vector() throw() {
 			clear();
 			::operator delete(data, capacity * sizeof(T)); // to not call any destructors
 		}
@@ -182,6 +196,20 @@ namespace ft {
 
 		T&	operator[](size_t idx) throw() {
 			return data[idx];
+		}
+
+		bool operator==(Vector<T> const& rhs) throw() {
+			if (size() != rhs.size())
+				return false;
+			for (int i = 0; i < currentSize; i++) {
+				if (data[i] != rhs.data[i])
+					return false;
+			}
+			return true;
+		}
+
+		bool operator!=(Vector<T> const& rhs) throw() {
+			return !(*this == rhs);
 		}
 
 	private:
