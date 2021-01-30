@@ -3,51 +3,70 @@
 
 namespace ft {
 	template<class T>
-	struct v_iterator {
+	class V_iterator {
 	public:
 		typedef T* pointer;
 		typedef T& reference;
-		typedef v_iterator iterator;
+		typedef V_iterator iterator;
 
-		v_iterator() {
+		V_iterator() throw() {
 			ptr = nullptr;
 		}
 
-		v_iterator(T* p) {
+		V_iterator(pointer p) throw() {
 			ptr = p;
 		}
 
-		iterator &operator++() {
+		V_iterator(V_iterator const &p) throw() {
+			*this = p;
+		}
+
+		virtual ~V_iterator() throw() {}
+
+		iterator &operator=(V_iterator const &p) throw() {
+			ptr = p.ptr;
+			return *this;
+		}
+
+		iterator &operator++() throw() {
 			ptr++;
 			return *this;
 		}
 
-		iterator operator++(int) {
-			v_iterator it = *this;
+		iterator operator++(int) throw() {
+			V_iterator it = *this;
 			++(*this);
 			return it;
 		}
 
-		iterator &operator--() {
+		iterator &operator--() throw() {
 			ptr--;
 			return *this;
 		}
 
-		iterator operator--(int) {
+		iterator operator--(int) throw() {
 			iterator it = *this;
 			--(*this);
 			return it;
 		}
 
-		reference operator*() const {
+		reference operator*() const throw() {
 			return *ptr;
 		}
 
-		reference operator[](int idx) const {
+		pointer operator->() const throw() {
+			return ptr;
+		}
+
+		reference operator[](int idx) const throw() {
 			return ptr[idx];
 		}
 
-		bool operator!=(iterator rhs) const {
+		bool operator==(iterator rhs) const throw() {
+			return ptr == rhs.ptr;
+		}
+
+		bool operator!=(iterator rhs) const throw() {
 			return ptr != rhs.ptr;
 		}
 
@@ -57,30 +76,30 @@ namespace ft {
 	template<class T> // pass any type and compiler auto generate Vector parametrized with this type
 	class Vector {
 	public:
-		typedef v_iterator<T> iterator;
+		typedef V_iterator<T> iterator;
 	public:
-		Vector() {
+		Vector() throw() {
 			data = nullptr;
 			currentSize = 0;
 			capacity = 0;
 			Realloc(2);
 		}
-		Vector(T arr[], int n) {
+		Vector(T arr[], int n) throw() {
 			data = new T[n];
 			for (int i = 0; i < n; i++) {
 				data[i] = arr[i];
 			}
 		}
-		~Vector() {
+		~Vector() throw() {
 			clear();
 			::operator delete(data, capacity * sizeof(T)); // to not call any destructors
 		}
 
-		iterator	begin() {
+		iterator	begin() throw() {
 			return iterator(data);
 		}
 
-		iterator	end() {
+		iterator	end() throw() {
 			return iterator(data + currentSize);
 		}
 
@@ -105,6 +124,15 @@ namespace ft {
 				data[i].~T();
 			}
 			currentSize = 0;
+		}
+
+		template<class ITER>
+		void assign(ITER begin, ITER end) throw() {
+			clear();
+			while (begin != end) {
+				push_back(*begin);
+				begin++;
+			}
 		}
 
 		size_t size() const throw() { return currentSize; }

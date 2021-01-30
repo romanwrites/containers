@@ -9,21 +9,30 @@ void PrintVector(const T& v) {
 	std::cout << std::endl << "-------------------------------" << std::endl;
 }
 
-int main() {
-	ft::Vector<std::string> v;
-	v.push_back("C++");
-	v.push_back("STL");
-	v.push_back("my Vector");
-	v.push_back("C++");
-	v.push_back("C++");
+void testPushPop() {
+	std::cout << "---------Test push_back, pop--------" << std::endl;
+	ft::Vector<int>		v;
+	for (int i = 1, j = 0; j < 16; i*=2, j++)
+		v.push_back(i);
 	PrintVector(v);
 	v.pop_back();
+	v.pop_back();
+	v.pop_back();
 	PrintVector(v);
-	ft::Vector<std::string>::iterator it = v.begin();
-	std::cout <<  "---------test iterators-------\n";
-	while (it != v.end()) {
-		std::cout << *it << " ";
-		it++;
-	}
+}
+
+void testAssign() {
+	std::cout << "---------Test assign--------" << std::endl;
+	ft::Vector<int>		v;
+	std::vector<int>	stl;
+	for (int i = 1, j = 0; j < 16; i*=2, j++)
+		stl.push_back(i);
+	v.assign(stl.begin(), stl.end());
+	PrintVector(v);
+}
+
+int main() {
+	testPushPop();
+	testAssign();
     return 0;
 }
