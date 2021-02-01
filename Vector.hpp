@@ -1,7 +1,9 @@
 #pragma once
-#include <vector>
+#include <iostream>
+//#include <vector>
 
 namespace ft {
+	//	------------------------------------- VECTOR ITERATOR -----------------------------------------
 	template<class T>
 	class V_iterator {
 	public:
@@ -111,16 +113,129 @@ namespace ft {
 	private:
 		T*	ptr;
 	};
+	//	------------------------------------- REVERSE ITERATOR -----------------------------------------
+	template<class T>
+	class V_rev_iterator {
+	public:
+		typedef T* pointer;
+		typedef T& reference;
+		typedef const T* const_pointer;
+		typedef const T& const_reference;
+		typedef V_rev_iterator rev_iterator;
 
+		V_rev_iterator() throw() {
+			ptr = nullptr;
+		}
+
+		V_rev_iterator(pointer p) throw() {
+			ptr = p;
+		}
+
+		V_rev_iterator(V_rev_iterator const &p) throw() {
+			*this = p;
+		}
+
+		virtual ~V_rev_iterator() throw() {}
+
+		rev_iterator &operator=(V_rev_iterator const &p) throw() {
+			ptr = p.ptr;
+			return *this;
+		}
+
+		rev_iterator &operator++() throw() {
+			ptr--;
+			return *this;
+		}
+
+		rev_iterator operator++(int) throw() {
+			V_rev_iterator it = *this;
+			--(*this);
+			return it;
+		}
+
+		rev_iterator &operator--() throw() {
+			ptr++;
+			return *this;
+		}
+
+		rev_iterator operator--(int) throw() {
+			rev_iterator it = *this;
+			++(*this);
+			return it;
+		}
+
+		reference operator*() const throw() {
+			return *ptr;
+		}
+
+		pointer operator->() const throw() {
+			return ptr;
+		}
+
+		reference operator[](int idx) const throw() {
+			return ptr[idx];
+		}
+
+		bool operator==(rev_iterator rhs) const throw() {
+			return ptr == rhs.ptr;
+		}
+
+		bool operator!=(rev_iterator rhs) const throw() {
+			return ptr != rhs.ptr;
+		}
+
+		rev_iterator operator+(int n) throw() {
+			rev_iterator ret(ptr - n);
+			return ret;
+		}
+
+		rev_iterator operator-(int n) throw() {
+			rev_iterator ret(ptr + n);
+			return ret;
+		}
+
+		rev_iterator operator+=(int n) throw() {
+			ptr -= n;
+			return *this;
+		}
+
+		rev_iterator operator-=(int n) throw() {
+			ptr += n;
+			return *this;
+		}
+
+		bool operator<(rev_iterator const &rhs) {
+			return ptr < rhs.ptr;
+		}
+
+		bool operator>(rev_iterator const &rhs) {
+			return ptr > rhs.ptr;
+		}
+
+		bool operator<=(rev_iterator const &rhs) {
+			return ptr <= rhs.ptr;
+		}
+
+		bool operator>=(rev_iterator const &rhs) {
+			return ptr >= rhs.ptr;
+		}
+
+	private:
+		T*	ptr;
+	};
+
+	//	------------------------------------- VECTOR -----------------------------------------
 	template<class T> // pass any type and compiler auto generate Vector parametrized with this type
 	class Vector {
 	public:
 		typedef V_iterator<T> iterator;
+		typedef V_rev_iterator<T> rev_iterator;
 	public:
 		Vector() throw() {
 			data = nullptr;
 			currentSize = 0;
 			capacity = 0;
+			_begin = _end = data;
 			Realloc(2);
 		}
 		Vector(T arr[], int n) throw() {
@@ -131,6 +246,13 @@ namespace ft {
 		}
 		Vector(Vector const &obj) throw() {
 			*this = obj;
+		}
+		Vector(int elems, T val) {
+			Realloc(elems);
+			currentSize = elems;
+			for (size_t i = 0; i < currentSize; i++) {
+				data[i] = val;
+			}
 		}
 		Vector &operator=(Vector const &obj) throw() {
 			clear();
@@ -154,6 +276,18 @@ namespace ft {
 
 		iterator	end() throw() {
 			return iterator(data + currentSize);
+		}
+
+		rev_iterator rbegin() throw() {
+			return rev_iterator(end());
+		}
+
+		rev_iterator rend() throw() {
+			return rev_iterator(begin());
+		}
+
+		bool empty() const throw() {
+			return this->_begin == this->_end;
 		}
 
 		void push_back(const T& val) throw() {
@@ -212,6 +346,10 @@ namespace ft {
 			return !(*this == rhs);
 		}
 
+		T&	at(int idx) {
+			return (*this)[idx];
+		}
+
 	private:
 		void	Realloc(size_t newCapacity) throw() {
 			T*	newBlock = (T*)::operator new(newCapacity * sizeof(T)); // we don't want to call a constructor at all
@@ -236,6 +374,8 @@ namespace ft {
 
 	private:
 		T*  data;
+		T*	_begin;
+		T*	_end;
 
 		size_t	currentSize;
 		size_t	capacity;

@@ -1,5 +1,6 @@
 #include "Vector.hpp"
 #include <iostream>
+#include <vector>
 
 template<typename T>
 void PrintVector(const T& v) {
@@ -19,6 +20,24 @@ void testPushPop() {
 	v.pop_back();
 	v.pop_back();
 	PrintVector(v);
+}
+
+void testElemsConstructor() {
+	std::cout << "---------Test elems constructor--------" << std::endl;
+	ft::Vector<int> v(15, 50);
+	PrintVector(v);
+	std::cout << "v size: " << v.size() << std::endl;
+	v.pop_back();
+	v.pop_back();
+	v.pop_back();
+	v.pop_back();
+	v.pop_back();
+	std::cout << "v size: " << v.size() << std::endl;
+	v.push_back(18);
+	v.push_back(18);
+	v.push_back(18);
+	PrintVector(v);
+	std::cout << "v size: " << v.size() << std::endl;
 }
 
 void testAssign() {
@@ -44,8 +63,16 @@ void testIterator() {
 }
 
 int main() {
-	testPushPop();
-	testAssign();
-	testIterator();
+	ft::Vector<std::string> v;
+	v.push_back("500");
+	v.push_back("500");
+	std::cout << *v.end() << std::endl;
+	std::vector<int> n;
+	std::cout << n[0] << std::endl;
+	
+//	testElemsConstructor();
+//	testPushPop();
+//	testAssign();
+//	testIterator();
     return 0;
 }
