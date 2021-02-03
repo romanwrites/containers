@@ -1,6 +1,8 @@
 #include "Vector.hpp"
 #include <iostream>
 #include <vector>
+#include <set>
+#include "List.hpp"
 
 template<typename T>
 void PrintVector(const T& v) {
@@ -70,146 +72,76 @@ void printMap(const T& t) {
 }
 
 template <class T>
-class Node {
-private:
-	template<class Iter>
-	class NodeIterator {
-		friend class Node;
-
-	public:
-		typedef Iter iterator_type;
-		typedef std::input_iterator_tag iterator_category;
-		typedef iterator_type value_type;
-		typedef ptrdiff_t difference_type;
-		typedef iterator_type& reference;
-		typedef iterator_type* pointer;
-
-		iterator_type *value;
-	private:
-		NodeIterator(Iter* p) : value(p) { }
-	public:
-		NodeIterator(const NodeIterator& it) : value(it.value) { }
-
-		bool operator!=(NodeIterator const& other) const {
-			return value != other.value;
-		}
-		bool operator==(NodeIterator const& other) const {
-			return value == other.value;
-		}
-
-		typename NodeIterator::reference operator*() const {
-			return *value;
-		}
-
-		NodeIterator& operator++() { // prefix increment. doesn't create a copy
-			if (value->parent == nullptr) {
-				value = nullptr;
-			} else if (value->parent->right.get() == value) {
-				value = value->parent;
-			} else {
-				value = value->parent;
-				if (value->right.get() != nullptr) {
-					value = value->right.get();
-					while (value->left.get() != nullptr) {
-						value = value->left.get();
-					}
-				}
-			}
-			return *this;
-		}
-	};
-
-public:
-	T value;
-	std::unique_ptr<Node> left;
-	std::unique_ptr<Node> right;
-	Node* parent;
-
-	Node(const T& value, std::unique_ptr<Node> left, std::unique_ptr<Node> right, Node *parent)
-							: value(value), left(std::move(left)), right(std::move(right)), parent(parent) {}
-	Node(const Node&) = delete;
-
-	typedef NodeIterator<Node> iterator;
-	typedef NodeIterator<const Node> const_iterator;
-
-	iterator begin() {
-		Node* node = this;
-		while (node->left != nullptr) {
-			node = node->left.get();
-		}
-		return iterator(node); // call private constructor. that's why friend
-	}
-	iterator end() {
-		return nullptr; // todo shadow node
-	}
-	const_iterator begin() const {
-		const Node* node = this;
-		while (node->left != nullptr) {
-			node = node->left.get();
-		}
-		return const_iterator(node);
-	}
-	const_iterator end() const {
-		return nullptr; // todo shadow node
-	}
-	friend std::ostream& operator<<(std::ostream& os, const Node& n) {
-		return os << n.value;
-	}
-};
-
-//int main() {
-
-////	for (std::string::iterator it = str.begin(); it != str.end(); ++it) {
-////		std::cout << *it << std::endl;
-////	}
-//
-////	testElemsConstructor();
-////	testPushPop();
-////	testAssign();
-////	testIterator();
-//    return 0;
-//}
-
-//// Member types
-//value_type //тип, который возвращает итератор
-//pointer // pointer to this type
-//reference // reference to this type
-//iterator_category // category of iterator
-//difference_type // difference between two iterators
+void testList() {
+	std::list<int> lst;
+	ft::List<int> ftlst;
+	std::cout << *(lst.begin()) <<std::endl;
+	std::cout << *(ftlst.begin()) <<std::endl;
+}
 
 int main() {
-	std::string str = "Hello world\n";
-	printMap(str);
 
-	auto root = std::make_unique<Node<std::string>>("a1", nullptr, nullptr, nullptr);
-	root->left = std::make_unique<Node<std::string>>("b1", nullptr, nullptr, root.get()); // get raw pointer
-	root->right = std::make_unique<Node<std::string>>("b2", nullptr, nullptr, root.get());
+//	for (std::string::iterator it = str.begin(); it != str.end(); ++it) {
+//		std::cout << *it << std::endl;
+//	}
 
-	auto b1 = root->left.get();
-	auto b2 = root->right.get();
-	b1->left = std::make_unique<Node<std::string>>("c1", nullptr, nullptr, b1);
-	b1->right = std::make_unique<Node<std::string>>("c2", nullptr, nullptr, b1);
-	b2->left = std::make_unique<Node<std::string>>("c3", nullptr, nullptr, b2);
-	b2->right = std::make_unique<Node<std::string>>("c4", nullptr, nullptr, b2);
-//	auto c1 = b1->left.get();
-//	auto c2 = b1->right.get();
-//	auto c3 = b2->left.get();
-//	auto c4 = b2->right.get();
-//
-//	std::cout << root->value << std::endl;
-//	std::cout << b1->value << std::endl;
-//	std::cout << b2->value << std::endl;
-//	std::cout << c1->value << std::endl;
-//	std::cout << c2->value << std::endl;
-//	std::cout << c3->value << std::endl;
-//	std::cout << c4->value << std::endl;
-	auto it = root->begin();
-	std::cout << *it << std::endl; // most left node
-	++it;
-	std::cout << *it << std::endl;
-	++it;
-	std::cout << *it << std::endl;
-
-	for (auto it = root->begin())
-
+//	testElemsConstructor();
+//	testPushPop();
+//	testAssign();
+//	testIterator();
+    return 0;
 }
+
+
+//int main() {
+//	std::vector<std::string> vv;
+//	try {
+//		vv.at(45);
+//	} catch (std::exception &ex) {
+//		std::cout << ex.what() << std::endl;
+//	}
+//
+//	std::string str = "Hello world\n";
+//	printMap(str);
+//
+//	auto root = std::make_unique<Node<std::string>>("a1", nullptr, nullptr, nullptr);
+//	root->left = std::make_unique<Node<std::string>>("b1", nullptr, nullptr, root.get()); // get raw pointer
+//	root->right = std::make_unique<Node<std::string>>("b2", nullptr, nullptr, root.get());
+//
+//	auto b1 = root->left.get();
+//	auto b2 = root->right.get();
+//	b1->left = std::make_unique<Node<std::string>>("c1", nullptr, nullptr, b1);
+//	b1->right = std::make_unique<Node<std::string>>("c2", nullptr, nullptr, b1);
+//	b2->left = std::make_unique<Node<std::string>>("c3", nullptr, nullptr, b2);
+//	b2->right = std::make_unique<Node<std::string>>("c4", nullptr, nullptr, b2);
+////	auto c1 = b1->left.get();
+////	auto c2 = b1->right.get();
+////	auto c3 = b2->left.get();
+////	auto c4 = b2->right.get();
+//
+//	for (auto it = root->begin(); it != root->end(); ++it) {
+//		std::cout << *it << std::endl;
+//	}
+//
+//	std::cout << std::endl;
+//
+//	for (auto &&node : *root) {
+//		std::cout << node << std::endl;
+//	}
+//
+//	std::set<Point> points{ {5,3}, {1,2}, {0,0}, {3, 2} }; //фигурная инициализация
+//	for (auto &&point : points) {
+//		std::cout << point.x << " " << point.y << std::endl;
+//	}
+//
+//}
+
+//#include <list>
+//int main() {
+//	std::vector<std::string> vv;
+//	try {
+//		vv.at(28);
+//	} catch (std::exception &ex) {
+//		std::cout << ex.what() << "WHAAAAAAT" << std::endl;
+//	}
+//}
