@@ -102,31 +102,45 @@ namespace ft {
 	//	------------------------------------- LIST CONTAINER -----------------------------------------
 	template < class T, class Alloc = std::allocator<T> >
     class List {
-        typedef T			value_type;
-        typedef Alloc		allocator_type;
-        typedef T&			reference;
-        typedef const T&	const_reference;
-        typedef T*			pointer;
-		typedef const T*	const_pointer;
-		typedef ptrdiff_t	difference_type;
-		typedef size_t 		size_type;
-//		typedef 			iterator;
+	private:
+
+        typedef T						value_type;
+        typedef Alloc					allocator_type;
+        typedef T&						reference;
+        typedef const T&				const_reference;
+        typedef T*						pointer;
+		typedef const T*				const_pointer;
+		typedef ptrdiff_t				difference_type;
+		typedef size_t 					size_type;
+		typedef BidirectionalListIt<T>	iterator;
 //		typedef node_pointer
 //		typedef
 //		typedef
+
+		NodeList<value_type>* shadow;
+
 		friend class NodeList; // to list todo
     public:
-    	List() : end(new NodeList<value_type>()) {}
+    	List() : shadow(new NodeList<value_type>()) {}
 
-    	void push_back(value_type const &value) {
-			NodeList<value_type> *ptr = new NodeList<value_type>();
-			end->next = ptr;
-			ptr->prev = end;
-			end->prev = ptr;
+    	iterator begin() {
+    		return shadow->next;
     	}
 
-	private:
+		iterator end() {
+			return shadow;
+		}
 
-		NodeList<value_type>* end;
+    	void push_back(value_type const &value) {
+    		//todo use insert
+//			NodeList<value_type> *ptr = new NodeList<value_type>();
+//			end->next = ptr;
+//			ptr->prev = end;
+//			end->prev = ptr;
+    	}
+
+    	void insert(value_type const &value) {
+
+    	}
 	};
 }
