@@ -2,6 +2,11 @@
 #include <list>
 
 namespace ft {
+    template < class T>
+    class List;
+
+    template <class Iter>
+    class BidirectionalListIt;
 	//	------------------------------------- LIST NODE -----------------------------------------
 	template <class T>
 	class NodeList {
@@ -14,6 +19,8 @@ namespace ft {
 		NodeList() : next(nullptr), prev(nullptr), value(value_type()) {}
 		NodeList(const value_type& value) : next(nullptr), prev(nullptr), value(value) {} //todo
 		//todo copy constructor
+		friend class List<T>;
+		friend class BidirectionalListIt<T>;
 
 		NodeList &operator=(const NodeList<value_type>& obj) {
 			next = obj.next;
@@ -58,6 +65,7 @@ namespace ft {
 	class BidirectionalListIt {
 	private:
 		NodeList<Iter> *ptr;
+        friend class List<Iter>;
 	public:
 		typedef std::ptrdiff_t 					difference_type;
 		typedef Iter							value_type;
@@ -110,42 +118,66 @@ namespace ft {
 		bool operator>=(const BidirectionalListIt &rhs) const {
 			return !(*this < rhs);
 		}
+
+        BidirectionalListIt<Iter> &operator++() {
+		    ptr = ptr->next;
+		    return *this;
+		}
+
+        BidirectionalListIt<Iter> operator++(int) {
+            BidirectionalListIt<Iter> clone(*this);
+            ptr = ptr->next;
+            return clone;
+        }
+
+        BidirectionalListIt<Iter> &operator--() {
+		    ptr = ptr->prev;
+		    return *this;
+		}
+
+        BidirectionalListIt<Iter> operator--(int) {
+            BidirectionalListIt<Iter> clone(*this);
+            ptr = ptr->prev;
+            return clone;
+        }
 	};
 
 	//	------------------------------------- LIST CONTAINER -----------------------------------------
-	template < class T, class Alloc = std::allocator<T> >
+	template < class T>
     class List {
-    private:
-        friend class NodeList<T>; // todo
-
-	private:
-
+    public:
         typedef T						value_type;
-        typedef Alloc					allocator_type;
         typedef T&						reference;
         typedef const T&				const_reference;
         typedef T*						pointer;
-		typedef const T*				const_pointer;
-		typedef ptrdiff_t				difference_type;
-		typedef size_t 					size_type;
-		typedef BidirectionalListIt<T>	iterator;
-
+        typedef const T*				const_pointer;
+        typedef ptrdiff_t				difference_type;
+        typedef size_t 					size_type;
+        typedef BidirectionalListIt<T>	iterator;
+	private:
 		NodeList<value_type>* shadow;
 		NodeList<value_type>* start;
         NodeList<value_type>* finish;
         int currentSize;
 
-
     public:
     	List() : shadow(new NodeList<value_type>()), start(nullptr), finish(nullptr), currentSize(0) {}
 
     	iterator begin() {
-    		return shadow->next;
+    		return iterator(shadow->next);
     	}
 
 		iterator end() {
-			return shadow;
+			return iterator(shadow);
 		}
+
+		value_type &at(int idx) {
+            NodeList<value_type> *ptr = shadow->next;
+    	    for (int i = 0; i < idx; i++) {
+    	        ptr = ptr->next;
+    	    }
+    	    return ptr->value;
+    	}
 
     	void push_back(value_type const &value) {
     		//todo use insert
@@ -176,16 +208,17 @@ namespace ft {
             return iterator(insert_node);
     	}
 
-    	// fill
-        void insert(iterator position, size_type n, const value_type& val) {
 
-    	}
-
-    	// range
-        template <class InputIterator>
-        void insert(iterator position, InputIterator first, InputIterator last) {
-
-    	}
+//    	// fill
+//        void insert(iterator position, size_type n, const value_type& val) {
+//
+//    	}
+//
+//    	// range
+//        template <class InputIterator>
+//        void insert(iterator position, InputIterator first, InputIterator last) {
+//
+//    	}
 
 	};
 }
