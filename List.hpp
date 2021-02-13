@@ -10,9 +10,9 @@ namespace ft {
 	//	------------------------------------- LIST NODE -----------------------------------------
 	template <class T>
 	class NodeList {
-		// typedef
-	private:
+	public:
 		typedef T value_type;
+	private:
 		NodeList<T> *next;
 		NodeList<T> *prev;
 		value_type value;
@@ -72,28 +72,37 @@ namespace ft {
 		typedef ft::bidirectional_iterator_tag	iterator_category;
 		typedef value_type& 					reference;
 		typedef value_type* 					pointer;
+		typedef value_type const& 				const_reference;
+		typedef value_type const* 				const_pointer;
+		typedef size_t 							size_type;
 
 		explicit BidirectionalListIt() throw() : ptr(nullptr) {}
 		explicit BidirectionalListIt(NodeList<Iter> *p) throw() : ptr(p) {}
 		explicit BidirectionalListIt(const NodeList<const Iter> *p) throw() : ptr(const_cast<NodeList<const Iter> *>(p)) {}
 		BidirectionalListIt(const BidirectionalListIt& p) throw() : ptr(p.ptr) {}
+		~BidirectionalListIt() { }
+
 
 		BidirectionalListIt& operator=(const BidirectionalListIt& rhs) {
 			ptr = rhs.ptr;
 			return *this;
 		}
 
-		// ? or this ? //todo
         reference operator*() {
-            return *(this->ptr);
+            return this->ptr->value;
         }
 
-        pointer operator->() {
-		    return &(this->ptr);
+        const_reference operator*() const {
+			return this->ptr->value;
 		}
 
-		// const -> * todo
+        pointer operator->() {
+		    return &(this->ptr->value);
+		}
 
+		const_pointer operator->() const {
+			return &(this->ptr->value);
+		}
 
 		bool operator==(const BidirectionalListIt &rhs) const {
 			return ptr == rhs.ptr;
@@ -221,4 +230,6 @@ namespace ft {
 //    	}
 
 	};
+
+	//todo list operator==, operator<= etc
 }

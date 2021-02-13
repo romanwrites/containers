@@ -100,10 +100,16 @@ void testList() {
 
     std::cout << "0: " << ftlst.at(0) << ", 1: " << ftlst.at(1) << ", 2: " << ftlst.at(2)  << ", 3: " << ftlst.at(3) << std::endl << std::endl;
 
-    auto it = lst.end();
-    it++;
-    it++;
-    std::cout << "test lst: " << *it << std::endl;
+    auto it = lst.begin();
+//	std::cout << "test lst: " << *it << std::endl;
+//    it++;
+//	std::cout << "test lst: " << *it << std::endl;
+//    it++;
+//    std::cout << "test lst: " << *it << std::endl;
+
+    for (ft::List<std::string>::iterator i = ftlst.begin(); i != ftlst.end(); ++i) {
+		std::cout << "test lst: " << *i << std::endl;
+    }
 
 //    for (auto &i : lst) {
 //        std::cout << i << std::endl;
@@ -114,10 +120,10 @@ void testList() {
 //    }
 //    std::cout << std::endl << "FTLST: \n";
 
-//    for (ft::BidirectionalListIt<std::__1::basic_string<char> >::value_type i : ftlst) {
+//    for (auto &i : ftlst) {
 //        std::cout << i << std::endl;
 //    }
-//
+
 
     std::cout << "================= emptyBegin() ===============\n";
 //    emptyBegin();
