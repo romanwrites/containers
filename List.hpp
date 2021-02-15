@@ -1,3 +1,5 @@
+#pragma once
+
 #include <memory>
 #include <list>
 
@@ -167,7 +169,7 @@ namespace ft {
 		NodeList<value_type>* shadow;
 		NodeList<value_type>* start;
         NodeList<value_type>* finish;
-        int currentSize;
+        size_type   currentSize;
 
     public:
     	List() : shadow(new NodeList<value_type>()), start(nullptr), finish(nullptr), currentSize(0) {}
@@ -179,6 +181,14 @@ namespace ft {
 		iterator end() {
 			return iterator(shadow);
 		}
+
+        iterator begin() const {
+            return iterator(shadow->next);
+        }
+
+        iterator end() const {
+            return iterator(shadow);
+        }
 
 		value_type &at(int idx) {
             NodeList<value_type> *ptr = shadow->next;
@@ -215,6 +225,10 @@ namespace ft {
             }
             ++currentSize;
             return iterator(insert_node);
+    	}
+
+    	size_type size() const {
+    	    return currentSize;
     	}
 
 
