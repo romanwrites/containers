@@ -82,7 +82,7 @@ void testVector() {
     testIterator();
 }
 
-void TestAllList() {
+void TestAllVector() {
     TestRunner tr;
     tr.RunTest(testVector, "TestSum");
 }

@@ -71,11 +71,12 @@ namespace ft {
 	public:
 		typedef std::ptrdiff_t 					difference_type;
 		typedef Iter							value_type;
+        typedef Iter const                      const_value_type;
 		typedef ft::bidirectional_iterator_tag	iterator_category;
 		typedef value_type& 					reference;
 		typedef value_type* 					pointer;
-		typedef value_type const& 				const_reference;
-		typedef value_type const* 				const_pointer;
+		typedef const_value_type& 				const_reference;
+		typedef const_value_type* 				const_pointer;
 		typedef size_t 							size_type;
 
 		explicit BidirectionalListIt() throw() : ptr(nullptr) {}
@@ -165,6 +166,9 @@ namespace ft {
         typedef ptrdiff_t				difference_type;
         typedef size_t 					size_type;
         typedef BidirectionalListIt<T>	iterator;
+        typedef BidirectionalListIt<T>	const_iterator;
+        typedef bidirectional_iterator_tag iterator_category;
+
 	private:
 		NodeList<value_type>* shadow;
 		NodeList<value_type>* start;
@@ -174,6 +178,7 @@ namespace ft {
     public:
     	List() : shadow(new NodeList<value_type>()), start(nullptr), finish(nullptr), currentSize(0) {}
 
+    	// ------------------- ITERATORS ----------------------
     	iterator begin() {
     		return iterator(shadow->next);
     	}
@@ -199,12 +204,11 @@ namespace ft {
     	}
 
     	void push_back(value_type const &value) {
-    		//todo use insert
-			insert(finish, value);
+			insert(end(), value);
     	}
 
     	void push_front(value_type const &value) {
-            insert(start, value);
+            insert(begin(), value);
     	}
 
     	// single element
@@ -229,6 +233,10 @@ namespace ft {
 
     	size_type size() const {
     	    return currentSize;
+    	}
+
+    	bool empty() const {
+    	    return currentSize == 0;
     	}
 
 

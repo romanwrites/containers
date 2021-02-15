@@ -7,6 +7,7 @@
 #include <set>
 #include <iostream>
 #include <sstream>
+#include "List.hpp"
 #include "TestList.h"
 
 #define GREEN(x) ("\033[32m" + x + "\033[0m")
@@ -98,4 +99,8 @@ std::ostream &operator << (std::ostream &os, std::vector<T> const &s) {
         os << x;
     }
     return os << "]";
+}
+
+std::string HintList(std::string const &str) {
+    return "List: " + str;
 }

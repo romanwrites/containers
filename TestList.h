@@ -1,7 +1,12 @@
 #pragma once
 
 #include <iostream>
+#include <list>
 #include "List.hpp"
+
+namespace TestList {
+    void TestAll();
+}
 
 // LIST vs FT::LIST
 template <class T>
