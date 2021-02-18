@@ -7,14 +7,37 @@ void TestInsert() {
   ft::List<std::string> ftlst;
 
   lst.insert(lst.begin(), "+");
-  lst.insert(lst.begin(), "С");
+  lst.insert(lst.begin(), "C");
   lst.insert(lst.end(), "+");
 
   ftlst.insert(ftlst.begin(), "+");
-  ftlst.insert(ftlst.begin(), "С");
+  ftlst.insert(ftlst.begin(), "C");
   ftlst.insert(ftlst.end(), "+");
 
   AssertEqual(ftlst, lst, HintList("Basic insert() 2 at begin, 1 at end"));
+
+  std::vector<std::string> v{"one", "two", "three", "four", "five"};
+  lst.insert(lst.begin(), v.begin(), v.end());
+  ftlst.insert(ftlst.begin(), v.begin(), v.end());
+  AssertEqual(ftlst, lst, HintList("Range fill insert() begin from vector<string>"));
+
+  lst.insert(lst.end(), v.begin(), v.end());
+  ftlst.insert(ftlst.end(), v.begin(), v.end());
+  AssertEqual(ftlst, lst, HintList("Range fill insert() end from vector<string>"));
+
+  auto itLst = std::find(lst.begin(), lst.end(), "C");
+  auto itFtlst = std::find(ftlst.begin(), ftlst.end(), "C");
+
+  lst.insert(itLst, v.begin(), v.end());
+  ftlst.insert(itFtlst, v.begin(), v.end());
+  AssertEqual(ftlst, lst, HintList("Range fill insert() mid from vector<string>"));
+
+  itLst = std::find(lst.begin(), lst.end(), "+");
+  itFtlst = std::find(ftlst.begin(), ftlst.end(), "+");
+
+  lst.insert(itLst, 5, "+");
+  ftlst.insert(itFtlst, 5, "+");
+  AssertEqual(ftlst, lst, HintList("Range fill insert() end from vector<string>"));
 }
 
 void TestEmpty() {
