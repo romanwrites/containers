@@ -242,8 +242,64 @@ class List {
     return SIZE_MAX / sizeof(NodeList<T>);
   }
 
-  reference front();
-  const_reference front() const;
+  reference front() {
+    return shadow->next->value;
+  }
+
+  const_reference front() const {
+    return shadow->next->value;
+  }
+
+  reference back() {
+    return shadow->prev->value;
+  }
+
+  const_reference back() const {
+    return shadow->prev->value;
+  }
+
+  template <class InputIterator>
+  void assign (InputIterator first, InputIterator last) {
+    (void)first;
+    (void)last;
+    // erase
+    // insert
+    // todo
+  }
+
+  void assign (size_type n, const value_type& val) {
+    (void)n;
+    (void)val;
+    // todo
+  }
+
+  iterator erase (iterator position) {
+    NodeList<value_type> *pos = position.ptr;
+    currentSize--;
+    if (pos->prev == shadow) {
+      shadow->next = pos->next;
+      pos->next->prev = shadow;
+      delete pos;
+      return iterator(shadow->next);
+    }
+    NodeList<value_type> *prev = pos->prev;
+    prev->next = pos->next;
+    pos->next->prev = prev;
+    delete pos;
+    return iterator(prev->next);
+  }
+
+  iterator erase (iterator first, iterator last) {
+    iterator tmp = first;
+    while (first != last) {
+      ++first;
+      erase(tmp);
+      tmp = first;
+    }
+    return iterator(first);
+  }
+
+
 
 
 //    	// fill
