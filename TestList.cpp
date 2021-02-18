@@ -78,7 +78,7 @@ void TestBeginEnd() {
   Assert(itFtlst == ftlst.end(), HintList("Test if iterated over ft::List to the end successfully"));
 }
 
-void TestRbeginRend() {
+void TestRbeginRend() { //todo
 //        std::list<int> lst;
 //        ft::List<int> ftlst;
 //
@@ -98,13 +98,102 @@ void TestRbeginRend() {
 //        Assert(itFtlst == ftlst.rend(), HintList("Test if iterated over ft::List to the end successfully"));
 }
 
+void TestFrontBack() {
+  std::list<int> lst;
+  ft::List<int> ftlst;
+
+  lst.push_back(77);
+  lst.push_back(22);
+
+  ftlst.push_back(77);
+  ftlst.push_back(22);
+
+  AssertEqual(ftlst.front(), lst.front(), HintList("Test front()"));
+  AssertEqual(ftlst.back(), lst.back(), HintList("Test back()"));
+
+  lst.front() -= lst.back();
+  ftlst.front() -= ftlst.back();
+
+  AssertEqual(ftlst.front(), lst.front(), HintList("Test front() change"));
+
+  lst.back() = 1;
+  ftlst.back() = 1;
+
+  AssertEqual(ftlst.back(), lst.back(), HintList("Test back() change"));
+
+  const int lstFront = lst.front();
+  const int ftlstFront = ftlst.front();
+
+  AssertEqual(ftlstFront, lstFront, HintList("Test const front()"));
+}
+
 void TestMaxSize() {
   std::list<int> lst;
   ft::List<int> ftlst;
 
-  AssertEqual(*itFtlst, *itLst, HintList("Test begin() to end() step: " + std::to_string(*itLst)));
-  std::cout << lst.max_size() << " " << ftlst.max_size() << std::endl;
+  AssertEqual(ftlst.max_size(), lst.max_size(), HintList("Test max_size()"));
 }
+
+//void TestAssign() {
+//  std::list<int>  lstFirst;
+//  std::list<int>  lstSecond;
+//  ft::List<int>   ftlstFirst;
+//  ft::List<int>   ftlstSecond;
+//
+//  lstFirst.assign (7,100);
+//  ftlstFirst.assign (7,100);
+//  AssertEqual(ftlstFirst, lstFirst, HintList("Test assign() fill"));
+//
+//  lstSecond.assign (lstFirst.begin(),lstFirst.end());
+//  ftlstSecond.assign (ftlstFirst.begin(),ftlstFirst.end());
+//  AssertEqual(ftlstSecond, lstSecond, HintList("Test assign() range"));
+//
+//  int myints[]={1776,7,4};
+//  lstFirst.assign (myints,myints+3);
+//  ftlstSecond.assign (myints,myints+3);
+//  AssertEqual(ftlstSecond, lstSecond, HintList("Test assign() range from array"));
+//
+//  std::cout << "Size of lstFirst: " << int (lstFirst.size()) << '\n';
+//  std::cout << "Size of second: " << int (lstSecond.size()) << '\n';
+//}
+
+void TestErase() {
+  std::list<int> lst;
+  ft::List<int> ftlst;
+
+  for (int i = 0; i < 10; i++) {
+    lst.push_back(i);
+    ftlst.push_back(i);
+  }
+
+  lst.erase(lst.begin());
+  ftlst.erase(ftlst.begin());
+  AssertEqual(ftlst, lst, HintList("Test erase() begin()"));
+
+  auto it = lst.begin();
+  auto itFt = ftlst.begin();
+  it++;
+  it++;
+  itFt++;
+  itFt++;
+
+  it = lst.erase(it);
+  itFt = ftlst.erase(itFt);
+  AssertEqual(*itFt, *it, HintList("Test erase() position iterators value equality"));
+  AssertEqual(ftlst, lst, HintList("Test erase() position lists equality"));
+
+  it++;
+  it++;
+  itFt++;
+  itFt++;
+
+  it = lst.erase(lst.begin(), it);
+  itFt = ftlst.erase(ftlst.begin(), itFt);
+  AssertEqual(*itFt, *it, HintList("Test erase() ranged iterators value equality"));
+  AssertEqual(ftlst, lst, HintList("Test erase() ranged lists equality"));
+
+}
+
 
 void TestAll() {
   TestRunner tr;
@@ -115,6 +204,9 @@ void TestAll() {
   tr.RunTest(TestPushBack, "TestPushBack");
   tr.RunTest(TestPushFront, "TestPushFront");
   tr.RunTest(TestMaxSize, "TestMaxSize");
+  tr.RunTest(TestFrontBack, "TestFrontBack");
+//  tr.RunTest(TestAssign, "TestAssign");
+  tr.RunTest(TestErase, "TestErase");
 
 }
 }
