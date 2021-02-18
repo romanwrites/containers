@@ -192,13 +192,17 @@ void TestErase() {
   AssertEqual(*itFt, *it, HintList("Test erase() ranged iterators value equality"));
   AssertEqual(ftlst, lst, HintList("Test erase() ranged lists equality"));
 
+  it = lst.erase(--(lst.end()));
+  itFt = ftlst.erase(--(ftlst.end()));
+  Assert((itFt == ftlst.end()) && (it == lst.end()), HintList("Test erase() ranged iterators value equality"));
+  AssertEqual(ftlst, lst, HintList("Test erase() position last elem"));
 }
 
 
 void TestAll() {
   TestRunner tr;
   tr.RunTest(TestBeginEnd, "TestBeginEnd");
-//        tr.RunTest(TestRbeginRend, "TestRbeginRend");
+//  tr.RunTest(TestRbeginRend, "TestRbeginRend");
   tr.RunTest(TestInsert, "TestListInsert");
   tr.RunTest(TestEmpty, "TestEmpty");
   tr.RunTest(TestPushBack, "TestPushBack");
