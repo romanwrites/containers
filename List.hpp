@@ -230,6 +230,27 @@ class List {
     return iterator(insert_node);
   }
 
+  // fill
+  void insert(iterator position, size_type n, const value_type &val) {
+    iterator tmp = position;
+    for (size_type i = 0; i < n; i++) {
+      ++position;
+      insert(tmp, val);
+    }
+  }
+
+  // range [first,last)
+  template<class InputIterator>
+  void insert(iterator position, InputIterator first, InputIterator last) {
+    iterator tmp = position;
+    while (first != last) {
+      ++position;
+      insert(tmp, *first);
+      ++first;
+    }
+  }
+
+
   size_type size() const {
     return currentSize;
   }
@@ -258,14 +279,23 @@ class List {
     return shadow->prev->value;
   }
 
-  template <class InputIterator>
-  void assign (InputIterator first, InputIterator last) {
-    (void)first;
-    (void)last;
-    // erase
-    // insert
-    // todo
-  }
+//  template <class InputIterator>
+//  void assign (InputIterator first, InputIterator last) {
+//    iterator it = begin();
+//    currentSize = 0;
+//    while (first != last) {
+//      if (it == end()) {
+//        insert(first, last);
+//      }
+//      *it = *first;
+//      ++currentSize;
+//      ++it;
+//      ++first;
+//    }
+//    if (it != end()) {
+//      erase(it, end());
+//    }
+//  }
 
   void assign (size_type n, const value_type& val) {
     (void)n;
@@ -276,12 +306,6 @@ class List {
   iterator erase (iterator position) {
     NodeList<value_type> *pos = position.ptr;
     currentSize--;
-    if (pos->prev == shadow) {
-      shadow->next = pos->next;
-      pos->next->prev = shadow;
-      delete pos;
-      return iterator(shadow->next);
-    }
     NodeList<value_type> *prev = pos->prev;
     prev->next = pos->next;
     pos->next->prev = prev;
@@ -298,20 +322,6 @@ class List {
     }
     return iterator(first);
   }
-
-
-
-
-//    	// fill
-//        void insert(iterator position, size_type n, const value_type& val) {
-//
-//    	}
-//
-//    	// range
-//        template <class InputIterator>
-//        void insert(iterator position, InputIterator first, InputIterator last) {
-//
-//    	}
 
 };
 
