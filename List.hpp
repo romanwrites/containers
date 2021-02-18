@@ -239,6 +239,10 @@ namespace ft {
     	    return currentSize == 0;
     	}
 
+        size_type max_size() const {
+    	    return SIZE_MAX / sizeof(NodeList<T>);
+    	}
+
 
 //    	// fill
 //        void insert(iterator position, size_type n, const value_type& val) {

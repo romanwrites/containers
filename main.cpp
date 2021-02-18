@@ -1,7 +1,7 @@
 #include "TestList.h"
 
 int main() {
-    TestList::TestAll();
+  TestList::TestAll();
 
-    return 0;
+  return 0;
 }
