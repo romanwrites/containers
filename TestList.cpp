@@ -58,8 +58,50 @@ namespace TestList {
     //    }
     }
 
+    void TestBeginEnd() {
+        std::list<int> lst;
+        ft::List<int> ftlst;
+
+        for (int i = 0; i < 50; i++) {
+            lst.push_front(i);
+            ftlst.push_front(i);
+        }
+
+        auto itLst = lst.begin();
+        auto itFtlst = ftlst.begin();
+
+        while (itLst != lst.end()) {
+            AssertEqual(*itFtlst, *itLst, HintList("Test begin() to end() step: " + std::to_string(*itLst)));
+            ++itLst;
+            ++itFtlst;
+        }
+        Assert(itFtlst == ftlst.end(), HintList("Test if iterated over ft::List to the end successfully"));
+    }
+
+    void TestRbeginRend() {
+//        std::list<int> lst;
+//        ft::List<int> ftlst;
+//
+//        for (int i = 0; i < 50; i++) {
+//            lst.push_front(i);
+//            ftlst.push_front(i);
+//        }
+//
+//        auto itLst = lst.rbegin();
+//        auto itFtlst = ftlst.rbegin();
+//
+//        while (itLst != lst.rend()) {
+//            AssertEqual(*itFtlst, *itLst, HintList("Test begin() to end() step: " + std::to_string(*itLst)));
+//            ++itLst;
+//            ++itFtlst;
+//        }
+//        Assert(itFtlst == ftlst.rend(), HintList("Test if iterated over ft::List to the end successfully"));
+    }
+
     void TestAll() {
         TestRunner tr;
+        tr.RunTest(TestBeginEnd, "TestBeginEnd");
+//        tr.RunTest(TestRbeginRend, "TestRbeginRend");
         tr.RunTest(TestInsert, "TestListInsert");
         tr.RunTest(TestEmpty, "TestEmpty");
         tr.RunTest(TestPushBack, "TestPushBack");
