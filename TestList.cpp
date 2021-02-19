@@ -74,11 +74,21 @@ void TestPushFront() {
   AssertEqual(ftlst, lst, HintList("Test push_front() equality"));
 }
 
-void TestParamConstructor() {
-  //    std::list<int> lst(21,42);
-  //    for (auto it = lst.begin(); it != lst.end(); ++it) {
-  //        std::cout << *it << " ";
-  //    }
+void TestParamConstructorFill() {
+  std::list<int> lst(21, 42);
+  ft::List<int> ftlst(21, 42);
+
+  Assert(ftlst.size() == lst.size(), HintList("Test fill constructor size()"));
+  AssertEqual(ftlst, lst, HintList("Test fill constructor lists equality"));
+}
+
+void TestParamConstructorRange() {
+  std::vector<std::string> v{"one", "two", "three", "four", "five", "six", "seven"};
+  std::list<std::string> lst(v.begin(), v.end());
+  ft::List<std::string> ftlst(v.begin(), v.end());
+
+  Assert(ftlst.size() == lst.size(), HintList("Test range constructor size()"));
+  AssertEqual(ftlst, lst, HintList("Test range constructor lists equality"));
 }
 
 void TestBeginEnd() {
@@ -158,29 +168,25 @@ void TestMaxSize() {
 }
 
 void TestAssign() {
-  std::list<int>  lstFirst;
-  std::list<int>  lstSecond;
-  ft::List<int>   ftlstFirst;
-  ft::List<int>   ftlstSecond;
+  std::list<int> lstFirst;
+  std::list<int> lstSecond;
+  ft::List<int> ftlstFirst;
+  ft::List<int> ftlstSecond;
 
-  lstFirst.assign (7,100);
-  ftlstFirst.assign (7,100);
+  lstFirst.assign(7, 100);
+  ftlstFirst.assign(7, 100);
   AssertEqual(ftlstFirst, lstFirst, HintList("Test assign() fill"));
-  std::cout << ftlstFirst << std::endl;
 
-  lstSecond.assign (lstFirst.begin(),lstFirst.end());
-  ftlstSecond.assign (ftlstFirst.begin(), ftlstFirst.end());
+  lstSecond.assign(lstFirst.begin(), lstFirst.end());
+  ftlstSecond.assign(ftlstFirst.begin(), ftlstFirst.end());
   AssertEqual(ftlstSecond, lstSecond, HintList("Test assign() range"));
+  Assert(ftlstSecond.size() == lstSecond.size(), HintList("Test assign() size() lstSecond"));
 
-  std::cout << ftlstSecond << std::endl;
-
-//  int myints[]={1776,7,4};
-//  lstFirst.assign (myints,myints+3);
-//  ftlstSecond.assign (myints, myints+3);
-//  AssertEqual(ftlstSecond, lstSecond, HintList("Test assign() range from array"));
-
-  std::cout << "Size of lstFirst: " << int (lstFirst.size()) << '\n';
-  std::cout << "Size of second: " << int (lstSecond.size()) << '\n';
+  int myints[] = {1776, 7, 4};
+  lstFirst.assign(myints, myints + 3);
+  ftlstFirst.assign(myints, myints + 3);
+  AssertEqual(ftlstSecond, lstSecond, HintList("Test assign() range from array"));
+  Assert(ftlstFirst.size() == lstFirst.size(), HintList("Test assign() size() lstFirst"));
 }
 
 void TestErase() {
@@ -224,7 +230,6 @@ void TestErase() {
   AssertEqual(ftlst, lst, HintList("Test erase() position last elem"));
 }
 
-
 void TestAll() {
   TestRunner tr;
   tr.RunTest(TestBeginEnd, "TestBeginEnd");
@@ -237,6 +242,8 @@ void TestAll() {
   tr.RunTest(TestFrontBack, "TestFrontBack");
   tr.RunTest(TestAssign, "TestAssign");
   tr.RunTest(TestErase, "TestErase");
+  tr.RunTest(TestParamConstructorFill, "TestParamConstructorFill");
+  tr.RunTest(TestParamConstructorRange, "TestParamConstructorRange");
 
 }
 }

@@ -172,27 +172,34 @@ class List {
 
  private:
   NodeList<value_type> *shadow;
-  NodeList<value_type> *start;
-  NodeList<value_type> *finish;
   size_type currentSize;
 
  public:
-  explicit List() : shadow(new NodeList<value_type>()), start(nullptr), finish(nullptr), currentSize(0) {
+  explicit List() : shadow(new NodeList<value_type>()), currentSize(0) {
     shadow->next = shadow;
     shadow->prev = shadow;
   }
 
-  explicit List(size_type n, const value_type &val = value_type()) {
-    this();
-    insert(begin(), n, val);
+  explicit List(size_type n, const value_type &val = value_type()) : List(){
+    shadow_constructor(n, val, ft::type_true());
   }
 
   template<class InputIterator>
-  List(InputIterator first, InputIterator last) {
-    this();
+  List(InputIterator first, InputIterator last) : List() {
+    shadow_constructor(first, last, ft::type_is_primitive<InputIterator>());
+  }
+
+ private:
+  template<class InputIterator>
+  void shadow_constructor(InputIterator first, InputIterator last, ft::type_false) {
     insert(begin(), first, last);
   }
 
+  void shadow_constructor(size_type n, const value_type &val, ft::type_true) {
+    insert(begin(), n, val);
+  }
+
+ public:
   List(const List &x) {
     this();
     insert(begin(), x.begin(), x.end());
@@ -304,17 +311,18 @@ class List {
     return shadow->prev->value;
   }
 
+ private:
   template<class InputIterator>
   void shadow_assign(InputIterator first, InputIterator last, ft::type_false) {
     iterator it = begin();
-    currentSize = 0;
+//    currentSize = 0;
     while (first != last) {
       if (it == end()) {
         insert(it, first, last);
         return;
       }
       *it = *(first);
-      ++currentSize;
+//      ++currentSize;
       ++it;
       ++first;
     }
@@ -326,7 +334,7 @@ class List {
   void shadow_assign(size_type n, const value_type &val, ft::type_true) {
     iterator it = begin();
     iterator tmp = it;
-    currentSize = 0;
+//    currentSize = 0;
     if (it == end()) {
       insert(begin(), n, val);
       return;
@@ -345,6 +353,7 @@ class List {
     }
   }
 
+ public:
   template<class InputIterator>
   void assign(InputIterator first, InputIterator last) {
     shadow_assign(first, last, ft::type_is_primitive<InputIterator>());
