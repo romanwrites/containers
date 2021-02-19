@@ -6,7 +6,7 @@
 
 namespace ft {
 
-template<class T>
+template<class T, class Alloc = std::allocator<T> >
 class List;
 
 template<class Iter>
@@ -156,7 +156,7 @@ class BidirectionalListIt {
 };
 
 //	------------------------------------- LIST CONTAINER -----------------------------------------
-template<class T>
+template<class T, class Alloc>
 class List {
  public:
   typedef T value_type;
@@ -399,9 +399,9 @@ class List {
 
   void resize (size_type n, value_type val = value_type()) {
     if (n < currentSize) {
-      ft::List<value_type>::iterator it = end();
+      typename ft::List<value_type>::iterator it = end();
       --it;
-      ft::List<value_type>::iterator tmp = it;
+      typename ft::List<value_type>::iterator tmp = it;
       while (currentSize > n) {
         --it;
         erase(tmp);
@@ -413,6 +413,11 @@ class List {
   }
 
 };
+
+template <class T, class Alloc>
+void swap (List<T,Alloc>& x, List<T,Alloc>& y) {
+  x.swap(y);
+}
 
 //todo list operator==, operator<= etc
 }

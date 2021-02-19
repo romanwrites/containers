@@ -243,6 +243,14 @@ void TestSwap() {
   AssertEqual(ftlst2, lst2, HintList("Test swap() lst2"));
   Assert(ftlst1.size() == lst1.size(), HintList("Test swap() size() lst1"));
   Assert(ftlst2.size() == lst2.size(), HintList("Test swap() size() lst2"));
+
+  std::swap(lst1, lst2);
+  ft::swap(ftlst1, ftlst2);
+
+  AssertEqual(ftlst1, lst1, HintList("Test nonmember swap() lst1"));
+  AssertEqual(ftlst2, lst2, HintList("Test nonmember swap() lst2"));
+  Assert(ftlst1.size() == lst1.size(), HintList("Test nonmember swap() size() lst1"));
+  Assert(ftlst2.size() == lst2.size(), HintList("Test nonmember swap() size() lst2"));
 }
 
 void TestResize() {
