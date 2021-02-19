@@ -206,7 +206,7 @@ class List {
   }
 
   ~List() {
-//    clear();
+    clear();
     delete shadow;
   }
 
@@ -381,6 +381,20 @@ class List {
       tmp = first;
     }
     return iterator(first);
+  }
+
+  void clear() {
+    erase(begin(), end());
+  }
+
+  void swap (List& x) {
+    NodeList<value_type> *tmp = shadow;
+    shadow = x.shadow;
+    x.shadow = tmp;
+
+    size_type tmpSize = currentSize;
+    currentSize = x.currentSize;
+    x.currentSize = tmpSize;
   }
 
 };

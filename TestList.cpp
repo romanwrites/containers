@@ -230,6 +230,21 @@ void TestErase() {
   AssertEqual(ftlst, lst, HintList("Test erase() position last elem"));
 }
 
+void TestSwap() {
+  std::list<int> lst1(5, 42);
+  std::list<int> lst2(10, 21);
+  ft::List<int> ftlst1(5, 42);
+  ft::List<int> ftlst2(10, 21);
+
+  lst1.swap(lst2);
+  ftlst1.swap(ftlst2);
+
+  AssertEqual(ftlst1, lst1, HintList("Test swap() lst1"));
+  AssertEqual(ftlst2, lst2, HintList("Test swap() lst2"));
+  Assert(ftlst1.size() == lst1.size(), HintList("Test swap() size() lst1"));
+  Assert(ftlst2.size() == lst2.size(), HintList("Test swap() size() lst2"));
+}
+
 void TestAll() {
   TestRunner tr;
   tr.RunTest(TestBeginEnd, "TestBeginEnd");
@@ -244,6 +259,7 @@ void TestAll() {
   tr.RunTest(TestErase, "TestErase");
   tr.RunTest(TestParamConstructorFill, "TestParamConstructorFill");
   tr.RunTest(TestParamConstructorRange, "TestParamConstructorRange");
+  tr.RunTest(TestSwap, "TestSwap");
 
 }
 }
