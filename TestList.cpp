@@ -257,28 +257,46 @@ void TestResize() {
   std::list<int> lst;
   ft::List<int> ftlst;
 
-  for (int i=1; i<10; ++i) {
+  for (int i = 1; i < 10; ++i) {
     lst.push_back(i);
     ftlst.push_back(i);
   }
-  std::cout << ftlst << std::endl;
+
   lst.resize(5);
   ftlst.resize(5);
   AssertEqual(ftlst, lst, HintList("Test resize() lower bound"));
   Assert(ftlst.size() == lst.size(), HintList("Test resize() lower bound size()"));
 
-  std::cout << ftlst << std::endl;
-
-  lst.resize(8,100);
-  ftlst.resize(8,100);
+  lst.resize(8, 100);
+  ftlst.resize(8, 100);
   AssertEqual(ftlst, lst, HintList("Test resize() higher bound"));
   Assert(ftlst.size() == lst.size(), HintList("Test resize() higher bound size()"));
-  std::cout << ftlst << std::endl;
   lst.resize(12);
   ftlst.resize(12);
   AssertEqual(ftlst, lst, HintList("Test resize() higher bound with default value"));
   Assert(ftlst.size() == lst.size(), HintList("Test resize() higher bound with default value size()"));
-  std::cout << ftlst << std::endl;
+}
+
+void TestComparisonOperators() {
+  std::list<std::string> l1{"a", "b"};
+  std::list<std::string> l2{"a", "b"};
+  ft::List<std::string> fl1;
+  ft::List<std::string> fl2;
+  fl1.push_back("a");
+  fl2.push_back("a");
+  fl1.push_back("b");
+  fl2.push_back("b");
+
+  Assert(fl1 == fl2 && l1 == l2, HintList("Test operator==()"));
+  Assert(fl1 >= fl2 && l1 >= l2, HintList("Test operator>=() 1"));
+  Assert(fl1 <= fl2 && l1 <= l2, HintList("Test operator<=() 1"));
+
+  l1.push_back("a");
+  fl1.push_back("a");
+  Assert(fl1 != fl2 && l1 != l2, HintList("Test operator!=()"));
+  Assert(fl1 > fl2 && l1 > l2, HintList("Test operator>()"));
+  Assert(fl1 >= fl2 && l1 >= l2, HintList("Test operator>=() 2"));
+  Assert(fl2 <= fl1 && l2 <= l1, HintList("Test operator<=() 2"));
 }
 
 void TestAll() {
@@ -297,6 +315,7 @@ void TestAll() {
   tr.RunTest(TestParamConstructorRange, "TestParamConstructorRange");
   tr.RunTest(TestSwap, "TestSwap");
   tr.RunTest(TestResize, "TestResize");
+  tr.RunTest(TestComparisonOperators, "TestComparisonOperators");
 
 }
 }

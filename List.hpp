@@ -419,5 +419,59 @@ void swap (List<T,Alloc>& x, List<T,Alloc>& y) {
   x.swap(y);
 }
 
+template<class T, class Alloc>
+bool operator== (ft::List<T,Alloc> const &lhs, ft::List<T,Alloc> const &rhs) {
+  if (lhs.size() != rhs.size()) {
+    return false;
+  }
+
+  typename ft::List<T>::iterator itLhs = lhs.begin();
+  typename ft::List<T>::iterator itRhs = rhs.begin();
+
+  while (itLhs != lhs.end() && itRhs != rhs.end()) {
+    if (*itLhs != *itRhs) {
+      return false;
+    }
+    ++itLhs;
+    ++itRhs;
+  }
+  return true;
+}
+
+template<class T, class Alloc>
+bool operator!= (ft::List<T,Alloc> const &lhs, ft::List<T,Alloc> const &rhs) {
+  return !(lhs == rhs);
+}
+
+template<class T, class Alloc>
+bool operator< (ft::List<T,Alloc> const &lhs, ft::List<T,Alloc> const &rhs) {
+  typename ft::List<T,Alloc>::iterator itLhs = lhs.begin();
+  typename ft::List<T,Alloc>::iterator itRhs = rhs.begin();
+
+  while (itLhs != lhs.end() && itRhs != rhs.end()) {
+    if (*itLhs < *itRhs) {
+      return true;
+    }
+    ++itLhs;
+    ++itRhs;
+  }
+  return lhs.size() < rhs.size();
+}
+
+template<class T, class Alloc>
+bool operator> (ft::List<T,Alloc> const &lhs, ft::List<T,Alloc> const &rhs) {
+  return rhs < lhs;
+}
+
+template <class T, class Alloc>
+bool operator<= (ft::List<T,Alloc> const &lhs, ft::List<T,Alloc> const &rhs) {
+  return lhs < rhs || lhs == rhs;
+}
+
+template <class T, class Alloc>
+bool operator>= (ft::List<T,Alloc> const &lhs, ft::List<T,Alloc> const &rhs) {
+  return lhs > rhs || lhs == rhs;
+}
+
 //todo list operator==, operator<= etc
 }
