@@ -327,6 +327,15 @@ class List {
     insert(begin(), value);
   }
 
+  void pop_front() {
+    erase(begin());
+  }
+  void pop_back() {
+    iterator pos = end();
+    --pos;
+    erase(pos);
+  }
+
   // single element
   iterator insert(iterator position, const value_type &val) {
     NodeList<value_type> *insert_node = new NodeList<value_type>();
@@ -556,6 +565,4 @@ template <class T, class Alloc>
 bool operator>= (ft::List<T,Alloc> const &lhs, ft::List<T,Alloc> const &rhs) {
   return lhs > rhs || lhs == rhs;
 }
-
-//todo list operator==, operator<= etc
 }

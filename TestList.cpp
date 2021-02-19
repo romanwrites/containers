@@ -299,6 +299,29 @@ void TestComparisonOperators() {
   Assert(fl2 <= fl1 && l2 <= l1, HintList("Test operator<=() 2"));
 }
 
+void TestPop() {
+  std::list<int> lst(10, 21);
+  ft::List<int> ftlst(10, 21);
+
+  lst.pop_back();
+  ftlst.pop_back();
+  lst.pop_back();
+  ftlst.pop_back();
+  AssertEqual(ftlst, lst, HintList("Test pop_back()"));
+  Assert(ftlst.size() == lst.size(), HintList("Test pop_back() size() after"));
+
+  lst.pop_front();
+  ftlst.pop_front();
+  lst.pop_front();
+  ftlst.pop_front();
+  lst.pop_front();
+  ftlst.pop_front();
+  lst.pop_front();
+  ftlst.pop_front();
+  AssertEqual(ftlst, lst, HintList("Test pop_front()"));
+  Assert(ftlst.size() == lst.size(), HintList("Test pop_front() size() after"));
+}
+
 void TestAll() {
   TestRunner tr;
   tr.RunTest(TestBeginEnd, "TestBeginEnd");
@@ -316,6 +339,7 @@ void TestAll() {
   tr.RunTest(TestSwap, "TestSwap");
   tr.RunTest(TestResize, "TestResize");
   tr.RunTest(TestComparisonOperators, "TestComparisonOperators");
+  tr.RunTest(TestPop, "TestPop");
 
 }
 }
