@@ -157,28 +157,31 @@ void TestMaxSize() {
   AssertEqual(ftlst.max_size(), lst.max_size(), HintList("Test max_size()"));
 }
 
-//void TestAssign() {
-//  std::list<int>  lstFirst;
-//  std::list<int>  lstSecond;
-//  ft::List<int>   ftlstFirst;
-//  ft::List<int>   ftlstSecond;
-//
-//  lstFirst.assign (7,100);
-//  ftlstFirst.assign (7,100);
-//  AssertEqual(ftlstFirst, lstFirst, HintList("Test assign() fill"));
-//
-//  lstSecond.assign (lstFirst.begin(),lstFirst.end());
-//  ftlstSecond.assign (ftlstFirst.begin(),ftlstFirst.end());
-//  AssertEqual(ftlstSecond, lstSecond, HintList("Test assign() range"));
-//
+void TestAssign() {
+  std::list<int>  lstFirst;
+  std::list<int>  lstSecond;
+  ft::List<int>   ftlstFirst;
+  ft::List<int>   ftlstSecond;
+
+  lstFirst.assign (7,100);
+  ftlstFirst.assign (7,100);
+  AssertEqual(ftlstFirst, lstFirst, HintList("Test assign() fill"));
+  std::cout << ftlstFirst << std::endl;
+
+  lstSecond.assign (lstFirst.begin(),lstFirst.end());
+  ftlstSecond.assign (ftlstFirst.begin(), ftlstFirst.end());
+  AssertEqual(ftlstSecond, lstSecond, HintList("Test assign() range"));
+
+  std::cout << ftlstSecond << std::endl;
+
 //  int myints[]={1776,7,4};
 //  lstFirst.assign (myints,myints+3);
-//  ftlstSecond.assign (myints,myints+3);
+//  ftlstSecond.assign (myints, myints+3);
 //  AssertEqual(ftlstSecond, lstSecond, HintList("Test assign() range from array"));
-//
-//  std::cout << "Size of lstFirst: " << int (lstFirst.size()) << '\n';
-//  std::cout << "Size of second: " << int (lstSecond.size()) << '\n';
-//}
+
+  std::cout << "Size of lstFirst: " << int (lstFirst.size()) << '\n';
+  std::cout << "Size of second: " << int (lstSecond.size()) << '\n';
+}
 
 void TestErase() {
   std::list<int> lst;
@@ -232,7 +235,7 @@ void TestAll() {
   tr.RunTest(TestPushFront, "TestPushFront");
   tr.RunTest(TestMaxSize, "TestMaxSize");
   tr.RunTest(TestFrontBack, "TestFrontBack");
-//  tr.RunTest(TestAssign, "TestAssign");
+  tr.RunTest(TestAssign, "TestAssign");
   tr.RunTest(TestErase, "TestErase");
 
 }

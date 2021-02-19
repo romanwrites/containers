@@ -2,8 +2,10 @@
 
 #include <memory>
 #include <list>
+#include "Traits.h"
 
 namespace ft {
+
 template<class T>
 class List;
 
@@ -175,7 +177,31 @@ class List {
   size_type currentSize;
 
  public:
-  List() : shadow(new NodeList<value_type>()), start(nullptr), finish(nullptr), currentSize(0) {}
+  explicit List() : shadow(new NodeList<value_type>()), start(nullptr), finish(nullptr), currentSize(0) {
+    shadow->next = shadow;
+    shadow->prev = shadow;
+  }
+
+  explicit List(size_type n, const value_type &val = value_type()) {
+    this();
+    insert(begin(), n, val);
+  }
+
+  template<class InputIterator>
+  List(InputIterator first, InputIterator last) {
+    this();
+    insert(begin(), first, last);
+  }
+
+  List(const List &x) {
+    this();
+    insert(begin(), x.begin(), x.end());
+  }
+
+  ~List() {
+//    clear();
+    delete shadow;
+  }
 
   // ------------------- ITERATORS ----------------------
   iterator begin() {
@@ -250,7 +276,6 @@ class List {
     }
   }
 
-
   size_type size() const {
     return currentSize;
   }
@@ -279,31 +304,57 @@ class List {
     return shadow->prev->value;
   }
 
-//  template <class InputIterator>
-//  void assign (InputIterator first, InputIterator last) {
-//    iterator it = begin();
-//    currentSize = 0;
-//    while (first != last) {
-//      if (it == end()) {
-//        insert(first, last);
-//      }
-//      *it = *first;
-//      ++currentSize;
-//      ++it;
-//      ++first;
-//    }
-//    if (it != end()) {
-//      erase(it, end());
-//    }
-//  }
-
-  void assign (size_type n, const value_type& val) {
-    (void)n;
-    (void)val;
-    // todo
+  template<class InputIterator>
+  void shadow_assign(InputIterator first, InputIterator last, ft::type_false) {
+    iterator it = begin();
+    currentSize = 0;
+    while (first != last) {
+      if (it == end()) {
+        insert(it, first, last);
+        return;
+      }
+      *it = *(first);
+      ++currentSize;
+      ++it;
+      ++first;
+    }
+    if (it != end()) {
+      erase(it, end());
+    }
   }
 
-  iterator erase (iterator position) {
+  void shadow_assign(size_type n, const value_type &val, ft::type_true) {
+    iterator it = begin();
+    iterator tmp = it;
+    currentSize = 0;
+    if (it == end()) {
+      insert(begin(), n, val);
+      return;
+    }
+    for (size_type i = 0; i < n; i++) {
+      if (it == end()) {
+        insert(it, n - i - 1, val);
+        return;
+      }
+      ++it;
+      *tmp = val;
+      tmp = it;
+    }
+    if (it != end()) {
+      erase(it, end());
+    }
+  }
+
+  template<class InputIterator>
+  void assign(InputIterator first, InputIterator last) {
+    shadow_assign(first, last, ft::type_is_primitive<InputIterator>());
+  }
+
+  void assign(size_type n, const value_type &val) {
+    shadow_assign(n, val, ft::type_true());
+  }
+
+  iterator erase(iterator position) {
     NodeList<value_type> *pos = position.ptr;
     currentSize--;
     NodeList<value_type> *prev = pos->prev;
@@ -313,7 +364,7 @@ class List {
     return iterator(prev->next);
   }
 
-  iterator erase (iterator first, iterator last) {
+  iterator erase(iterator first, iterator last) {
     iterator tmp = first;
     while (first != last) {
       ++first;
