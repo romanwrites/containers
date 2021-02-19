@@ -245,6 +245,34 @@ void TestSwap() {
   Assert(ftlst2.size() == lst2.size(), HintList("Test swap() size() lst2"));
 }
 
+void TestResize() {
+  std::list<int> lst;
+  ft::List<int> ftlst;
+
+  for (int i=1; i<10; ++i) {
+    lst.push_back(i);
+    ftlst.push_back(i);
+  }
+  std::cout << ftlst << std::endl;
+  lst.resize(5);
+  ftlst.resize(5);
+  AssertEqual(ftlst, lst, HintList("Test resize() lower bound"));
+  Assert(ftlst.size() == lst.size(), HintList("Test resize() lower bound size()"));
+
+  std::cout << ftlst << std::endl;
+
+  lst.resize(8,100);
+  ftlst.resize(8,100);
+  AssertEqual(ftlst, lst, HintList("Test resize() higher bound"));
+  Assert(ftlst.size() == lst.size(), HintList("Test resize() higher bound size()"));
+  std::cout << ftlst << std::endl;
+  lst.resize(12);
+  ftlst.resize(12);
+  AssertEqual(ftlst, lst, HintList("Test resize() higher bound with default value"));
+  Assert(ftlst.size() == lst.size(), HintList("Test resize() higher bound with default value size()"));
+  std::cout << ftlst << std::endl;
+}
+
 void TestAll() {
   TestRunner tr;
   tr.RunTest(TestBeginEnd, "TestBeginEnd");
@@ -260,6 +288,7 @@ void TestAll() {
   tr.RunTest(TestParamConstructorFill, "TestParamConstructorFill");
   tr.RunTest(TestParamConstructorRange, "TestParamConstructorRange");
   tr.RunTest(TestSwap, "TestSwap");
+  tr.RunTest(TestResize, "TestResize");
 
 }
 }

@@ -25,7 +25,7 @@ class TestRunner {
     try {
       func();
       // Use cerr to not mix tests output and program output
-      std::cerr << test_name << ": "
+      std::cerr << KHAKI_SET << test_name << ": "
                 << SPRING_GREEN_SET << "OK" << RESET << std::endl;
     } catch (std::runtime_error &ex) {
       ++fail_count;
