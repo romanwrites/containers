@@ -6,6 +6,28 @@
 
 namespace ft {
 
+// -------------------------------------- COMPARE -------------------------------------
+template<class Arg1, class Arg2, class Result>
+struct binary_function {
+  typedef Arg1 first_argument_type;
+  typedef Arg2 second_argument_type;
+  typedef Result result_type;
+};
+
+template<class T>
+struct less : binary_function<T, T, bool> {
+  bool operator()(T const &x, T const &y) const {
+    return x < y;
+  }
+};
+
+template<class T>
+struct greater : binary_function<T, T, bool> {
+  bool operator()(T const &x, T const &y) const {
+    return x > y;
+  }
+};
+
 // -------------------------------------- TAGS -------------------------------------
 struct input_iterator_tag {};
 struct output_iterator_tag {};
@@ -330,6 +352,7 @@ class List {
   void pop_front() {
     erase(begin());
   }
+
   void pop_back() {
     iterator pos = end();
     --pos;
@@ -516,15 +539,7 @@ class List {
   }
 
   void splice(iterator position, List &x, iterator first, iterator last) {
-    iterator start = first;
-    iterator finish = last;
-
-    size_type dist = 0;
-
-    while (start != finish) {
-      ++dist;
-      ++start;
-    }
+    size_type dist = distance(first, last);
 
     NodeList<T> *tmp_last_prev = last.ptr->prev;
     first.ptr->prev->next = last.ptr;
@@ -539,7 +554,7 @@ class List {
     x.currentSize -= dist;
   }
 
-  void remove (const value_type& val) {
+  void remove(const value_type &val) {
     iterator it = begin();
     iterator tmp = it;
 
@@ -554,8 +569,8 @@ class List {
     }
   }
 
-  template <class Predicate>
-  void remove_if (Predicate pred) {
+  template<class Predicate>
+  void remove_if(Predicate pred) {
     iterator it = begin();
     iterator tmp = it;
 
@@ -568,6 +583,101 @@ class List {
       tmp = it;
       ++it;
     }
+  }
+//
+//  void unique() {
+//
+//  }
+//
+//  template <class BinaryPredicate>
+//  void unique (BinaryPredicate binary_pred) {
+//
+//  }
+
+  void sort() {
+    if (currentSize <= 1) {
+      return;
+    }
+    iterator start = begin();
+    iterator finish = end();
+    sort(ft::less<value_type>());
+  }
+
+  template<class Compare>
+  void sort(Compare comp) {
+    if (currentSize <= 1) {
+      return;
+    }
+    iterator start = begin();
+    iterator finish = end();
+    (void) comp;
+    //todo
+  }
+
+  void merge(List &x) {
+    if (x.size() < 1) {
+      return;
+    }
+    merge(x, ft::less<value_type>());
+  }
+
+  template<class Compare>
+  void merge(List &x, Compare comp) {
+    NodeList<T> *last = shadow;
+
+    iterator this_it = begin();
+    iterator x_it = x.begin();
+
+    while (this_it != end() && x_it != x.end()) {
+      if (comp(*this_it, *x_it)) {
+        last->next = this_it.ptr;
+        this_it.ptr->prev = last;
+        last = this_it.ptr;
+        ++this_it;
+      } else {
+        last->next = x_it.ptr;
+        x_it.ptr->prev = last;
+        last = x_it.ptr;
+        ++x_it;
+      }
+    }
+    if (this_it != end()) {
+      last->next = this_it.ptr;
+    }
+    if (x_it != x.end()) {
+      last->next = x_it.ptr;
+    }
+    x.shadow->next = x.shadow;
+    x.shadow->prev = x.shadow;
+    currentSize += x.currentSize;
+    x.currentSize = 0;
+  }
+
+ private:
+  void swap(value_type *a, value_type *b) {
+    value_type tmp = *a;
+    *a = *b;
+    *b = tmp;
+  }
+
+  size_type distance(iterator start, iterator finish) {
+    size_type dist = 0;
+
+    while (start != finish) {
+      ++dist;
+      ++start;
+    }
+    return dist;
+  }
+
+  size_type distance(NodeList<T> *start, NodeList<T> *finish) {
+    size_type dist = 0;
+
+    while (start != finish) {
+      ++dist;
+      start = start->next;
+    }
+    return dist;
   }
 
 };
@@ -630,4 +740,6 @@ template<class T, class Alloc>
 bool operator>=(ft::List<T, Alloc> const &lhs, ft::List<T, Alloc> const &rhs) {
   return lhs > rhs || lhs == rhs;
 }
+
+
 }

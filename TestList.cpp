@@ -429,6 +429,44 @@ void TestRemoveIf() {
   AssertEqual(ftlst, lst, HintList("Test remove_if()"));
   Assert(ftlst.size() == lst.size(), HintList("Test remove_if() size() after"));
 }
+//
+//void TestSort() {
+//  std::vector<int> v{2, 4, 6, 1, -5, -6, -1, 3, 7, 0, 4, 2, 1, -3, 5, 8, 10, 11, -10, 22, 21};
+//  std::list<int> lst(v.begin(), v.end());
+//  ft::List<int> ftlst(v.begin(), v.end());
+//
+//  lst.sort();
+//  ftlst.sort();
+//  std::cout << lst << std::endl;
+//  std::cout << ftlst << std::endl;
+//
+//
+//}
+
+void TestMerge() {
+  std::list<std::string> l1{"one", "two", "three"};
+  std::list<std::string> l2{"one", "two", "three"};
+
+  ft::List<std::string> f1;
+  ft::List<std::string> f2;
+
+  f1.push_back("one");
+  f2.push_back("one");
+  f1.push_back("two");
+  f2.push_back("two");
+  f1.push_back("three");
+  f2.push_back("three");
+
+  l1.merge(l2);
+  std::cout << f1 << std::endl;
+  std::cout << f2 << std::endl;
+
+  f1.merge(f2);
+  std::cout << l1 << std::endl;
+  std::cout << l2 << std::endl;
+  std::cout << f1 << std::endl;
+  std::cout << f2 << std::endl;
+}
 
 void TestAll() {
   TestRunner tr;
@@ -451,6 +489,8 @@ void TestAll() {
   tr.RunTest(TestSplice, "TestSplice");
   tr.RunTest(TestRemove, "TestRemove");
   tr.RunTest(TestRemoveIf, "TestRemoveIf");
+//  tr.RunTest(TestSort, "TestSort");
+  tr.RunTest(TestMerge, "TestMerge");
 
 }
 }
