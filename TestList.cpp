@@ -405,6 +405,31 @@ void TestRemove() {
   Assert(l.size() == 4, HintList("Test remove() elements by value \"one\" size() after"));
 }
 
+bool isNegative(int const &val) {
+  return val < 0;
+}
+
+struct IsEven {
+  bool operator()(const int &val) {
+    return (val % 2) == 0;
+  }
+};
+
+void TestRemoveIf() {
+  std::vector<int> v{2, 4, 6, 1, -5, -6, -1, 3, 7, 0, 4, 2, 1, -3, 5, 8, 10, 11, -10, 22, 21};
+  std::list<int> lst(v.begin(), v.end());
+  ft::List<int> ftlst(v.begin(), v.end());
+
+  lst.remove_if(isNegative);
+  ftlst.remove_if(isNegative);
+
+  lst.remove_if(IsEven());
+  ftlst.remove_if(IsEven());
+
+  AssertEqual(ftlst, lst, HintList("Test remove_if()"));
+  Assert(ftlst.size() == lst.size(), HintList("Test remove_if() size() after"));
+}
+
 void TestAll() {
   TestRunner tr;
   tr.RunTest(TestBeginEnd, "TestBeginEnd");
@@ -425,6 +450,7 @@ void TestAll() {
   tr.RunTest(TestPop, "TestPop");
   tr.RunTest(TestSplice, "TestSplice");
   tr.RunTest(TestRemove, "TestRemove");
+  tr.RunTest(TestRemoveIf, "TestRemoveIf");
 
 }
 }

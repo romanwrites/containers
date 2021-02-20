@@ -554,6 +554,22 @@ class List {
     }
   }
 
+  template <class Predicate>
+  void remove_if (Predicate pred) {
+    iterator it = begin();
+    iterator tmp = it;
+
+    --tmp;
+    while (it != end()) {
+      if (pred(*it)) {
+        erase(it);
+        it = tmp;
+      }
+      tmp = it;
+      ++it;
+    }
+  }
+
 };
 
 template<class T, class Alloc>
