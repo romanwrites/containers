@@ -623,34 +623,19 @@ class List {
 
   template<class Compare>
   void merge(List &x, Compare comp) {
-    NodeList<T> *last = shadow;
-
     iterator this_it = begin();
     iterator x_it = x.begin();
 
     while (this_it != end() && x_it != x.end()) {
       if (comp(*this_it, *x_it)) {
-        last->next = this_it.ptr;
-        this_it.ptr->prev = last;
-        last = this_it.ptr;
-        ++this_it;
+        splice(this_it, *this, x_it);
       } else {
-        last->next = x_it.ptr;
-        x_it.ptr->prev = last;
-        last = x_it.ptr;
-        ++x_it;
+        ++this_it;
       }
     }
-    if (this_it != end()) {
-      last->next = this_it.ptr;
-    }
     if (x_it != x.end()) {
-      last->next = x_it.ptr;
+      splice(this_it, *this, x_it, x.end());
     }
-    x.shadow->next = x.shadow;
-    x.shadow->prev = x.shadow;
-    currentSize += x.currentSize;
-    x.currentSize = 0;
   }
 
  private:
