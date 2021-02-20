@@ -368,6 +368,43 @@ void TestSplice() {
   Assert(ftlst1.size() == lst1.size(), HintList("Test splice() entire list lst size() after"));
 }
 
+void TestRemove() {
+  std::list<int> lst;
+  ft::List<int> ftlst;
+
+  for (int i = 1; i < 10; ++i) {
+    lst.push_back(i);
+    ftlst.push_back(i);
+  }
+
+  lst.resize(18, 100);
+  ftlst.resize(18, 100);
+  lst.resize(20);
+  ftlst.resize(20);
+
+  lst.remove(9);
+  ftlst.remove(9);
+  AssertEqual(ftlst, lst, HintList("Test remove() single element"));
+  Assert(ftlst.size() == lst.size(), HintList("Test remove() single element size() after"));
+
+  lst.remove(100);
+  ftlst.remove(100);
+  AssertEqual(ftlst, lst, HintList("Test remove() elements by value 100"));
+  Assert(ftlst.size() == lst.size(), HintList("Test remove() elements by value 100 size() after"));
+
+  ft::List<std::string> l;
+  l.push_back("one");
+  l.push_back("two");
+  l.push_back("one");
+  l.push_back("two");
+  l.push_back("onw");
+  l.push_back("three");
+  l.push_back("one");
+
+  l.remove("one");
+  Assert(l.size() == 4, HintList("Test remove() elements by value \"one\" size() after"));
+}
+
 void TestAll() {
   TestRunner tr;
   tr.RunTest(TestBeginEnd, "TestBeginEnd");
@@ -387,6 +424,7 @@ void TestAll() {
   tr.RunTest(TestComparisonOperators, "TestComparisonOperators");
   tr.RunTest(TestPop, "TestPop");
   tr.RunTest(TestSplice, "TestSplice");
+  tr.RunTest(TestRemove, "TestRemove");
 
 }
 }

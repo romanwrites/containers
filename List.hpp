@@ -539,6 +539,21 @@ class List {
     x.currentSize -= dist;
   }
 
+  void remove (const value_type& val) {
+    iterator it = begin();
+    iterator tmp = it;
+
+    --tmp;
+    while (it != end()) {
+      if (*it == val) {
+        erase(it);
+        it = tmp;
+      }
+      tmp = it;
+      ++it;
+    }
+  }
+
 };
 
 template<class T, class Alloc>
