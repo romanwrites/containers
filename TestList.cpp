@@ -322,6 +322,52 @@ void TestPop() {
   Assert(ftlst.size() == lst.size(), HintList("Test pop_front() size() after"));
 }
 
+void TestSplice() {
+  std::list<int> lst(10, 21);
+  std::list<int> lst1(3, 42);
+  ft::List<int> ftlst(10, 21);
+  ft::List<int> ftlst1(3, 42);
+
+  // RANGE
+  lst1.splice(lst1.end(), lst, lst.begin(), lst.end());
+  ftlst1.splice(ftlst1.end(), ftlst, ftlst.begin(), ftlst.end());
+
+  AssertEqual(ftlst, lst, HintList("Test splice() ranged lst"));
+  Assert(ftlst.size() == lst.size(), HintList("Test splice() ranged lst size() after"));
+
+  AssertEqual(ftlst1, lst1, HintList("Test splice() ranged lst1"));
+  Assert(ftlst1.size() == lst1.size(), HintList("Test splice() ranged lst size() after"));
+
+  lst.splice(lst.end(), lst1, lst1.begin(), lst1.end());
+  ftlst.splice(ftlst.end(), ftlst1, ftlst1.begin(), ftlst1.end());
+
+  AssertEqual(ftlst, lst, HintList("Test splice() ranged lst reversed"));
+  Assert(ftlst.size() == lst.size(), HintList("Test splice() ranged lst size() after reversed"));
+
+  AssertEqual(ftlst1, lst1, HintList("Test splice() ranged lst1 reversed"));
+  Assert(ftlst1.size() == lst1.size(), HintList("Test splice() ranged lst size() after reversed"));
+
+  // SINGLE
+  lst1.splice(lst1.begin(), lst, lst.begin());
+  ftlst1.splice(ftlst1.begin(), ftlst, ftlst.begin());
+
+  AssertEqual(ftlst, lst, HintList("Test splice() single lst"));
+  Assert(ftlst.size() == lst.size(), HintList("Test splice() single lst size() after"));
+
+  AssertEqual(ftlst1, lst1, HintList("Test splice() single lst1"));
+  Assert(ftlst1.size() == lst1.size(), HintList("Test splice() single lst size() after"));
+
+  // ENTIRE LIST
+  lst1.splice(lst1.begin(), lst);
+  ftlst1.splice(ftlst1.begin(), ftlst);
+
+  AssertEqual(ftlst, lst, HintList("Test splice() entire list lst"));
+  Assert(ftlst.size() == lst.size(), HintList("Test splice() entire list lst size() after"));
+
+  AssertEqual(ftlst1, lst1, HintList("Test splice() entire list lst1"));
+  Assert(ftlst1.size() == lst1.size(), HintList("Test splice() entire list lst size() after"));
+}
+
 void TestAll() {
   TestRunner tr;
   tr.RunTest(TestBeginEnd, "TestBeginEnd");
@@ -340,6 +386,7 @@ void TestAll() {
   tr.RunTest(TestResize, "TestResize");
   tr.RunTest(TestComparisonOperators, "TestComparisonOperators");
   tr.RunTest(TestPop, "TestPop");
+  tr.RunTest(TestSplice, "TestSplice");
 
 }
 }

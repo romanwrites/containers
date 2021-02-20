@@ -165,7 +165,7 @@ class BidirectionalListIt {
 
 //	------------------------------------- LIST REVERSE ITERATOR -----------------------------------------
 template<class Category, class Iter>
-class BidirectionalListReverseIt : public BidirectionalListIt<Category, Iter>{
+class BidirectionalListReverseIt : public BidirectionalListIt<Category, Iter> {
  private:
 //  NodeList<Iter> *ptr;
   friend class List<Iter>;
@@ -183,7 +183,7 @@ class BidirectionalListReverseIt : public BidirectionalListIt<Category, Iter>{
   typedef BidirectionalListIt<Category, Iter> iterator;
   typedef BidirectionalListIt<Category, Iter> base_iterator;
 
-  explicit BidirectionalListReverseIt() throw() : base_iterator() {}
+  explicit BidirectionalListReverseIt() throw(): base_iterator() {}
   explicit BidirectionalListReverseIt(NodeList<Iter> *p) throw(): base_iterator(p) {}
   explicit BidirectionalListReverseIt(const NodeList<const Iter> *p) throw() {
     this->ptr = const_cast<NodeList<const Iter> *>(p);
@@ -248,7 +248,7 @@ class List {
     shadow->prev = shadow;
   }
 
-  explicit List(size_type n, const value_type &val = value_type()) : List(){
+  explicit List(size_type n, const value_type &val = value_type()) : List() {
     shadow_constructor(n, val, ft::type_true());
   }
 
@@ -480,7 +480,7 @@ class List {
     erase(begin(), end());
   }
 
-  void swap (List& x) {
+  void swap(List &x) {
     NodeList<value_type> *tmp = shadow;
     shadow = x.shadow;
     x.shadow = tmp;
@@ -490,7 +490,7 @@ class List {
     x.currentSize = tmpSize;
   }
 
-  void resize (size_type n, value_type val = value_type()) {
+  void resize(size_type n, value_type val = value_type()) {
     if (n < currentSize) {
       typename ft::List<value_type>::iterator it = end();
       --it;
@@ -505,15 +505,49 @@ class List {
     }
   }
 
+  void splice(iterator position, List &x) {
+    splice(position, x, x.begin(), x.end());
+  }
+
+  void splice(iterator position, List &x, iterator i) {
+    iterator last = i;
+    ++last;
+    splice(position, x, i, last);
+  }
+
+  void splice(iterator position, List &x, iterator first, iterator last) {
+    iterator start = first;
+    iterator finish = last;
+
+    size_type dist = 0;
+
+    while (start != finish) {
+      ++dist;
+      ++start;
+    }
+
+    NodeList<T> *tmp_last_prev = last.ptr->prev;
+    first.ptr->prev->next = last.ptr;
+    last.ptr->prev = first.ptr->prev;
+    NodeList<T> *tmp_pos_prev = position.ptr->prev;
+    position.ptr->prev->next = first.ptr;
+    position.ptr->prev = tmp_last_prev;
+    first.ptr->prev = tmp_pos_prev;
+    tmp_last_prev->next = position.ptr;
+
+    currentSize += dist;
+    x.currentSize -= dist;
+  }
+
 };
 
-template <class T, class Alloc>
-void swap (List<T,Alloc>& x, List<T,Alloc>& y) {
+template<class T, class Alloc>
+void swap(List<T, Alloc> &x, List<T, Alloc> &y) {
   x.swap(y);
 }
 
 template<class T, class Alloc>
-bool operator== (ft::List<T,Alloc> const &lhs, ft::List<T,Alloc> const &rhs) {
+bool operator==(ft::List<T, Alloc> const &lhs, ft::List<T, Alloc> const &rhs) {
   if (lhs.size() != rhs.size()) {
     return false;
   }
@@ -532,14 +566,14 @@ bool operator== (ft::List<T,Alloc> const &lhs, ft::List<T,Alloc> const &rhs) {
 }
 
 template<class T, class Alloc>
-bool operator!= (ft::List<T,Alloc> const &lhs, ft::List<T,Alloc> const &rhs) {
+bool operator!=(ft::List<T, Alloc> const &lhs, ft::List<T, Alloc> const &rhs) {
   return !(lhs == rhs);
 }
 
 template<class T, class Alloc>
-bool operator< (ft::List<T,Alloc> const &lhs, ft::List<T,Alloc> const &rhs) {
-  typename ft::List<T,Alloc>::iterator itLhs = lhs.begin();
-  typename ft::List<T,Alloc>::iterator itRhs = rhs.begin();
+bool operator<(ft::List<T, Alloc> const &lhs, ft::List<T, Alloc> const &rhs) {
+  typename ft::List<T, Alloc>::iterator itLhs = lhs.begin();
+  typename ft::List<T, Alloc>::iterator itRhs = rhs.begin();
 
   while (itLhs != lhs.end() && itRhs != rhs.end()) {
     if (*itLhs < *itRhs) {
@@ -552,17 +586,17 @@ bool operator< (ft::List<T,Alloc> const &lhs, ft::List<T,Alloc> const &rhs) {
 }
 
 template<class T, class Alloc>
-bool operator> (ft::List<T,Alloc> const &lhs, ft::List<T,Alloc> const &rhs) {
+bool operator>(ft::List<T, Alloc> const &lhs, ft::List<T, Alloc> const &rhs) {
   return rhs < lhs;
 }
 
-template <class T, class Alloc>
-bool operator<= (ft::List<T,Alloc> const &lhs, ft::List<T,Alloc> const &rhs) {
+template<class T, class Alloc>
+bool operator<=(ft::List<T, Alloc> const &lhs, ft::List<T, Alloc> const &rhs) {
   return lhs < rhs || lhs == rhs;
 }
 
-template <class T, class Alloc>
-bool operator>= (ft::List<T,Alloc> const &lhs, ft::List<T,Alloc> const &rhs) {
+template<class T, class Alloc>
+bool operator>=(ft::List<T, Alloc> const &lhs, ft::List<T, Alloc> const &rhs) {
   return lhs > rhs || lhs == rhs;
 }
 }
