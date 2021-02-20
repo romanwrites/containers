@@ -2,6 +2,7 @@
 #include "List.hpp"
 
 namespace TestList {
+
 void TestInsert() {
   std::list<std::string> lst;
   ft::List<std::string> ftlst;
@@ -57,7 +58,6 @@ void TestPushBack() {
     ftlst.push_back(i);
   }
 
-  Assert(ftlst.size() == lst.size(), HintList("Test push_back() size()"));
   AssertEqual(ftlst, lst, HintList("Test push_back() equality"));
 }
 
@@ -70,7 +70,6 @@ void TestPushFront() {
     ftlst.push_front(i);
   }
 
-  Assert(ftlst.size() == lst.size(), HintList("Test push_front() size()"));
   AssertEqual(ftlst, lst, HintList("Test push_front() equality"));
 }
 
@@ -78,7 +77,6 @@ void TestParamConstructorFill() {
   std::list<int> lst(21, 42);
   ft::List<int> ftlst(21, 42);
 
-  Assert(ftlst.size() == lst.size(), HintList("Test fill constructor size()"));
   AssertEqual(ftlst, lst, HintList("Test fill constructor lists equality"));
 }
 
@@ -87,7 +85,6 @@ void TestParamConstructorRange() {
   std::list<std::string> lst(v.begin(), v.end());
   ft::List<std::string> ftlst(v.begin(), v.end());
 
-  Assert(ftlst.size() == lst.size(), HintList("Test range constructor size()"));
   AssertEqual(ftlst, lst, HintList("Test range constructor lists equality"));
 }
 
@@ -241,7 +238,7 @@ void TestSwap() {
 
   AssertEqual(ftlst1, lst1, HintList("Test swap() lst1"));
   AssertEqual(ftlst2, lst2, HintList("Test swap() lst2"));
-  Assert(ftlst1.size() == lst1.size(), HintList("Test swap() size() lst1"));
+
   Assert(ftlst2.size() == lst2.size(), HintList("Test swap() size() lst2"));
 
   std::swap(lst1, lst2);
@@ -249,8 +246,6 @@ void TestSwap() {
 
   AssertEqual(ftlst1, lst1, HintList("Test nonmember swap() lst1"));
   AssertEqual(ftlst2, lst2, HintList("Test nonmember swap() lst2"));
-  Assert(ftlst1.size() == lst1.size(), HintList("Test nonmember swap() size() lst1"));
-  Assert(ftlst2.size() == lst2.size(), HintList("Test nonmember swap() size() lst2"));
 }
 
 void TestResize() {
@@ -265,16 +260,13 @@ void TestResize() {
   lst.resize(5);
   ftlst.resize(5);
   AssertEqual(ftlst, lst, HintList("Test resize() lower bound"));
-  Assert(ftlst.size() == lst.size(), HintList("Test resize() lower bound size()"));
 
   lst.resize(8, 100);
   ftlst.resize(8, 100);
   AssertEqual(ftlst, lst, HintList("Test resize() higher bound"));
-  Assert(ftlst.size() == lst.size(), HintList("Test resize() higher bound size()"));
   lst.resize(12);
   ftlst.resize(12);
   AssertEqual(ftlst, lst, HintList("Test resize() higher bound with default value"));
-  Assert(ftlst.size() == lst.size(), HintList("Test resize() higher bound with default value size()"));
 }
 
 void TestComparisonOperators() {
@@ -288,7 +280,7 @@ void TestComparisonOperators() {
   fl2.push_back("b");
 
   Assert(fl1 == fl2 && l1 == l2, HintList("Test operator==()"));
-  Assert(fl1 >= fl2 && l1 >= l2, HintList("Test operator>=() 1"));
+
   Assert(fl1 <= fl2 && l1 <= l2, HintList("Test operator<=() 1"));
 
   l1.push_back("a");
@@ -308,7 +300,6 @@ void TestPop() {
   lst.pop_back();
   ftlst.pop_back();
   AssertEqual(ftlst, lst, HintList("Test pop_back()"));
-  Assert(ftlst.size() == lst.size(), HintList("Test pop_back() size() after"));
 
   lst.pop_front();
   ftlst.pop_front();
@@ -319,7 +310,6 @@ void TestPop() {
   lst.pop_front();
   ftlst.pop_front();
   AssertEqual(ftlst, lst, HintList("Test pop_front()"));
-  Assert(ftlst.size() == lst.size(), HintList("Test pop_front() size() after"));
 }
 
 void TestSplice() {
@@ -333,39 +323,27 @@ void TestSplice() {
   ftlst1.splice(ftlst1.end(), ftlst, ftlst.begin(), ftlst.end());
 
   AssertEqual(ftlst, lst, HintList("Test splice() ranged lst"));
-  Assert(ftlst.size() == lst.size(), HintList("Test splice() ranged lst size() after"));
-
   AssertEqual(ftlst1, lst1, HintList("Test splice() ranged lst1"));
-  Assert(ftlst1.size() == lst1.size(), HintList("Test splice() ranged lst size() after"));
 
   lst.splice(lst.end(), lst1, lst1.begin(), lst1.end());
   ftlst.splice(ftlst.end(), ftlst1, ftlst1.begin(), ftlst1.end());
 
   AssertEqual(ftlst, lst, HintList("Test splice() ranged lst reversed"));
-  Assert(ftlst.size() == lst.size(), HintList("Test splice() ranged lst size() after reversed"));
-
   AssertEqual(ftlst1, lst1, HintList("Test splice() ranged lst1 reversed"));
-  Assert(ftlst1.size() == lst1.size(), HintList("Test splice() ranged lst size() after reversed"));
 
   // SINGLE
   lst1.splice(lst1.begin(), lst, lst.begin());
   ftlst1.splice(ftlst1.begin(), ftlst, ftlst.begin());
 
   AssertEqual(ftlst, lst, HintList("Test splice() single lst"));
-  Assert(ftlst.size() == lst.size(), HintList("Test splice() single lst size() after"));
-
   AssertEqual(ftlst1, lst1, HintList("Test splice() single lst1"));
-  Assert(ftlst1.size() == lst1.size(), HintList("Test splice() single lst size() after"));
 
   // ENTIRE LIST
   lst1.splice(lst1.begin(), lst);
   ftlst1.splice(ftlst1.begin(), ftlst);
 
   AssertEqual(ftlst, lst, HintList("Test splice() entire list lst"));
-  Assert(ftlst.size() == lst.size(), HintList("Test splice() entire list lst size() after"));
-
   AssertEqual(ftlst1, lst1, HintList("Test splice() entire list lst1"));
-  Assert(ftlst1.size() == lst1.size(), HintList("Test splice() entire list lst size() after"));
 }
 
 void TestRemove() {
@@ -385,12 +363,10 @@ void TestRemove() {
   lst.remove(9);
   ftlst.remove(9);
   AssertEqual(ftlst, lst, HintList("Test remove() single element"));
-  Assert(ftlst.size() == lst.size(), HintList("Test remove() single element size() after"));
 
   lst.remove(100);
   ftlst.remove(100);
   AssertEqual(ftlst, lst, HintList("Test remove() elements by value 100"));
-  Assert(ftlst.size() == lst.size(), HintList("Test remove() elements by value 100 size() after"));
 
   ft::List<std::string> l;
   l.push_back("one");
@@ -427,21 +403,30 @@ void TestRemoveIf() {
   ftlst.remove_if(IsEven());
 
   AssertEqual(ftlst, lst, HintList("Test remove_if()"));
-  Assert(ftlst.size() == lst.size(), HintList("Test remove_if() size() after"));
 }
-//
-//void TestSort() {
-//  std::vector<int> v{2, 4, 6, 1, -5, -6, -1, 3, 7, 0, 4, 2, 1, -3, 5, 8, 10, 11, -10, 22, 21};
-//  std::list<int> lst(v.begin(), v.end());
-//  ft::List<int> ftlst(v.begin(), v.end());
-//
-//  lst.sort();
-//  ftlst.sort();
-//  std::cout << lst << std::endl;
-//  std::cout << ftlst << std::endl;
-//
-//
-//}
+
+void TestSort() {
+  std::vector<int> v{2, 4, 6, 1, -5, -6, -1, 3, 7, 0, 4, 2, 1, -3, 5, 8, 10, 11, -10, 22, 21};
+  std::list<int> lst(v.begin(), v.end());
+  ft::List<int> ftlst(v.begin(), v.end());
+  std::cout << lst << std::endl;
+  std::cout << ftlst << std::endl;
+  std::cout << ftlst.size() << std::endl;
+
+  lst.sort();
+  ftlst.sort();
+  std::cout << lst << std::endl;
+  std::cout << ftlst << std::endl;
+  std::cout << ftlst.size() << std::endl;
+  AssertEqual(ftlst, lst, HintList("Test sort() less"));
+
+  lst.sort(std::greater());
+  ftlst.sort(std::greater());
+  std::cout << lst << std::endl;
+  std::cout << ftlst << std::endl;
+  std::cout << ftlst.size() << std::endl;
+  AssertEqual(ftlst, lst, HintList("Test sort() greater"));
+}
 
 void TestMerge() {
   std::list<std::string> l1{"one", "two", "three"};
@@ -458,14 +443,9 @@ void TestMerge() {
   f2.push_back("three");
 
   l1.merge(l2);
-  std::cout << f1 << std::endl;
-  std::cout << f2 << std::endl;
-
   f1.merge(f2);
-  std::cout << l1 << std::endl;
-  std::cout << l2 << std::endl;
-  std::cout << f1 << std::endl;
-  std::cout << f2 << std::endl;
+  AssertEqual(f1, l1, HintList("Test merge() l1"));
+  AssertEqual(f2, l2, HintList("Test merge() l2"));
 }
 
 void TestAll() {
@@ -489,7 +469,7 @@ void TestAll() {
   tr.RunTest(TestSplice, "TestSplice");
   tr.RunTest(TestRemove, "TestRemove");
   tr.RunTest(TestRemoveIf, "TestRemoveIf");
-//  tr.RunTest(TestSort, "TestSort");
+  tr.RunTest(TestSort, "TestSort");
   tr.RunTest(TestMerge, "TestMerge");
 
 }

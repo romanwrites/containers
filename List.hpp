@@ -541,16 +541,16 @@ class List {
   void splice(iterator position, List &x, iterator first, iterator last) {
     size_type dist = distance(first, last);
 
-    NodeList<T> *tmp_last_prev = last.ptr->prev;
+    NodeList<T> *tmp_lastprev = last.ptr->prev;
     first.ptr->prev->next = last.ptr;
     last.ptr->prev = first.ptr->prev;
-    NodeList<T> *tmp_pos_prev = position.ptr->prev;
+    NodeList<T> *tmp_posprev = position.ptr->prev;
     position.ptr->prev->next = first.ptr;
-    position.ptr->prev = tmp_last_prev;
-    first.ptr->prev = tmp_pos_prev;
-    tmp_last_prev->next = position.ptr;
+    position.ptr->prev = tmp_lastprev;
+    first.ptr->prev = tmp_posprev;
+    tmp_lastprev->next = position.ptr;
 
-    currentSize += dist;
+    this->currentSize += dist;
     x.currentSize -= dist;
   }
 
@@ -608,12 +608,39 @@ class List {
     if (currentSize <= 1) {
       return;
     }
-    iterator start = begin();
-    iterator finish = end();
-    (void) comp;
-    //todo
+    size_type tmp = currentSize;
+    merge_sort(*this, comp);
+    currentSize = tmp;
   }
 
+ private:
+  template<class Compare>
+  void merge_sort(List<value_type> &lst, Compare comp) {
+    if (lst.size() <= 1) {
+      return;
+    }
+
+    iterator itmid = lst.begin();
+
+    size_type mid = lst.size() / 2;
+    while (mid > 0) {
+      --mid;
+      ++itmid;
+    }
+
+    List<value_type> left;
+    List<value_type> right;
+    left.splice(left.begin(), lst, lst.begin(), itmid);
+    right.splice(right.begin(), lst, itmid, lst.end());
+
+    merge_sort(left, comp);
+    merge_sort(right, comp);
+
+    left.merge(right, comp);
+    lst.swap(left);
+  }
+
+ public:
   void merge(List &x) {
     if (x.size() < 1) {
       return;
@@ -623,12 +650,15 @@ class List {
 
   template<class Compare>
   void merge(List &x, Compare comp) {
-    iterator this_it = begin();
+    iterator this_it = this->begin();
     iterator x_it = x.begin();
+    size_type this_size = this->currentSize;
+    size_type x_size = x.currentSize;
 
-    while (this_it != end() && x_it != x.end()) {
-      if (comp(*this_it, *x_it)) {
+    while (this_it != this->end() && x_it != x.end()) {
+      if (comp(*x_it, *this_it)) {
         splice(this_it, *this, x_it);
+        x_it = x.begin();
       } else {
         ++this_it;
       }
@@ -636,6 +666,8 @@ class List {
     if (x_it != x.end()) {
       splice(this_it, *this, x_it, x.end());
     }
+    this->currentSize = this_size + x_size;
+    x.currentSize = 0;
   }
 
  private:
@@ -725,6 +757,5 @@ template<class T, class Alloc>
 bool operator>=(ft::List<T, Alloc> const &lhs, ft::List<T, Alloc> const &rhs) {
   return lhs > rhs || lhs == rhs;
 }
-
 
 }
