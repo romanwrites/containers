@@ -63,6 +63,7 @@ class NodeList {
   NodeList &operator=(const NodeList<value_type> &obj) {
     next = obj.next;
     prev = obj.prev;
+    return *this;
   }
  public:
 
@@ -670,11 +671,36 @@ class List {
     x.currentSize = 0;
   }
 
+  void reverse() {
+    iterator it = begin();
+    NodeList<T> *tmp_prev;
+    NodeList<T> *it_tmp;
+
+    while (it != end()) {
+      it_tmp = it.ptr;
+      tmp_prev = it_tmp->prev;
+      ++it;
+      it_tmp->prev = it_tmp->next;
+      it_tmp->next = tmp_prev;
+    }
+    it_tmp = it.ptr;
+    tmp_prev = it_tmp->prev;
+    it_tmp->prev = it_tmp->next;
+    it_tmp->next = tmp_prev;
+  }
+
  private:
   void swap(value_type *a, value_type *b) {
     value_type tmp = *a;
     *a = *b;
     *b = tmp;
+  }
+
+  template<class S>
+  void swap(S &a, S &b) {
+    S &tmp = a;
+    a = b;
+    b = tmp;
   }
 
   size_type distance(iterator start, iterator finish) {

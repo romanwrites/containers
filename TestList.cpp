@@ -409,22 +409,13 @@ void TestSort() {
   std::vector<int> v{2, 4, 6, 1, -5, -6, -1, 3, 7, 0, 4, 2, 1, -3, 5, 8, 10, 11, -10, 22, 21};
   std::list<int> lst(v.begin(), v.end());
   ft::List<int> ftlst(v.begin(), v.end());
-  std::cout << lst << std::endl;
-  std::cout << ftlst << std::endl;
-  std::cout << ftlst.size() << std::endl;
 
   lst.sort();
   ftlst.sort();
-  std::cout << lst << std::endl;
-  std::cout << ftlst << std::endl;
-  std::cout << ftlst.size() << std::endl;
   AssertEqual(ftlst, lst, HintList("Test sort() less"));
 
   lst.sort(std::greater());
   ftlst.sort(std::greater());
-  std::cout << lst << std::endl;
-  std::cout << ftlst << std::endl;
-  std::cout << ftlst.size() << std::endl;
   AssertEqual(ftlst, lst, HintList("Test sort() greater"));
 }
 
@@ -446,6 +437,20 @@ void TestMerge() {
   f1.merge(f2);
   AssertEqual(f1, l1, HintList("Test merge() l1"));
   AssertEqual(f2, l2, HintList("Test merge() l2"));
+}
+
+void TestReverse() {
+  std::vector<int> v{2, 4, 6, 1, -5, -6, -1, 3, 7, 0, 4, 2, 1, -3, 5, 8, 10, 11, -10, 22, 21};
+  std::list<int> lst(v.begin(), v.end());
+  ft::List<int> ftlst(v.begin(), v.end());
+
+  lst.reverse();
+  ftlst.reverse();
+  AssertEqual(ftlst, lst, HintList("Test reverse() 1"));
+
+  lst.reverse();
+  ftlst.reverse();
+  AssertEqual(ftlst, lst, HintList("Test reverse() 2"));
 }
 
 void TestAll() {
@@ -471,6 +476,6 @@ void TestAll() {
   tr.RunTest(TestRemoveIf, "TestRemoveIf");
   tr.RunTest(TestSort, "TestSort");
   tr.RunTest(TestMerge, "TestMerge");
-
+  tr.RunTest(TestReverse, "TestReverse");
 }
 }
