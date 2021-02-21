@@ -61,8 +61,7 @@ class NodeList {
   NodeList<T> *prev;
   value_type value;
   NodeList() : next(nullptr), prev(nullptr), value(value_type()) {}
-  NodeList(const value_type &value) : next(nullptr), prev(nullptr), value(value) {} //todo
-  //todo copy constructor
+  NodeList(const value_type &value) : next(nullptr), prev(nullptr), value(value) {}
   friend class List<T>;
   friend class BidirectionalListIt<iterator_category, T>;
   friend class BidirectionalListReverseIt<iterator_category, T>;
@@ -99,8 +98,6 @@ class NodeList {
   }
 };
 
-//reverse_iterator rbegin(); todo
-//const_reverse_iterator rbegin() const; todo
 //	------------------------------------- LIST ITERATOR -----------------------------------------
 template<class Category, class Iter>
 class BidirectionalListIt {
@@ -287,6 +284,16 @@ class List {
     shadow_constructor(first, last, ft::type_is_primitive<InputIterator>());
   }
 
+  List(const List &x) {
+    this();
+    insert(begin(), x.begin(), x.end());
+  }
+
+  ~List() {
+    clear();
+    delete shadow;
+  }
+
  private:
   template<class InputIterator>
   void shadow_constructor(InputIterator first, InputIterator last, ft::type_false) {
@@ -298,16 +305,6 @@ class List {
   }
 
  public:
-  List(const List &x) {
-    this();
-    insert(begin(), x.begin(), x.end());
-  }
-
-  ~List() {
-    clear();
-    delete shadow;
-  }
-
   // ------------------- ITERATORS ----------------------
   iterator begin() {
     return iterator(shadow->next);
