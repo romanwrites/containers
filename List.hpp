@@ -269,29 +269,43 @@ class List {
   NodeList<value_type> *shadow;
   size_type currentSize;
 
- public:
-  explicit List() : shadow(new NodeList<value_type>()), currentSize(0) {
+  void ListConstructorInit() {
+    shadow = new NodeList<value_type>();
     shadow->next = shadow;
     shadow->prev = shadow;
+    currentSize = 0;
   }
 
-  explicit List(size_type n, const value_type &val = value_type()) : List() {
+ public:
+  explicit List(){
+    ListConstructorInit();
+  }
+
+  explicit List(size_type n, const value_type &val = value_type()) {
+    ListConstructorInit();
     shadow_constructor(n, val, ft::type_true());
   }
 
   template<class InputIterator>
-  List(InputIterator first, InputIterator last) : List() {
+  List(InputIterator first, InputIterator last) {
+    ListConstructorInit();
     shadow_constructor(first, last, ft::type_is_primitive<InputIterator>());
   }
 
   List(const List &x) {
-    this();
+    ListConstructorInit();
     insert(begin(), x.begin(), x.end());
   }
 
   ~List() {
     clear();
     delete shadow;
+  }
+
+  List &operator=(const List &x) {
+    clear();
+    insert(begin(), x.begin(), x.end());
+    return *this;
   }
 
  private:
