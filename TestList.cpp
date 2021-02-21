@@ -453,6 +453,24 @@ void TestReverse() {
   AssertEqual(ftlst, lst, HintList("Test reverse() 2"));
 }
 
+void TestUnique() {
+  std::vector<int> v{2, 4, 6, 1, -5, -6, -1, 3, 7, 0, 0, 0, 4, 2, 1, -3, 5, 8, 10, 10, 11, -10, -10, 22, 21};
+  std::list<int> lst(v.begin(), v.end());
+  ft::List<int> ftlst(v.begin(), v.end());
+
+  lst.unique();
+  ftlst.unique();
+  AssertEqual(ftlst, lst, HintList("Test unique() equal_to"));
+
+  lst.unique(std::less());
+  ftlst.unique(std::less());
+  AssertEqual(ftlst, lst, HintList("Test unique() less"));
+
+  lst.unique(std::greater());
+  ftlst.unique(std::greater());
+  AssertEqual(ftlst, lst, HintList("Test unique() greater"));
+}
+
 void TestAll() {
   TestRunner tr;
   tr.RunTest(TestBeginEnd, "TestBeginEnd");
@@ -477,5 +495,6 @@ void TestAll() {
   tr.RunTest(TestSort, "TestSort");
   tr.RunTest(TestMerge, "TestMerge");
   tr.RunTest(TestReverse, "TestReverse");
+  tr.RunTest(TestUnique, "TestUnique");
 }
 }

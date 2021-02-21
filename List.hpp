@@ -28,6 +28,13 @@ struct greater : binary_function<T, T, bool> {
   }
 };
 
+template<class T>
+struct equal_to : binary_function<T, T, bool> {
+  bool operator()(T const &x, T const &y) const {
+    return x == y;
+  }
+};
+
 // -------------------------------------- TAGS -------------------------------------
 struct input_iterator_tag {};
 struct output_iterator_tag {};
@@ -585,15 +592,31 @@ class List {
       ++it;
     }
   }
-//
-//  void unique() {
-//
-//  }
-//
-//  template <class BinaryPredicate>
-//  void unique (BinaryPredicate binary_pred) {
-//
-//  }
+
+  void unique() {
+    unique(ft::equal_to<value_type>());
+  }
+
+  template<class BinaryPredicate>
+  void unique(BinaryPredicate binary_pred) {
+    iterator it = begin();
+
+    if (it == end()) {
+      return;
+    }
+
+    iterator tmp;
+    ++it;
+    while (it != end()) {
+      if (binary_pred(it.ptr->prev->value, it.ptr->value)) {
+        tmp = it;
+        ++it;
+        erase(tmp);
+        continue;
+      }
+      ++it;
+    }
+  }
 
   void sort() {
     if (currentSize <= 1) {
