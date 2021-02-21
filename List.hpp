@@ -450,14 +450,13 @@ class List {
   template<class InputIterator>
   void shadow_assign(InputIterator first, InputIterator last, ft::type_false) {
     iterator it = begin();
-//    currentSize = 0;
+
     while (first != last) {
       if (it == end()) {
         insert(it, first, last);
         return;
       }
       *it = *(first);
-//      ++currentSize;
       ++it;
       ++first;
     }
@@ -469,7 +468,7 @@ class List {
   void shadow_assign(size_type n, const value_type &val, ft::type_true) {
     iterator it = begin();
     iterator tmp = it;
-//    currentSize = 0;
+
     if (it == end()) {
       insert(begin(), n, val);
       return;
@@ -759,6 +758,18 @@ class List {
 
 };
 
+template <class Iter, class Compare>
+bool lexicographical_compare(Iter first1, Iter last1, Iter first2, Iter last2, Compare comp) {
+  for (; first2 != last2; ++first1, (void) ++first2)
+  {
+    if (first1 == last1 || comp(*first1, *first2))
+      return true;
+    if (comp(*first2, *first1))
+      return false;
+  }
+  return false;
+}
+
 template<class T, class Alloc>
 void swap(List<T, Alloc> &x, List<T, Alloc> &y) {
   x.swap(y);
@@ -790,27 +801,22 @@ bool operator!=(ft::List<T, Alloc> const &lhs, ft::List<T, Alloc> const &rhs) {
 
 template<class T, class Alloc>
 bool operator<(ft::List<T, Alloc> const &lhs, ft::List<T, Alloc> const &rhs) {
-  typename ft::List<T, Alloc>::iterator itLhs = lhs.begin();
-  typename ft::List<T, Alloc>::iterator itRhs = rhs.begin();
+  typename ft::List<T, Alloc>::iterator first1 = lhs.begin();
+  typename ft::List<T, Alloc>::iterator first2 = rhs.begin();
+  typename ft::List<T, Alloc>::iterator last1 = lhs.end();
+  typename ft::List<T, Alloc>::iterator last2 = rhs.end();
 
-  while (itLhs != lhs.end() && itRhs != rhs.end()) {
-    if (*itLhs < *itRhs) {
-      return true;
-    }
-    ++itLhs;
-    ++itRhs;
-  }
-  return lhs.size() < rhs.size();
-}
-
-template<class T, class Alloc>
-bool operator>(ft::List<T, Alloc> const &lhs, ft::List<T, Alloc> const &rhs) {
-  return rhs < lhs;
+  return lexicographical_compare(first1, last1, first2, last2, ft::less<T>());
 }
 
 template<class T, class Alloc>
 bool operator<=(ft::List<T, Alloc> const &lhs, ft::List<T, Alloc> const &rhs) {
   return lhs < rhs || lhs == rhs;
+}
+
+template<class T, class Alloc>
+bool operator>(ft::List<T, Alloc> const &lhs, ft::List<T, Alloc> const &rhs) {
+  return !(lhs <= rhs);
 }
 
 template<class T, class Alloc>
