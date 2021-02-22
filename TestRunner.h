@@ -9,6 +9,8 @@
 #include <sstream>
 #include "List.hpp"
 #include "TestList.h"
+#include "Vector.hpp"
+#include "TestVector.h"
 
 #define GREEN(x) ("\033[32m" + x + "\033[0m")
 #define RED_SET "\033[0;31m"
@@ -16,7 +18,7 @@
 #define RESET "\033[0m"
 #define PINK_SET "\033[38:5:225m"
 #define SPRING_GREEN_SET "\033[38;2;0;255;127m"
-#define    WITH_BG "\033[48;2;0;250;154m\033[38;2;0;0;0m"
+#define WITH_BG "\033[48;2;0;250;154m\033[38;2;0;0;0m"
 
 class TestRunner {
  public:
@@ -103,4 +105,24 @@ std::ostream &operator<<(std::ostream &os, std::vector<T> const &s) {
 
 std::string HintList(std::string const &str) {
   return "List: " + str;
+}
+
+std::string HintVector(std::string const &str) {
+  return "Vector: " + str;
+}
+
+std::string HintMap(std::string const &str) {
+  return "Map: " + str;
+}
+
+std::string HintSet(std::string const &str) {
+  return "Set: " + str;
+}
+
+std::string HintStack(std::string const &str) {
+  return "Stack: " + str;
+}
+
+std::string HintQueue(std::string const &str) {
+  return "Queue : " + str;
 }
