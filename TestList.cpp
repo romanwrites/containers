@@ -473,6 +473,8 @@ void TestUnique() {
 
 void TestAll() {
   TestRunner tr;
+
+  std::cerr << WITH_BG << "--------------------- Running List Tests ---------------------" << RESET << std::endl;
   tr.RunTest(TestBeginEnd, "TestBeginEnd");
   tr.RunTest(TestRbeginRend, "TestRbeginRend");
   tr.RunTest(TestInsert, "TestListInsert");
