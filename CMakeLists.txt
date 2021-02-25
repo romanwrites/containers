@@ -6,4 +6,6 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -std=c++98 -fsized-deallocation")
 
 add_executable(main
         main.cpp
-        TestList.cpp)
+        TestList.cpp
+        TestVector.cpp
+        TestRunnerContainersUtils.cpp)

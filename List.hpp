@@ -36,11 +36,11 @@ struct equal_to : binary_function<T, T, bool> {
 };
 
 // -------------------------------------- TAGS -------------------------------------
-struct input_iterator_tag {};
-struct output_iterator_tag {};
-struct forward_iterator_tag : public input_iterator_tag {};
-struct bidirectional_iterator_tag : public forward_iterator_tag {};
-struct random_access_iterator_tag : public bidirectional_iterator_tag {};
+//struct input_iterator_tag {};
+//struct output_iterator_tag {};
+//struct forward_iterator_tag : public input_iterator_tag {};
+//struct bidirectional_iterator_tag : public forward_iterator_tag {};
+//struct random_access_iterator_tag : public bidirectional_iterator_tag {};
 
 template<class T, class Alloc = std::allocator<T> >
 class List;
@@ -55,7 +55,7 @@ template<class T>
 class NodeList {
  public:
   typedef T value_type;
-  typedef ft::bidirectional_iterator_tag iterator_category;
+  typedef std::bidirectional_iterator_tag iterator_category;
  private:
   NodeList<T> *next;
   NodeList<T> *prev;
@@ -108,7 +108,7 @@ class BidirectionalListIt {
   typedef std::ptrdiff_t difference_type;
   typedef Iter value_type;
   typedef Iter const const_value_type;
-  typedef ft::bidirectional_iterator_tag iterator_category;
+  typedef std::bidirectional_iterator_tag iterator_category;
   typedef value_type &reference;
   typedef value_type *pointer;
   typedef const_value_type &const_reference;
@@ -200,7 +200,7 @@ class BidirectionalListReverseIt : public BidirectionalListIt<Category, Iter> {
   typedef std::ptrdiff_t difference_type;
   typedef Iter value_type;
   typedef Iter const const_value_type;
-  typedef ft::bidirectional_iterator_tag iterator_category;
+  typedef std::bidirectional_iterator_tag iterator_category;
   typedef value_type &reference;
   typedef value_type *pointer;
   typedef const_value_type &const_reference;
@@ -259,7 +259,7 @@ class List {
   typedef const T *const_pointer;
   typedef ptrdiff_t difference_type;
   typedef size_t size_type;
-  typedef bidirectional_iterator_tag iterator_category;
+  typedef std::bidirectional_iterator_tag iterator_category;
   typedef BidirectionalListIt<iterator_category, T> iterator;
   typedef BidirectionalListIt<iterator_category, T> const_iterator;
   typedef BidirectionalListReverseIt<iterator_category, T> reverse_iterator;
@@ -328,11 +328,11 @@ class List {
     return iterator(shadow);
   }
 
-  iterator begin() const {
+  const_iterator begin() const {
     return iterator(shadow->next);
   }
 
-  iterator end() const {
+  const_iterator end() const {
     return iterator(shadow);
   }
 

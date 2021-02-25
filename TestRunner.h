@@ -7,6 +7,9 @@
 #include <set>
 #include <iostream>
 #include <sstream>
+#include <algorithm>
+#include <functional>
+#include <string>
 #include "List.hpp"
 #include "TestList.h"
 #include "Vector.hpp"
@@ -57,9 +60,7 @@ void AssertEqual(T const &t, U const &u, std::string const &hint) {
   }
 }
 
-void Assert(bool b, std::string const &hint) {
-  AssertEqual(b, true, hint);
-}
+void Assert(bool b, std::string const &hint);
 
 // MAP OUTPUT
 
@@ -91,38 +92,23 @@ std::ostream &operator<<(std::ostream &os, std::set<T> const &s) {
   return os << "}";
 }
 
-template<class T>
-std::ostream &operator<<(std::ostream &os, std::vector<T> const &s) {
-  os << "[";
-  bool first = true;
-  for (auto const &x : s) {
-    os << ", ";
-    first = false;
-    os << x;
-  }
-  return os << "]";
-}
+//template<class T>
+//std::ostream &operator<<(std::ostream &os, std::vector<T> const &s) {
+//  os << "[";
+//  bool first = true;
+//  for (auto const &x : s) {
+//    os << ", ";
+//    first = false;
+//    os << x;
+//  }
+//  return os << "]";
+//}
 
-std::string HintList(std::string const &str) {
-  return "List: " + str;
-}
+std::string HintList(std::string const &str);
 
-std::string HintVector(std::string const &str) {
-  return "Vector: " + str;
-}
+std::string HintVector(std::string const &str);
 
-std::string HintMap(std::string const &str) {
-  return "Map: " + str;
-}
-
-std::string HintSet(std::string const &str) {
-  return "Set: " + str;
-}
-
-std::string HintStack(std::string const &str) {
-  return "Stack: " + str;
-}
-
-std::string HintQueue(std::string const &str) {
-  return "Queue : " + str;
-}
+std::string HintMap(std::string const &str);
+std::string HintSet(std::string const &str);
+std::string HintStack(std::string const &str);
+std::string HintQueue(std::string const &str);

@@ -1,5 +1,4 @@
 #include "TestRunner.h"
-#include "List.hpp"
 
 namespace TestList {
 
@@ -414,8 +413,8 @@ void TestSort() {
   ftlst.sort();
   AssertEqual(ftlst, lst, HintList("Test sort() less"));
 
-  lst.sort(std::greater());
-  ftlst.sort(std::greater());
+  lst.sort(std::greater<int>());
+  ftlst.sort(std::greater<int>());
   AssertEqual(ftlst, lst, HintList("Test sort() greater"));
 }
 
@@ -462,12 +461,12 @@ void TestUnique() {
   ftlst.unique();
   AssertEqual(ftlst, lst, HintList("Test unique() equal_to"));
 
-  lst.unique(std::less());
-  ftlst.unique(std::less());
+  lst.unique(std::less<int>());
+  ftlst.unique(std::less<int>());
   AssertEqual(ftlst, lst, HintList("Test unique() less"));
 
-  lst.unique(std::greater());
-  ftlst.unique(std::greater());
+  lst.unique(std::greater<int>());
+  ftlst.unique(std::greater<int>());
   AssertEqual(ftlst, lst, HintList("Test unique() greater"));
 }
 
