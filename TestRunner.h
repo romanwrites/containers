@@ -92,18 +92,6 @@ std::ostream &operator<<(std::ostream &os, std::set<T> const &s) {
   return os << "}";
 }
 
-//template<class T>
-//std::ostream &operator<<(std::ostream &os, std::vector<T> const &s) {
-//  os << "[";
-//  bool first = true;
-//  for (auto const &x : s) {
-//    os << ", ";
-//    first = false;
-//    os << x;
-//  }
-//  return os << "]";
-//}
-
 std::string HintList(std::string const &str);
 
 std::string HintVector(std::string const &str);
