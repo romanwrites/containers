@@ -227,7 +227,7 @@ class V_reverse_iterator {
 };
 
 //	------------------------------------- VECTOR -----------------------------------------
-template<class T> // pass any type and compiler auto generate Vector parametrized with this type
+template<class T, typename Alloc = std::allocator<T> > // pass any type and compiler auto generate Vector parametrized with this type
 class Vector {
  public:
   typedef T value_type;
@@ -240,34 +240,48 @@ class Vector {
   typedef V_reverse_iterator<T> reverse_iterator;
   typedef V_reverse_iterator<T> const const_reverse_iterator;
   typedef size_t size_type;
-  typedef std::allocator<value_type> allocator_type;
+  typedef Alloc allocator_type;
   typedef ptrdiff_t difference_type;
 
+ private:
+  T *data;
+  T *_begin;
+  T *_end;
+
+  size_t currentSize;
+  size_t capacity;
+  allocator_type alloc;
+
  public:
-  Vector() throw() {
-    data = nullptr;
-    currentSize = 0;
-    capacity = 0;
-    _begin = _end = data;
-    Realloc(2);
+  explicit Vector (const allocator_type& alloc = allocator_type()) : alloc(alloc) {
+	data = nullptr;
+	currentSize = 0;
+	capacity = 0;
+	_begin = _end = data;
+	Realloc(2);
+  }
+
+  explicit Vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) {
+	Realloc(n);
+	currentSize = n;
+	for (size_t i = 0; i < currentSize; i++) {
+	  data[i] = val;
+	}
+  }
+
+  template <class InputIterator>
+  Vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) {
+
+  }
+
+  Vector (const Vector& x) {
+
   }
 
   Vector(T arr[], int n) throw() {
     data = new T[n];
     for (int i = 0; i < n; i++) {
       data[i] = arr[i];
-    }
-  }
-
-  Vector(Vector const &obj) throw() {
-    *this = obj;
-  }
-
-  Vector(int elems, T val) {
-    Realloc(elems);
-    currentSize = elems;
-    for (size_t i = 0; i < currentSize; i++) {
-      data[i] = val;
     }
   }
 
@@ -354,25 +368,25 @@ class Vector {
 	  ++it;
 	}
 	bool first = true;
-	value_type tmp1 = val;
+	value_type tmp1 = value_type(val);
 	value_type tmp2;
 
 	for (size_t i = pos; it != end(); ++i) {
 	  if (first) {
-	    tmp2 = *it;
-	    *it = tmp1;
+	    tmp2 = value_type(*it);
+	    *it = value_type(tmp1);
 	    first = false;
 	  } else {
-		tmp1 = *it;
-		*it = tmp2;
+		tmp1 = value_type(*it);
+		*it = value_type(tmp2);
 		first = true;
 	  }
 	  ++it;
 	}
 	if (first) {
-	  *it = tmp1;
+	  *it = value_type(tmp1);
 	} else {
-	  *it = tmp2;
+	  *it = value_type(tmp2);
 	}
 	currentSize++;
 	return position;
@@ -442,7 +456,7 @@ class Vector {
     }
 
     for (size_t i = 0; i < allocSize; i++) {
-      newBlock[i] = data[i];
+      newBlock[i] = value_type(data[i]);
     }
 
     for (size_t i = 0; i < currentSize; i++) { // clear, but don't set size to zero
@@ -455,14 +469,6 @@ class Vector {
     data = newBlock;
     capacity = newCapacity;
   }
-
- private:
-  T *data;
-  T *_begin;
-  T *_end;
-
-  size_t currentSize;
-  size_t capacity;
 
 };
 }
