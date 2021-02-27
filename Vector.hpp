@@ -230,9 +230,19 @@ class V_reverse_iterator {
 template<class T> // pass any type and compiler auto generate Vector parametrized with this type
 class Vector {
  public:
+  typedef T value_type;
+  typedef value_type& reference;
+  typedef value_type* pointer;
+  typedef value_type const& const_reference;
+  typedef value_type const* const_pointer;
   typedef V_iterator<T> iterator;
-  typedef V_iterator<T> const_iterator;
+  typedef V_iterator<T> const const_iterator;
   typedef V_reverse_iterator<T> reverse_iterator;
+  typedef V_reverse_iterator<T> const const_reverse_iterator;
+  typedef size_t size_type;
+  typedef std::allocator<value_type> allocator_type;
+  typedef ptrdiff_t difference_type;
+
  public:
   Vector() throw() {
     data = nullptr;
@@ -275,7 +285,7 @@ class Vector {
 
   virtual ~Vector() throw() {
     clear();
-    ::operator delete(data); // to not call any destructors // , capacity * sizeof(T)
+	::operator delete(data, capacity * sizeof(T)); // to not call any destructors // , capacity * sizeof(T)
   }
 
   iterator begin() throw() {
@@ -308,10 +318,10 @@ class Vector {
 
   void push_back(const T &val) throw() {
     if (currentSize >= capacity) {
-      Realloc(capacity * 2);
+      Realloc(capacity + capacity);
     }
 
-    data[currentSize] = val;
+    data[currentSize] = val; //
     currentSize++;
   }
 
@@ -321,6 +331,62 @@ class Vector {
       data[currentSize].~T();
     }
   }
+
+  iterator insert (iterator position, const value_type& val){
+	if (currentSize > 0 && position == end()) {
+	  push_back(val);
+	  return iterator(data + currentSize - 1);
+	}
+
+	iterator it = begin();
+	size_type pos = 0;
+	while (it != position) {
+	  ++pos;
+	  ++it;
+	}
+	if (currentSize >= capacity) {
+	  Realloc(capacity + capacity);
+	} // position changed
+	position = (data + pos); // update position
+
+	it = begin();
+	while (it != position) {
+	  ++it;
+	}
+	bool first = true;
+	value_type tmp1 = val;
+	value_type tmp2;
+
+	for (size_t i = pos; it != end(); ++i) {
+	  if (first) {
+	    tmp2 = *it;
+	    *it = tmp1;
+	    first = false;
+	  } else {
+		tmp1 = *it;
+		*it = tmp2;
+		first = true;
+	  }
+	  ++it;
+	}
+	if (first) {
+	  *it = tmp1;
+	} else {
+	  *it = tmp2;
+	}
+	currentSize++;
+	return position;
+  }
+
+//  void insert (iterator position, size_type n, const value_type& val){
+//
+//  }
+//
+//  template <class InputIterator>
+//  void insert (iterator position, InputIterator first, InputIterator last){
+//
+//  }
+
 
   void clear() throw() {
     for (size_t i = 0; i < currentSize; i++) {
@@ -383,7 +449,9 @@ class Vector {
       data[i].~T();
     }
 
-    ::operator delete(data, capacity * sizeof(T));
+    if (data != nullptr) {
+	  ::operator delete(data, capacity * sizeof(T));
+    }
     data = newBlock;
     capacity = newCapacity;
   }

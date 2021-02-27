@@ -264,6 +264,7 @@ class List {
   typedef BidirectionalListIt<iterator_category, T> const_iterator;
   typedef BidirectionalListReverseIt<iterator_category, T> reverse_iterator;
   typedef BidirectionalListReverseIt<iterator_category, T> const_reverse_iterator;
+  typedef std::allocator<value_type> allocator_type;
 
  private:
   NodeList<value_type> *shadow;
