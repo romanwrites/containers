@@ -250,32 +250,35 @@ class Vector {
 
   size_t currentSize;
   size_t capacity;
-  allocator_type alloc;
+  allocator_type allocator;
 
  public:
-  explicit Vector (const allocator_type& alloc = allocator_type()) : alloc(alloc) {
+  explicit Vector (const allocator_type& alloc = allocator_type()) : allocator(alloc) {
 	data = nullptr;
 	currentSize = 0;
 	capacity = 0;
 	_begin = _end = data;
-	Realloc(2);
+	reserve(2);
   }
 
   explicit Vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) {
-	Realloc(n);
+	reserve(n);
 	currentSize = n;
 	for (size_t i = 0; i < currentSize; i++) {
 	  data[i] = val;
 	}
+    (void)alloc;
   }
 
   template <class InputIterator>
   Vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) {
-
+    (void)first;
+    (void)last;
+    (void)alloc;
   }
 
   Vector (const Vector& x) {
-
+    (void)x;
   }
 
   Vector(T arr[], int n) throw() {
@@ -290,7 +293,7 @@ class Vector {
     if (data && capacity) {
       ::operator delete(data); // , capacity * sizeof(T)
     }
-    Realloc(obj.capacity);
+    reserve(obj.capacity);
     for (int i = 0; i < obj.currentSize; i++) {
       data[i] = obj.data[i];
     }
@@ -332,7 +335,7 @@ class Vector {
 
   void push_back(const T &val) throw() {
     if (currentSize >= capacity) {
-      Realloc(capacity + capacity);
+      reserve(capacity + capacity);
     }
 
     data[currentSize] = val; //
@@ -347,50 +350,22 @@ class Vector {
   }
 
   iterator insert (iterator position, const value_type& val){
-	if (currentSize > 0 && position == end()) {
-	  push_back(val);
-	  return iterator(data + currentSize - 1);
-	}
+    size_type pos = &(*position) - data;
 
-	iterator it = begin();
-	size_type pos = 0;
-	while (it != position) {
-	  ++pos;
-	  ++it;
-	}
-	if (currentSize >= capacity) {
-	  Realloc(capacity + capacity);
-	} // position changed
-	position = (data + pos); // update position
+    if (currentSize >= capacity) {
+      reserve(capacity + capacity);
+    }
+    for (size_t i = 0; i < currentSize - pos; ++i) {
+      allocator.destroy(&data[currentSize - i]);
+      allocator.construct(&data[currentSize - i], data[currentSize - i - 1]);
+    }
+    allocator.destroy(data + pos);
+    allocator.construct(data + pos, val);
+    ++currentSize;
 
-	it = begin();
-	while (it != position) {
-	  ++it;
-	}
-	bool first = true;
-	value_type tmp1 = value_type(val);
-	value_type tmp2;
-
-	for (size_t i = pos; it != end(); ++i) {
-	  if (first) {
-	    tmp2 = value_type(*it);
-	    *it = value_type(tmp1);
-	    first = false;
-	  } else {
-		tmp1 = value_type(*it);
-		*it = value_type(tmp2);
-		first = true;
-	  }
-	  ++it;
-	}
-	if (first) {
-	  *it = value_type(tmp1);
-	} else {
-	  *it = value_type(tmp2);
-	}
-	currentSize++;
-	return position;
+	return iterator(data + pos);
   }
+
 
 //  void insert (iterator position, size_type n, const value_type& val){
 //
@@ -447,27 +422,28 @@ class Vector {
   }
 
  private:
-  void Realloc(size_t newCapacity) throw() {
-    T *newBlock = (T *) ::operator new(newCapacity * sizeof(T)); // we don't want to call a constructor at all
+  void reserve (size_type n) throw() {
+    if (n == 0) {
+      return ;
+    }
+
+    T *newBlock = allocator.allocate(n);
 
     size_t allocSize = currentSize;
-    if (newCapacity < allocSize) {
-      allocSize = newCapacity;
+    if (n < allocSize) {
+      allocSize = n;
     }
 
     for (size_t i = 0; i < allocSize; i++) {
-      newBlock[i] = value_type(data[i]);
+      allocator.construct(&newBlock[i], data[i]);
+      allocator.destroy(data + i);
     }
-
-    for (size_t i = 0; i < currentSize; i++) { // clear, but don't set size to zero
-      data[i].~T();
-    }
-
-    if (data != nullptr) {
-	  ::operator delete(data, capacity * sizeof(T));
-    }
+    allocator.deallocate(data, capacity);
     data = newBlock;
-    capacity = newCapacity;
+    capacity = n;
+    if (capacity < currentSize) {
+      currentSize = capacity;
+    }
   }
 
 };
