@@ -249,19 +249,20 @@ class Vector {
   T *_end;
 
   size_t currentSize;
-  size_t capacity;
+  size_t dataCapacity;
   allocator_type allocator;
 
  public:
   explicit Vector (const allocator_type& alloc = allocator_type()) : allocator(alloc) {
 	data = nullptr;
 	currentSize = 0;
-	capacity = 0;
+    dataCapacity = 0;
 	_begin = _end = data;
 	reserve(2);
   }
 
-  explicit Vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) {
+  explicit Vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
+        : data(nullptr), currentSize(0), dataCapacity(0){
 	reserve(n);
 	currentSize = n;
 	for (size_t i = 0; i < currentSize; i++) {
@@ -290,10 +291,10 @@ class Vector {
 
   Vector &operator=(Vector const &obj) throw() {
     clear();
-    if (data && capacity) {
+    if (data && dataCapacity) {
       ::operator delete(data); // , capacity * sizeof(T)
     }
-    reserve(obj.capacity);
+    reserve(obj.dataCapacity);
     for (int i = 0; i < obj.currentSize; i++) {
       data[i] = obj.data[i];
     }
@@ -302,7 +303,7 @@ class Vector {
 
   virtual ~Vector() throw() {
     clear();
-	::operator delete(data, capacity * sizeof(T)); // to not call any destructors // , capacity * sizeof(T)
+	::operator delete(data, dataCapacity * sizeof(T)); // to not call any destructors // , capacity * sizeof(T)
   }
 
   iterator begin() throw() {
@@ -334,8 +335,8 @@ class Vector {
   }
 
   void push_back(const T &val) throw() {
-    if (currentSize >= capacity) {
-      reserve(capacity + capacity);
+    if (currentSize >= dataCapacity) {
+      reserve(dataCapacity + dataCapacity);
     }
 
     data[currentSize] = val; //
@@ -352,14 +353,14 @@ class Vector {
   iterator insert (iterator position, const value_type& val){
     size_type pos = &(*position) - data;
 
-    if (currentSize >= capacity) {
-      reserve(capacity + capacity);
+    if (currentSize >= dataCapacity) {
+      reserve(dataCapacity + dataCapacity);
     }
     for (size_t i = 0; i < currentSize - pos; ++i) {
       allocator.destroy(&data[currentSize - i]);
       allocator.construct(&data[currentSize - i], data[currentSize - i - 1]);
     }
-    allocator.destroy(data + pos);
+//    allocator.destroy(data + pos);
     allocator.construct(data + pos, val);
     ++currentSize;
 
@@ -394,6 +395,7 @@ class Vector {
   }
 
   size_t size() const throw() { return currentSize; }
+  size_type capacity() const { return dataCapacity; }
 
   const T &operator[](size_t idx) const throw() {
     return data[idx];
@@ -421,29 +423,20 @@ class Vector {
     return (*this)[idx];
   }
 
- private:
-  void reserve (size_type n) throw() {
-    if (n == 0) {
+  void reserve (size_type newCapacity) throw() {
+    if (newCapacity == 0 || newCapacity <= currentSize) {
       return ;
     }
 
-    T *newBlock = allocator.allocate(n);
+    T *newBlock = allocator.allocate(newCapacity);
 
-    size_t allocSize = currentSize;
-    if (n < allocSize) {
-      allocSize = n;
-    }
-
-    for (size_t i = 0; i < allocSize; i++) {
+    for (size_t i = 0; i < currentSize; i++) {
       allocator.construct(&newBlock[i], data[i]);
       allocator.destroy(data + i);
     }
-    allocator.deallocate(data, capacity);
+    allocator.deallocate(data, dataCapacity);
     data = newBlock;
-    capacity = n;
-    if (capacity < currentSize) {
-      currentSize = capacity;
-    }
+    dataCapacity = newCapacity;
   }
 
 };

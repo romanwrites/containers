@@ -120,12 +120,26 @@ void TestInsert() {
 //  AssertEqual(fv, v, HintList("Range fill insert() end from vector<string>"));
 }
 
+void TestReserve() {
+  std::vector<int> v(10);
+  ft::Vector<int> fv(10);
+  v.reserve(5);
+  fv.reserve(5);
+  Assert(fv.capacity() == v.capacity(), HintVector("Reserve() with lesser value than capacity. Compare capacity")); //todo add capacity
+  AssertEqual(fv, v, HintVector("Reserve() with lesser value than capacity"));
+  v.reserve(50);
+  fv.reserve(50);
+  Assert(fv.capacity() == v.capacity(), HintVector("Reserve() with greater value than capacity. Compare capacity")); //todo add capacity
+  AssertEqual(fv, v, HintVector("Reserve() with lesser value than capacity)"));
+}
+
 void TestAll() {
   TestRunner tr;
 
-  std::cerr << WITH_BG << "--------------------- Running Vector Tests ---------------------" 
-  			<< RESET << std::endl;
+  std::cerr << WITH_BG << "--------------------- Running Vector Tests ---------------------"
+            << RESET << std::endl;
   tr.RunTest(TestEmpty, "TestEmpty");
-  tr.RunTest(TestInsert, "TestInsert");
+  tr.RunTest(TestReserve, "TestReserve");
+//  tr.RunTest(TestInsert, "TestInsert");
 }
 }
