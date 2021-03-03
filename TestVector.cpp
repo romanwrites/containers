@@ -79,6 +79,19 @@ void TestInsert() {
   v.insert(itv, 15, 5);
   fv.insert(itfv, 15, 5);
   AssertEqual(fv, v, HintVector("Fill insert() 2"));
+
+  itv = v.begin();
+  ++itv;
+  ++itv;
+  itfv = fv.begin();
+  ++itfv;
+  ++itfv;
+
+  std::vector<Auto> vauto{1,2,3,4,5,6,7,8,9,10};
+
+  v.insert(itv, vauto.begin(), vauto.end());
+  fv.insert(itfv, vauto.begin(), vauto.end());
+  AssertEqual(fv, v, HintVector("Range insert()"));
 }
 
 void TestReserve() {
