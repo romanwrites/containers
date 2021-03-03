@@ -65,51 +65,20 @@ void TestInsert() {
   fv.insert(fv.end(), 3);
   AssertEqual(fv, v, HintVector("Basic insert() 2 at begin, 1 at end"));
 
-//  fv.insert(fv.begin(), 2);
-//  std::cout << fv << std::endl;
-//  fv.insert(fv.begin(), 1);
-//  std::cout << fv << std::endl;
-//  fv.insert(fv.end(), 3);
-//  std::cout << fv << std::endl;
+  v.insert(v.begin(), 10, 4);
+  fv.insert(fv.begin(), 10, 4);
+  AssertEqual(fv, v, HintVector("Fill insert() 1"));
 
-//  std::vector<std::string> v;
-//  ft::Vector<std::string> fv;
-//
-//  v.insert(v.begin(), "+");
-//  v.insert(v.begin(), "C");
-//  v.insert(v.end(), "+");
-//
-//  fv.insert(fv.begin(), "+");
-//  std::cout << fv << std::endl;
-//  fv.insert(fv.begin(), "C");
-//  std::cout << fv << std::endl;
-//  fv.insert(fv.end(), "+");
-//  std::cout << fv << std::endl;
-//
-//  AssertEqual(fv, v, HintList("Basic insert() 2 at begin, 1 at end"));
-//
-//  std::vector<std::string> v{"one", "two", "three", "four", "five"};
-//  v.insert(v.begin(), v.begin(), v.end());
-//  fv.insert(fv.begin(), v.begin(), v.end());
-//  AssertEqual(fv, v, HintList("Range fill insert() begin from vector<string>"));
-//
-//  v.insert(v.end(), v.begin(), v.end());
-//  fv.insert(fv.end(), v.begin(), v.end());
-//  AssertEqual(fv, v, HintList("Range fill insert() end from vector<string>"));
-//
-//  auto itv = std::find(v.begin(), v.end(), "C");
-//  auto itfv = std::find(fv.begin(), fv.end(), "C");
-//
-//  v.insert(itv, v.begin(), v.end());
-//  fv.insert(itfv, v.begin(), v.end());
-//  AssertEqual(fv, v, HintList("Range fill insert() mid from vector<string>"));
-//
-//  itv = std::find(v.begin(), v.end(), "+");
-//  itfv = std::find(fv.begin(), fv.end(), "+");
-//
-//  v.insert(itv, 5, "+");
-//  fv.insert(itfv, 5, "+");
-//  AssertEqual(fv, v, HintList("Range fill insert() end from vector<string>"));
+  auto itv = v.begin();
+  ++itv;
+  ++itv;
+  auto itfv = fv.begin();
+  ++itfv;
+  ++itfv;
+
+  v.insert(itv, 15, 5);
+  fv.insert(itfv, 15, 5);
+  AssertEqual(fv, v, HintVector("Fill insert() 2"));
 }
 
 void TestReserve() {

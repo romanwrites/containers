@@ -301,8 +301,6 @@ class Vector {
       allocator.destroy(data + i);
     }
     allocator.deallocate(data, dataCapacity);
-//    clear();
-//    ::operator delete(data, dataCapacity * sizeof(T)); // to not call any destructors // , capacity * sizeof(T)
   }
 
   iterator begin() throw() {
@@ -356,22 +354,24 @@ class Vector {
       reserve(dataCapacity + dataCapacity);
     }
 
-    // 1 2 3 4 5 6
     for (size_t i = 0; i < currentSize - pos; ++i) {
       allocator.construct(&data[currentSize - i], data[currentSize - i - 1]);
       allocator.destroy(&data[currentSize - i - 1]);
     }
-//    allocator.destroy(data + pos);
     allocator.construct(data + pos, val);
     ++currentSize;
 
     return iterator(data + pos);
   }
 
+  void insert (iterator position, size_type n, const value_type& val){
+    size_type pos = &(*position) - data;
 
-//  void insert (iterator position, size_type n, const value_type& val){
-//
-//  }
+    for (size_type i = 0; i < n; ++i) {
+      insert(iterator(data + pos), val);
+      ++pos;
+    }
+  }
 //
 //  template <class InputIterator>
 //  void insert (iterator position, InputIterator first, InputIterator last){
