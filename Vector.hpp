@@ -231,10 +231,10 @@ template<class T, typename Alloc = std::allocator<T> > // pass any type and comp
 class Vector {
  public:
   typedef T value_type;
-  typedef value_type& reference;
-  typedef value_type* pointer;
-  typedef value_type const& const_reference;
-  typedef value_type const* const_pointer;
+  typedef value_type &reference;
+  typedef value_type *pointer;
+  typedef value_type const &const_reference;
+  typedef value_type const *const_pointer;
   typedef V_iterator<T> iterator;
   typedef V_iterator<T> const const_iterator;
   typedef V_reverse_iterator<T> reverse_iterator;
@@ -245,41 +245,36 @@ class Vector {
 
  private:
   T *data;
-  T *_begin;
-  T *_end;
 
   size_t currentSize;
   size_t dataCapacity;
   allocator_type allocator;
 
  public:
-  explicit Vector (const allocator_type& alloc = allocator_type()) : allocator(alloc) {
-	data = nullptr;
-	currentSize = 0;
-    dataCapacity = 0;
-	_begin = _end = data;
-	reserve(2);
+  explicit Vector(const allocator_type &alloc = allocator_type())
+      : data(nullptr), currentSize(0), dataCapacity(0), allocator(alloc) {
+    reserve(2);
   }
 
-  explicit Vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
-        : data(nullptr), currentSize(0), dataCapacity(0){
-	reserve(n);
-	currentSize = n;
-	for (size_t i = 0; i < currentSize; i++) {
-	  data[i] = val;
-	}
-    (void)alloc;
+  explicit Vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type())
+      : data(nullptr), currentSize(0), dataCapacity(0) {
+    reserve(n);
+    currentSize = n;
+    for (size_t i = 0; i < currentSize; i++) {
+      data[i] = val;
+    }
+    (void) alloc;
   }
 
-  template <class InputIterator>
-  Vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) {
-    (void)first;
-    (void)last;
-    (void)alloc;
+  template<class InputIterator>
+  Vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type()) {
+    (void) first;
+    (void) last;
+    (void) alloc;
   }
 
-  Vector (const Vector& x) {
-    (void)x;
+  Vector(const Vector &x) {
+    (void) x;
   }
 
   Vector(T arr[], int n) throw() {
@@ -302,8 +297,12 @@ class Vector {
   }
 
   virtual ~Vector() throw() {
-    clear();
-	::operator delete(data, dataCapacity * sizeof(T)); // to not call any destructors // , capacity * sizeof(T)
+    for (size_type i = 0; i < currentSize; ++i) {
+      allocator.destroy(data + i);
+    }
+    allocator.deallocate(data, dataCapacity);
+//    clear();
+//    ::operator delete(data, dataCapacity * sizeof(T)); // to not call any destructors // , capacity * sizeof(T)
   }
 
   iterator begin() throw() {
@@ -331,7 +330,7 @@ class Vector {
   }
 
   bool empty() const throw() {
-    return this->_begin == this->_end;
+    return currentSize == 0;
   }
 
   void push_back(const T &val) throw() {
@@ -350,21 +349,23 @@ class Vector {
     }
   }
 
-  iterator insert (iterator position, const value_type& val){
+  iterator insert(iterator position, const value_type &val) {
     size_type pos = &(*position) - data;
 
     if (currentSize >= dataCapacity) {
       reserve(dataCapacity + dataCapacity);
     }
+
+    // 1 2 3 4 5 6
     for (size_t i = 0; i < currentSize - pos; ++i) {
-      allocator.destroy(&data[currentSize - i]);
       allocator.construct(&data[currentSize - i], data[currentSize - i - 1]);
+      allocator.destroy(&data[currentSize - i - 1]);
     }
 //    allocator.destroy(data + pos);
     allocator.construct(data + pos, val);
     ++currentSize;
 
-	return iterator(data + pos);
+    return iterator(data + pos);
   }
 
 
@@ -423,9 +424,9 @@ class Vector {
     return (*this)[idx];
   }
 
-  void reserve (size_type newCapacity) throw() {
+  void reserve(size_type newCapacity) throw() {
     if (newCapacity == 0 || newCapacity <= currentSize) {
-      return ;
+      return;
     }
 
     T *newBlock = allocator.allocate(newCapacity);
