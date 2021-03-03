@@ -19,25 +19,37 @@ void TestInsert() {
   std::vector<std::string> v{"one", "two", "three", "four", "five"};
   lst.insert(lst.begin(), v.begin(), v.end());
   ftlst.insert(ftlst.begin(), v.begin(), v.end());
-  AssertEqual(ftlst, lst, HintList("Range fill insert() begin from vector<string>"));
+  AssertEqual(ftlst, lst, HintList("Range insert() begin from vector<string>"));
 
   lst.insert(lst.end(), v.begin(), v.end());
   ftlst.insert(ftlst.end(), v.begin(), v.end());
-  AssertEqual(ftlst, lst, HintList("Range fill insert() end from vector<string>"));
+  AssertEqual(ftlst, lst, HintList("Range insert() end from vector<string>"));
 
   auto itLst = std::find(lst.begin(), lst.end(), "C");
   auto itFtlst = std::find(ftlst.begin(), ftlst.end(), "C");
 
   lst.insert(itLst, v.begin(), v.end());
   ftlst.insert(itFtlst, v.begin(), v.end());
-  AssertEqual(ftlst, lst, HintList("Range fill insert() mid from vector<string>"));
+  AssertEqual(ftlst, lst, HintList("Range insert() mid from vector<string>"));
 
   itLst = std::find(lst.begin(), lst.end(), "+");
   itFtlst = std::find(ftlst.begin(), ftlst.end(), "+");
 
   lst.insert(itLst, 5, "+");
   ftlst.insert(itFtlst, 5, "+");
-  AssertEqual(ftlst, lst, HintList("Range fill insert() end from vector<string>"));
+  AssertEqual(ftlst, lst, HintList("Range insert() end from vector<string>"));
+
+  std::list<int> l;
+  ft::List<int> fl;
+  std::vector<int> vv{0,1,2,3,4,5,6,7,8,9};
+
+  l.insert(l.begin(), vv.begin(), vv.end());
+  fl.insert(fl.begin(), vv.begin(), vv.end());
+  AssertEqual(ftlst, lst, HintList("Range insert() begin from vector<int>"));
+
+  l.insert(l.begin(), 10, 15);
+  fl.insert(fl.begin(), 10, 15);
+  AssertEqual(ftlst, lst, HintList("Fill insert() integers from begin"));
 }
 
 void TestEmpty() {

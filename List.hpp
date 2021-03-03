@@ -278,7 +278,7 @@ class List {
   }
 
  public:
-  explicit List(){
+  explicit List() {
     ListConstructorInit();
   }
 
@@ -401,23 +401,37 @@ class List {
 
   // fill
   void insert(iterator position, size_type n, const value_type &val) {
-    iterator tmp = position;
-    for (size_type i = 0; i < n; i++) {
-      ++position;
-      insert(tmp, val);
-    }
+    shadow_insert(position, n, val, ft::type_true());
   }
 
   // range [first,last)
   template<class InputIterator>
   void insert(iterator position, InputIterator first, InputIterator last) {
+    shadow_insert(position, first, last, ft::type_is_primitive<InputIterator>());
+  }
+
+ private:
+  template<class InputIterator>
+  void shadow_insert(iterator position, InputIterator first, InputIterator last, ft::type_false) {
     iterator tmp = position;
+
     while (first != last) {
       ++position;
       insert(tmp, *first);
       ++first;
     }
   }
+
+  void shadow_insert(iterator position, size_type n, const value_type &val, ft::type_true) {
+    iterator tmp = position;
+
+    for (size_type i = 0; i < n; i++) {
+      ++position;
+      insert(tmp, val);
+    }
+  }
+
+ public:
 
   size_type size() const {
     return currentSize;
@@ -759,10 +773,9 @@ class List {
 
 };
 
-template <class Iter, class Compare>
+template<class Iter, class Compare>
 bool lexicographical_compare(Iter first1, Iter last1, Iter first2, Iter last2, Compare comp) {
-  for (; first2 != last2; ++first1, (void) ++first2)
-  {
+  for (; first2 != last2; ++first1, (void) ++first2) {
     if (first1 == last1 || comp(*first1, *first2))
       return true;
     if (comp(*first2, *first1))
