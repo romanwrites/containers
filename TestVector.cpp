@@ -107,6 +107,17 @@ void TestReserve() {
   AssertEqual(fv, v, HintVector("Reserve() with lesser value than capacity)"));
 }
 
+void TestPushBack() {
+  std::vector<int> v;
+  ft::Vector<int> fv;
+
+  for (int i = 0; i < 5000; ++i) {
+    v.push_back(i);
+    fv.push_back(i);
+  }
+  AssertEqual(fv, v, HintVector("push_back()"));
+}
+
 void TestAll() {
   TestRunner tr;
 
@@ -115,5 +126,6 @@ void TestAll() {
   tr.RunTest(TestEmpty, "TestEmpty");
   tr.RunTest(TestReserve, "TestReserve");
   tr.RunTest(TestInsert, "TestInsert");
+  tr.RunTest(TestPushBack, "TestPushBack");
 }
 }

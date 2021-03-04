@@ -332,18 +332,13 @@ class Vector {
   }
 
   void push_back(const T &val) throw() {
-    if (currentSize >= dataCapacity) {
-      reserve(dataCapacity + dataCapacity);
-    }
-
-    data[currentSize] = val; //
-    currentSize++;
+    insert(end(), val);
   }
 
   void pop_back() throw() {
     if (currentSize > 0) {
       currentSize--;
-      data[currentSize].~T();
+      allocator.destroy(&data[currentSize]);
     }
   }
 
