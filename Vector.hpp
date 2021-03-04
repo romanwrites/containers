@@ -342,6 +342,10 @@ class Vector {
     }
   }
 
+  size_type max_size() const {
+    return std::numeric_limits<size_type>::max() / sizeof(T);
+  }
+
   iterator insert(iterator position, const value_type &val) {
     size_type pos = &(*position) - data;
 

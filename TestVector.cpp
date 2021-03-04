@@ -118,6 +118,16 @@ void TestPushBack() {
   AssertEqual(fv, v, HintVector("push_back()"));
 }
 
+void TestMaxSize() {
+  std::vector<int> vi;
+  ft::Vector<int> fvi;
+  Assert(fvi.max_size() == vi.max_size(), "kek");
+
+  std::vector<std::string> vs;
+  ft::Vector<std::string> fvs;
+  Assert(fvs.max_size() == vs.max_size(), "kek");
+}
+
 void TestAll() {
   TestRunner tr;
 
@@ -127,5 +137,6 @@ void TestAll() {
   tr.RunTest(TestReserve, "TestReserve");
   tr.RunTest(TestInsert, "TestInsert");
   tr.RunTest(TestPushBack, "TestPushBack");
+  tr.RunTest(TestMaxSize, "TestMaxSize");
 }
 }
