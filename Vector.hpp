@@ -231,10 +231,10 @@ template<class T, typename Alloc = std::allocator<T> > // pass any type and comp
 class Vector {
  public:
   typedef T value_type;
-  typedef value_type& reference;
-  typedef value_type* pointer;
-  typedef value_type const & const_reference;
-  typedef value_type const * const_pointer;
+  typedef value_type &reference;
+  typedef value_type *pointer;
+  typedef value_type const &const_reference;
+  typedef value_type const *const_pointer;
   typedef V_iterator<T> iterator;
   typedef V_iterator<T> const const_iterator;
   typedef V_reverse_iterator<T> reverse_iterator;
@@ -257,7 +257,7 @@ class Vector {
   }
 
   explicit Vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type())
-      : data(nullptr), currentSize(0), dataCapacity(0), allocator(alloc)  {
+      : data(nullptr), currentSize(0), dataCapacity(0), allocator(alloc) {
     reserve(n);
     currentSize = n;
     for (size_t i = 0; i < currentSize; i++) {
@@ -354,6 +354,14 @@ class Vector {
     return data[0];
   }
 
+  reference at(size_type n) {
+    return data[n];
+  }
+
+  const_reference at(size_type n) const {
+    return data[n];
+  }
+
   reference back() { return *(data + currentSize - 1); }
 
   const_reference back() const { return *(data + currentSize - 1); }
@@ -375,17 +383,17 @@ class Vector {
     return iterator(data + pos);
   }
 
-  void insert (iterator position, size_type n, const value_type& val){
+  void insert(iterator position, size_type n, const value_type &val) {
     shadow_insert(position, n, val, ft::type_true());
   }
 
-  template <class InputIterator>
-  void insert (iterator position, InputIterator first, InputIterator last){
+  template<class InputIterator>
+  void insert(iterator position, InputIterator first, InputIterator last) {
     shadow_insert(position, first, last, ft::type_is_primitive<InputIterator>());
   }
  private:
   template<class InputIterator>
-  void shadow_insert (iterator position, InputIterator first, InputIterator last,  ft::type_false) {
+  void shadow_insert(iterator position, InputIterator first, InputIterator last, ft::type_false) {
     size_type pos = &(*position) - data;
 
     for (size_type i = 0; first != last; ++i) {
@@ -395,7 +403,7 @@ class Vector {
     }
   }
 
-  void shadow_insert(iterator position, size_type n, const value_type& val, ft::type_true){
+  void shadow_insert(iterator position, size_type n, const value_type &val, ft::type_true) {
     size_type pos = &(*position) - data;
 
     for (size_type i = 0; i < n; ++i) {

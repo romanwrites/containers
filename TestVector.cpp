@@ -128,7 +128,7 @@ void TestMaxSize() {
   Assert(fvs.max_size() == vs.max_size(), "string vector max_size()");
 }
 
-void TestFrontBack() {
+void TestFrontBackAt() {
   std::vector<int> v;
   ft::Vector<int> fv;
 
@@ -138,11 +138,13 @@ void TestFrontBack() {
   }
   Assert(fv.front() == v.front(), HintVector("front()"));
   Assert(fv.back() == v.back(), HintVector("back()"));
+  Assert(fv.at(553) == v.at(553), HintVector("at()"));
 
   std::vector<int> const v_const(v.begin(), v.end());
   ft::Vector<int> const fv_const(fv.begin(), fv.end());
   Assert(fv_const.front() == v_const.front(), HintVector("const front()"));
   Assert(fv_const.back() == v_const.back(), HintVector("const back()"));
+  Assert(fv.at(1324) == v.at(1324), HintVector("at()"));
 }
 
 void TestAll() {
@@ -155,6 +157,6 @@ void TestAll() {
   tr.RunTest(TestInsert, "TestInsert");
   tr.RunTest(TestPushBack, "TestPushBack");
   tr.RunTest(TestMaxSize, "TestMaxSize");
-  tr.RunTest(TestFrontBack, "TestFrontBack");
+  tr.RunTest(TestFrontBackAt, "TestFrontBackAt");
 }
 }
