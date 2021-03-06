@@ -231,10 +231,10 @@ template<class T, typename Alloc = std::allocator<T> > // pass any type and comp
 class Vector {
  public:
   typedef T value_type;
-  typedef value_type &reference;
-  typedef value_type *pointer;
-  typedef value_type const &const_reference;
-  typedef value_type const *const_pointer;
+  typedef value_type& reference;
+  typedef value_type* pointer;
+  typedef value_type const & const_reference;
+  typedef value_type const * const_pointer;
   typedef V_iterator<T> iterator;
   typedef V_iterator<T> const const_iterator;
   typedef V_reverse_iterator<T> reverse_iterator;
@@ -257,7 +257,7 @@ class Vector {
   }
 
   explicit Vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type())
-      : data(nullptr), currentSize(0), dataCapacity(0) {
+      : data(nullptr), currentSize(0), dataCapacity(0), allocator(alloc)  {
     reserve(n);
     currentSize = n;
     for (size_t i = 0; i < currentSize; i++) {
@@ -267,10 +267,10 @@ class Vector {
   }
 
   template<class InputIterator>
-  Vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type()) {
-    (void) first;
-    (void) last;
-    (void) alloc;
+  Vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type())
+      : data(nullptr), currentSize(0), dataCapacity(0), allocator(alloc) {
+    reserve(2);
+    insert(begin(), first, last);
   }
 
   Vector(const Vector &x) {
@@ -345,6 +345,18 @@ class Vector {
   size_type max_size() const {
     return std::numeric_limits<size_type>::max() / sizeof(T);
   }
+
+  reference front() {
+    return *(data + 0);
+  }
+
+  const_reference front() const {
+    return data[0];
+  }
+
+  reference back() { return *(data + currentSize - 1); }
+
+  const_reference back() const { return *(data + currentSize - 1); }
 
   iterator insert(iterator position, const value_type &val) {
     size_type pos = &(*position) - data;

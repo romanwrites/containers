@@ -121,11 +121,28 @@ void TestPushBack() {
 void TestMaxSize() {
   std::vector<int> vi;
   ft::Vector<int> fvi;
-  Assert(fvi.max_size() == vi.max_size(), "kek");
+  Assert(fvi.max_size() == vi.max_size(), "int vector max_size()");
 
   std::vector<std::string> vs;
   ft::Vector<std::string> fvs;
-  Assert(fvs.max_size() == vs.max_size(), "kek");
+  Assert(fvs.max_size() == vs.max_size(), "string vector max_size()");
+}
+
+void TestFrontBack() {
+  std::vector<int> v;
+  ft::Vector<int> fv;
+
+  for (int i = 0; i < 5000; ++i) {
+    v.push_back(i);
+    fv.push_back(i);
+  }
+  Assert(fv.front() == v.front(), HintVector("front()"));
+  Assert(fv.back() == v.back(), HintVector("back()"));
+
+  std::vector<int> const v_const(v.begin(), v.end());
+  ft::Vector<int> const fv_const(fv.begin(), fv.end());
+  Assert(fv_const.front() == v_const.front(), HintVector("const front()"));
+  Assert(fv_const.back() == v_const.back(), HintVector("const back()"));
 }
 
 void TestAll() {
@@ -138,5 +155,6 @@ void TestAll() {
   tr.RunTest(TestInsert, "TestInsert");
   tr.RunTest(TestPushBack, "TestPushBack");
   tr.RunTest(TestMaxSize, "TestMaxSize");
+  tr.RunTest(TestFrontBack, "TestFrontBack");
 }
 }
