@@ -87,7 +87,7 @@ void TestInsert() {
   ++itfv;
   ++itfv;
 
-  std::vector<Auto> vauto{1,2,3,4,5,6,7,8,9,10};
+  std::vector<Auto> vauto{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
   v.insert(itv, vauto.begin(), vauto.end());
   fv.insert(itfv, vauto.begin(), vauto.end());
@@ -99,11 +99,13 @@ void TestReserve() {
   ft::Vector<int> fv(10);
   v.reserve(5);
   fv.reserve(5);
-  Assert(fv.capacity() == v.capacity(), HintVector("Reserve() with lesser value than capacity. Compare capacity")); //todo add capacity
+  Assert(fv.capacity() == v.capacity(),
+         HintVector("Reserve() with lesser value than capacity. Compare capacity")); //todo add capacity
   AssertEqual(fv, v, HintVector("Reserve() with lesser value than capacity"));
   v.reserve(50);
   fv.reserve(50);
-  Assert(fv.capacity() == v.capacity(), HintVector("Reserve() with greater value than capacity. Compare capacity")); //todo add capacity
+  Assert(fv.capacity() == v.capacity(),
+         HintVector("Reserve() with greater value than capacity. Compare capacity")); //todo add capacity
   AssertEqual(fv, v, HintVector("Reserve() with lesser value than capacity)"));
 }
 
@@ -147,6 +149,34 @@ void TestFrontBackAt() {
   Assert(fv.at(1324) == v.at(1324), HintVector("at()"));
 }
 
+void TestGetAllocator() {
+  // Example from cplusplus.com
+  std::vector<int> v;
+  ft::Vector<int> fv;
+  int *p;
+  int *fp;
+  unsigned int i;
+
+  p = v.get_allocator().allocate(5);
+  fp = fv.get_allocator().allocate(5);
+
+  for (i = 0; i < 5; i++) {
+    v.get_allocator().construct(&p[i], i);
+    fv.get_allocator().construct(&fp[i], i);
+  }
+
+  for (i = 0; i < 5; ++i) {
+    Assert(fp[i] == p[i], HintVector("get_allocator() compare array elements"));
+  }
+
+  for (i = 0; i < 5; i++) {
+    v.get_allocator().destroy(&p[i]);
+    fv.get_allocator().destroy(&fp[i]);
+  }
+  v.get_allocator().deallocate(p, 5);
+  fv.get_allocator().deallocate(fp, 5);
+}
+
 void TestAll() {
   TestRunner tr;
 
@@ -158,5 +188,6 @@ void TestAll() {
   tr.RunTest(TestPushBack, "TestPushBack");
   tr.RunTest(TestMaxSize, "TestMaxSize");
   tr.RunTest(TestFrontBackAt, "TestFrontBackAt");
+  tr.RunTest(TestGetAllocator, "TestGetAllocator");
 }
 }

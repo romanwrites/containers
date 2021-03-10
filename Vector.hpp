@@ -475,5 +475,9 @@ class Vector {
     dataCapacity = newCapacity;
   }
 
+  allocator_type get_allocator() const {
+    return allocator;
+  }
+
 };
 }
