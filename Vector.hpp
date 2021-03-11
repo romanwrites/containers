@@ -475,6 +475,14 @@ class Vector {
     dataCapacity = newCapacity;
   }
 
+  void resize (size_type n, value_type val = value_type()) {
+    if (n < currentSize) {
+      currentSize = n;
+      return;
+    }
+    insert(end(), n - currentSize, val);
+  }
+
   allocator_type get_allocator() const {
     return allocator;
   }

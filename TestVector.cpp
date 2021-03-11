@@ -177,6 +177,29 @@ void TestGetAllocator() {
   fv.get_allocator().deallocate(fp, 5);
 }
 
+void TestResize() {
+  std::vector<int> v;
+  ft::Vector<int> fv;
+
+  for (int i = 0; i < 10; ++i) {
+    v.push_back(i);
+    fv.push_back(i);
+  }
+
+  v.resize(7);
+  fv.resize(7);
+  AssertEqual(fv, v, HintVector("resize() smaller"));
+
+  v.resize(9);
+  fv.resize(9);
+  AssertEqual(fv, v, HintVector("resize() greater deefault value"));
+
+  v.resize(15, 100);
+  fv.resize(15, 100);
+  AssertEqual(fv, v, HintVector("resize() greater set value"));
+
+}
+
 void TestAll() {
   TestRunner tr;
 
@@ -189,5 +212,6 @@ void TestAll() {
   tr.RunTest(TestMaxSize, "TestMaxSize");
   tr.RunTest(TestFrontBackAt, "TestFrontBackAt");
   tr.RunTest(TestGetAllocator, "TestGetAllocator");
+  tr.RunTest(TestResize, "TestResize");
 }
 }
