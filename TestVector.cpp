@@ -200,6 +200,37 @@ void TestResize() {
 
 }
 
+template<class T>
+void printTmp(std::vector<T> const &a) {
+  std::cout << "[";
+  for (int i = 0; i < (int)a.size(); ++i) {
+    std::cout << a[i];
+    if (i + 1 != (int)a.size()) {
+      std::cout << ",";
+    }
+  }
+  std::cout << "]" << std::endl;
+}
+
+void TestAssign() {
+  std::vector<int> v;
+  ft::Vector<int> fv;
+
+  for (int i = 0; i < 10; ++i) {
+    v.push_back(i);
+    fv.push_back(i);
+  }
+
+  v.assign(4,3);
+  fv.assign(4,3);
+  AssertEqual(fv, v, HintVector("assign() fill"));
+
+  std::list<int> lst{10,20,30,40,50};
+  v.assign(lst.begin(), lst.end());
+  fv.assign(lst.begin(), lst.end());
+  AssertEqual(fv, v, HintVector("assign() range"));
+}
+
 void TestAll() {
   TestRunner tr;
 
@@ -213,5 +244,6 @@ void TestAll() {
   tr.RunTest(TestFrontBackAt, "TestFrontBackAt");
   tr.RunTest(TestGetAllocator, "TestGetAllocator");
   tr.RunTest(TestResize, "TestResize");
+  tr.RunTest(TestAssign, "TestAssign");
 }
 }

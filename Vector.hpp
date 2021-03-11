@@ -327,6 +327,14 @@ class Vector {
     return reverse_iterator(begin());
   }
 
+  const_reverse_iterator rbegin() const throw() {
+    return reverse_iterator(end());
+  }
+
+  const_reverse_iterator rend() const throw() {
+    return reverse_iterator(begin());
+  }
+
   bool empty() const throw() {
     return currentSize == 0;
   }
@@ -412,7 +420,27 @@ class Vector {
     }
   }
 
+  void shadow_assign(size_type n, const value_type &val, ft::type_true) {
+    clear();
+    insert(begin(), n, val);
+  }
+
+  template<class InputIterator>
+  void shadow_assign(InputIterator first, InputIterator last, ft::type_false) {
+    clear();
+    insert(begin(), first, last);
+  }
+
  public:
+
+  template<class InputIterator>
+  void assign(InputIterator first, InputIterator last) {
+    shadow_assign(first, last, ft::type_is_primitive<InputIterator>());
+  }
+
+  void assign(size_type n, const value_type &val) {
+    shadow_assign(n, val, ft::type_true());
+  }
 
   void clear() throw() {
     for (size_t i = 0; i < currentSize; i++) {
@@ -421,23 +449,14 @@ class Vector {
     currentSize = 0;
   }
 
-  template<class ITER>
-  void assign(ITER begin, ITER end) throw() {
-    clear();
-    while (begin != end) {
-      push_back(*begin);
-      begin++;
-    }
-  }
-
   size_t size() const throw() { return currentSize; }
   size_type capacity() const { return dataCapacity; }
 
-  const T &operator[](size_t idx) const throw() {
+  const_reference operator[](size_t idx) const throw() {
     return data[idx];
   }
 
-  T &operator[](size_t idx) throw() {
+  reference operator[](size_t idx) throw() {
     return data[idx];
   }
 
@@ -475,7 +494,7 @@ class Vector {
     dataCapacity = newCapacity;
   }
 
-  void resize (size_type n, value_type val = value_type()) {
+  void resize(size_type n, value_type val = value_type()) {
     if (n < currentSize) {
       currentSize = n;
       return;
