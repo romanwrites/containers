@@ -303,6 +303,23 @@ class Vector {
     allocator.deallocate(data, dataCapacity);
   }
 
+  iterator erase (iterator position) {
+    return erase(position, position + 1);
+  }
+
+  iterator erase (iterator first, iterator last) {
+    size_type pos_first = &(*first) - data;
+    size_type pos_last = &(*last) - data;
+
+    for (size_type i = pos_first, j = pos_last; last != end(); ++i, ++j) {
+      allocator.destroy(data + i);
+      allocator.construct(&data[i], data[j]);
+      ++last;
+    }
+    currentSize -= pos_last - pos_first;
+    return iterator(data + pos_first);
+  }
+
   iterator begin() throw() {
     return iterator(data);
   }

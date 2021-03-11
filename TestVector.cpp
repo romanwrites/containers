@@ -203,9 +203,9 @@ void TestResize() {
 template<class T>
 void printTmp(std::vector<T> const &a) {
   std::cout << "[";
-  for (int i = 0; i < (int)a.size(); ++i) {
+  for (int i = 0; i < (int) a.size(); ++i) {
     std::cout << a[i];
-    if (i + 1 != (int)a.size()) {
+    if (i + 1 != (int) a.size()) {
       std::cout << ",";
     }
   }
@@ -221,14 +221,36 @@ void TestAssign() {
     fv.push_back(i);
   }
 
-  v.assign(4,3);
-  fv.assign(4,3);
+  v.assign(4, 3);
+  fv.assign(4, 3);
   AssertEqual(fv, v, HintVector("assign() fill"));
 
-  std::list<int> lst{10,20,30,40,50};
+  std::list<int> lst{10, 20, 30, 40, 50};
   v.assign(lst.begin(), lst.end());
   fv.assign(lst.begin(), lst.end());
   AssertEqual(fv, v, HintVector("assign() range"));
+}
+
+void TestErase() {
+  std::vector<int> v;
+  ft::Vector<int> fv;
+
+  for (int i = 1; i <= 50; i++) {
+    v.push_back(i);
+    fv.push_back(i);
+  }
+
+  v.erase(v.begin() + 5);
+  fv.erase(fv.begin() + 5);
+  AssertEqual(fv, v, HintVector("erase() one element"));
+
+  v.erase(v.begin(), v.begin() + 10);
+  fv.erase(fv.begin(), fv.begin() + 10);
+  AssertEqual(fv, v, HintVector("erase() range begin"));
+
+  v.erase(v.begin() + 10, v.end());
+  fv.erase(fv.begin() + 10, fv.end());
+  AssertEqual(fv, v, HintVector("erase() range till end"));
 }
 
 void TestAll() {
@@ -245,5 +267,6 @@ void TestAll() {
   tr.RunTest(TestGetAllocator, "TestGetAllocator");
   tr.RunTest(TestResize, "TestResize");
   tr.RunTest(TestAssign, "TestAssign");
+  tr.RunTest(TestErase, "TestErase");
 }
 }
