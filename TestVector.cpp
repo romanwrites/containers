@@ -273,6 +273,33 @@ void TestSwap() {
   fv1.swap(fv2);
   AssertEqual(fv1, v1, HintVector("swap() first vector"));
   AssertEqual(fv2, v2, HintVector("swap() second vector"));
+
+  std::swap(v1, v2);
+  ft::swap(fv1, fv2);
+  AssertEqual(fv1, v1, HintVector("swap() non member vector1"));
+  AssertEqual(fv2, v2, HintVector("swap() non member vector2"));
+}
+
+void TestComparisonOperators() {
+  std::vector<std::string> l1{"a", "b"};
+  std::vector<std::string> l2{"a", "b"};
+  ft::Vector<std::string> fl1;
+  ft::Vector<std::string> fl2;
+  fl1.push_back("a");
+  fl2.push_back("a");
+  fl1.push_back("b");
+  fl2.push_back("b");
+
+  Assert(fl1 == fl2 && l1 == l2, HintVector("Test operator==()"));
+
+  Assert(fl1 <= fl2 && l1 <= l2, HintVector("Test operator<=() 1"));
+
+  l1.push_back("a");
+  fl1.push_back("a");
+  Assert(fl1 != fl2 && l1 != l2, HintVector("Test operator!=()"));
+  Assert(fl1 > fl2 && l1 > l2, HintVector("Test operator>()"));
+  Assert(fl1 >= fl2 && l1 >= l2, HintVector("Test operator>=() 2"));
+  Assert(fl2 <= fl1 && l2 <= l1, HintVector("Test operator<=() 2"));
 }
 
 void TestAll() {
@@ -291,5 +318,6 @@ void TestAll() {
   tr.RunTest(TestAssign, "TestAssign");
   tr.RunTest(TestErase, "TestErase");
   tr.RunTest(TestSwap, "TestSwap");
+  tr.RunTest(TestComparisonOperators, "TestComparisonOperators");
 }
 }

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include "Traits.h"
+#include "List.hpp"
 
 namespace ft {
 //	------------------------------------- VECTOR ITERATOR -----------------------------------------
@@ -303,11 +304,11 @@ class Vector {
     allocator.deallocate(data, dataCapacity);
   }
 
-  iterator erase (iterator position) {
+  iterator erase(iterator position) {
     return erase(position, position + 1);
   }
 
-  iterator erase (iterator first, iterator last) {
+  iterator erase(iterator first, iterator last) {
     size_type pos_first = &(*first) - data;
     size_type pos_last = &(*last) - data;
 
@@ -480,7 +481,7 @@ class Vector {
   bool operator==(Vector<T> const &rhs) throw() {
     if (size() != rhs.size())
       return false;
-    for (int i = 0; i < currentSize; i++) {
+    for (size_type i = 0; i < currentSize; i++) {
       if (data[i] != rhs.data[i])
         return false;
     }
@@ -519,7 +520,7 @@ class Vector {
     insert(end(), n - currentSize, val);
   }
 
-  void swap (Vector& x) {
+  void swap(Vector &x) {
     size_type tmp_currentSize = x.currentSize;
     x.currentSize = this->currentSize;
     this->currentSize = tmp_currentSize;
@@ -538,4 +539,59 @@ class Vector {
   }
 
 };
+
+template<class T, class Alloc>
+void swap(Vector<T, Alloc> &x, Vector<T, Alloc> &y) {
+  x.swap(y);
+}
+
+template<class T, class Alloc>
+bool operator==(const Vector<T, Alloc> &lhs, const Vector<T, Alloc> &rhs) {
+  if (lhs.size() != rhs.size()) {
+    return false;
+  }
+
+  typename ft::Vector<T>::iterator itLhs = lhs.begin();
+  typename ft::Vector<T>::iterator itRhs = rhs.begin();
+
+  while (itLhs != lhs.end() && itRhs != rhs.end()) {
+    if (*itLhs != *itRhs) {
+      return false;
+    }
+    ++itLhs;
+    ++itRhs;
+  }
+  return true;
+}
+
+template<class T, class Alloc>
+bool operator!=(const Vector<T, Alloc> &lhs, const Vector<T, Alloc> &rhs) {
+  return !(lhs == rhs);
+}
+
+template<class T, class Alloc>
+bool operator<(const Vector<T, Alloc> &lhs, const Vector<T, Alloc> &rhs) {
+  typename ft::Vector<T, Alloc>::iterator first1 = lhs.begin();
+  typename ft::Vector<T, Alloc>::iterator first2 = rhs.begin();
+  typename ft::Vector<T, Alloc>::iterator last1 = lhs.end();
+  typename ft::Vector<T, Alloc>::iterator last2 = rhs.end();
+
+  return lexicographical_compare(first1, last1, first2, last2, ft::less<T>());
+}
+
+template<class T, class Alloc>
+bool operator<=(const Vector<T, Alloc> &lhs, const Vector<T, Alloc> &rhs) {
+  return lhs < rhs || lhs == rhs;
+}
+
+template<class T, class Alloc>
+bool operator>(const Vector<T, Alloc> &lhs, const Vector<T, Alloc> &rhs) {
+  return !(lhs <= rhs);
+}
+
+template<class T, class Alloc>
+bool operator>=(const Vector<T, Alloc> &lhs, const Vector<T, Alloc> &rhs) {
+  return lhs > rhs || lhs == rhs;
+}
+
 }
