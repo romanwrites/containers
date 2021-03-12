@@ -253,6 +253,28 @@ void TestErase() {
   AssertEqual(fv, v, HintVector("erase() range till end"));
 }
 
+void TestSwap() {
+  std::vector<int> v1;
+  std::vector<int> v2;
+  ft::Vector<int> fv1;
+  ft::Vector<int> fv2;
+
+  for (int i = 1; i <= 50; i++) {
+    v1.push_back(i);
+    fv1.push_back(i);
+  }
+
+  for (int i = 25; i > 0; i--) {
+    v2.push_back(i);
+    fv2.push_back(i);
+  }
+
+  v1.swap(v2);
+  fv1.swap(fv2);
+  AssertEqual(fv1, v1, HintVector("swap() first vector"));
+  AssertEqual(fv2, v2, HintVector("swap() second vector"));
+}
+
 void TestAll() {
   TestRunner tr;
 
@@ -268,5 +290,6 @@ void TestAll() {
   tr.RunTest(TestResize, "TestResize");
   tr.RunTest(TestAssign, "TestAssign");
   tr.RunTest(TestErase, "TestErase");
+  tr.RunTest(TestSwap, "TestSwap");
 }
 }

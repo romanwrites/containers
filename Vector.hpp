@@ -519,6 +519,20 @@ class Vector {
     insert(end(), n - currentSize, val);
   }
 
+  void swap (Vector& x) {
+    size_type tmp_currentSize = x.currentSize;
+    x.currentSize = this->currentSize;
+    this->currentSize = tmp_currentSize;
+
+    size_type tmp_capacity = x.dataCapacity;
+    x.dataCapacity = this->dataCapacity;
+    this->dataCapacity = tmp_capacity;
+
+    value_type *tmp_data = x.data;
+    x.data = this->data;
+    this->data = tmp_data;
+  }
+
   allocator_type get_allocator() const {
     return allocator;
   }
