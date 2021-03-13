@@ -8,4 +8,5 @@ add_executable(main
         main.cpp
         TestList.cpp
         TestVector.cpp
-        TestRunner.cpp)
+        TestRunner.cpp
+        TestMap.cpp)

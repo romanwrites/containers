@@ -98,3 +98,4 @@ template<class T>
 class Map {
 
 };
+}

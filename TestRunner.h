@@ -14,6 +14,8 @@
 #include "TestList.h"
 #include "Vector.hpp"
 #include "TestVector.h"
+#include "Map.h"
+#include "TestMap.h"
 
 #define GREEN(x) ("\033[32m" + x + "\033[0m")
 #define RED_SET "\033[0;31m"
@@ -61,22 +63,6 @@ void AssertEqual(T const &t, U const &u, std::string const &hint) {
 }
 
 void Assert(bool b, std::string const &hint);
-
-// MAP OUTPUT
-
-template<class K, class V>
-std::ostream &operator<<(std::ostream &os, std::map<K, V> const &m) {
-  os << "{";
-  bool first = true;
-  for (auto const &kv : m) {
-    if (!first) {
-      os << ", ";
-    }
-    first = false;
-    os << kv.first << ": " << kv.second;
-  }
-  return os << "}";
-}
 
 template<class T>
 std::ostream &operator<<(std::ostream &os, std::set<T> const &s) {
