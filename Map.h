@@ -5,10 +5,14 @@
 namespace ft {
 //	------------------------------------- MAP ITERATOR -----------------------------------------
 
+enum RB_tree_color {
+  red = false,
+  black = true
+};
+
 template<class T>
 class Node {
  private:
-
   template<class Iter>
   class NodeIterator {
     friend class Node;
@@ -56,13 +60,16 @@ class Node {
     }
   };
 
+ private:
+  Node() : color(RB_tree_color::black), parent(nullptr), left(nullptr), right(nullptr) {}
  public:
   T value;
-  Node * left;
-  Node * right;
+  RB_tree_color color;
   Node *parent;
+  Node *left;
+  Node *right;
 
-  Node(const T &value, Node * left, Node * right, Node *parent)
+  Node(const T &value, Node *left, Node *right, Node *parent)
       : value(value), left(std::move(left)), right(std::move(right)), parent(parent) {}
   Node(const Node &) = delete;
 
