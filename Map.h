@@ -127,5 +127,10 @@ class Map {
 
 
 //  todo constructors...
+
+ public:
+  bool empty() const {
+    return true; //mock todo implement
+  }
 };
 }
