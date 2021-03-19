@@ -125,12 +125,19 @@ class Map {
 //  typedef mapIterator reverse_iterator;
 //  typedef mapIterator const_reverse_iterator;
 
+ private:
+  size_type currentSize;
+
 
 //  todo constructors...
 
  public:
   bool empty() const {
-    return true; //mock todo implement
+    return currentSize == 0; //mock todo implement
+  }
+
+  size_type size() const {
+    return size;
   }
 };
 }
