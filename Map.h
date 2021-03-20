@@ -69,6 +69,8 @@ class Node {
   Node *left;
   Node *right;
 
+  Node(const T &value) : value(value), left(nullptr), right(nullptr), parent(nullptr) {}
+
   Node(const T &value, Node *left, Node *right, Node *parent)
       : value(value), left(std::move(left)), right(std::move(right)), parent(parent) {}
   Node(const Node &) = delete;

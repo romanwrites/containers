@@ -1,11 +1,23 @@
 #include "TestRunner.h"
+#include <array>
+#include "TreePrinter.h"
 
 namespace TestMap {
 
+void PrintTree() {
+  ft::TreePrinter tree_printer;
+
+  std::array<int, 13> arr = {931, 39, 1960, 385, 388, 2070, 185, 9, 957, 54, 904, 49800, 394};
+  for (int i = 0; i < (int)arr.size(); ++i) {
+    tree_printer.add(arr[i]);
+  }
+  tree_printer.printTree();
+}
+
 void TestEmpty() {
-  std::map<std::string, int> m;
-  ft::Map<std::string, int> fm;
-  Assert(fm.empty() == m.empty(), HintMap("test empty"));
+//  std::map<std::string, int> m;
+//  ft::Map<std::string, int> fm;
+//  Assert(fm.empty() == m.empty(), HintMap("test empty"));
 }
 
 void TestAll() {
@@ -15,5 +27,6 @@ void TestAll() {
             << RESET << std::endl;
 
   tr.RunTest(TestEmpty, "TestEmpty");
+  PrintTree();
 }
 }
