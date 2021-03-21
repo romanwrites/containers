@@ -1,6 +1,7 @@
 #pragma once
 
 namespace ft {
+
 class TreePrinter {
 
  private:
@@ -10,10 +11,11 @@ class TreePrinter {
     Node *parent;
     Node *left;
     Node *right;
+    RB_tree_color color;
     Node() {}
 
 
-    Node(int const value) : value(value), parent(nullptr), left(nullptr), right(nullptr) {}
+    Node(int const value) : value(value), parent(nullptr), left(nullptr), right(nullptr), color(RB_tree_color::RED) {}
   };
 
   Node *root;
@@ -23,6 +25,7 @@ class TreePrinter {
                   std::string &appendLeft,
                   std::string &appendRight) const {
     std::string valStr = std::string(std::to_string(tree->value));
+
     if (isRight) {
       if (tree->parent != nullptr) {
         appendLeft += "│" + std::string(valStr.length() - 1, ' ');
@@ -65,7 +68,11 @@ class TreePrinter {
         ret += "└";
       }
     }
-    ret += std::string(std::to_string(tree->value));
+    if (tree->color == RB_tree_color::RED) {
+      ret += std::string(RED_BG_SET + std::to_string(tree->value) + RESET);
+    } else {
+      ret += std::string(BLACK_BG_SET + std::to_string(tree->value) + RESET);
+    }
 
     if (tree->left != nullptr && tree->right != nullptr) {
       ret += "┤";

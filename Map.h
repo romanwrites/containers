@@ -6,8 +6,8 @@ namespace ft {
 //	------------------------------------- MAP ITERATOR -----------------------------------------
 
 enum RB_tree_color {
-  red = false,
-  black = true
+  RED = true,
+  BLACK = false
 };
 
 template<class T>
@@ -61,7 +61,7 @@ class Node {
   };
 
  private:
-  Node() : color(RB_tree_color::black), parent(nullptr), left(nullptr), right(nullptr) {}
+  Node() : color(RB_tree_color::BLACK), parent(nullptr), left(nullptr), right(nullptr) {}
  public:
   T value;
   RB_tree_color color;

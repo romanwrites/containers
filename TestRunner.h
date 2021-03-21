@@ -24,6 +24,8 @@
 #define PINK_SET "\033[38:5:225m"
 #define SPRING_GREEN_SET "\033[38;2;0;255;127m"
 #define WITH_BG "\033[48;2;0;250;154m\033[38;2;0;0;0m"
+#define RED_BG_SET "\033[38;5;202m"
+#define BLACK_BG_SET "\033[38;5;33m"
 
 class TestRunner {
  public:
