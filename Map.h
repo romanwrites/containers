@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Allocator.h"
 #include <map>
 
 namespace ft {
@@ -11,38 +12,49 @@ enum RB_tree_color {
 
 //	------------------------------------- MAP NODE -----------------------------------------
 template<class T>
-class Node {
+class MapNode {
+
  public:
   typedef T value_type;
 
-  Node() : color(RB_tree_color::BLACK), parent(nullptr), left(nullptr), right(nullptr) {}
   value_type value;
   RB_tree_color color;
-  Node *parent;
-  Node *left;
-  Node *right;
+  MapNode *parent;
+  MapNode *left;
+  MapNode *right;
 
-  Node(const value_type &value)
+  MapNode() : color(RB_tree_color::BLACK), parent(nullptr), left(nullptr), right(nullptr) {}
+
+  MapNode(const value_type &value)
       : color(RB_tree_color::BLACK), value(value), left(nullptr), right(nullptr), parent(nullptr) {}
 
-      //todo
-//  Node &operator++() {
-//
-//  }
+  MapNode(const MapNode &o)
+      : color(o.color), value(o.value), left(o.left), right(o.right), parent(o.parent) {}
+
+  MapNode &operator=(const MapNode &o) {
+    color = o.color;
+    value = o.value;
+    left = o.left;
+    right = o.right;
+    parent = o.parent;
+  }
+
+  virtual ~MapNode() {}
 };
 
 //	------------------------------------- MAP ITERATOR -----------------------------------------
-
-template<class U>
-class NodeIterator {
+template<class P>
+class MapIterator {
  public:
-  typedef U iterator_type;
+  typedef P iterator_type;
   typedef std::bidirectional_iterator_tag iterator_category;
   typedef iterator_type value_type;
   typedef ptrdiff_t difference_type;
-  typedef iterator_type &reference;
-  typedef iterator_type *pointer;
-  typedef Node<U> Node;
+  typedef P &reference;
+  typedef P *pointer;
+  typedef MapNode<P> Node;
+
+  // add const in const iterator
 
  private:
   Node *node;
@@ -50,55 +62,47 @@ class NodeIterator {
 
  public:
   //  Is default-constructible, copy-constructible, copy-assignable and destructible
-  NodeIterator() : node(nullptr), nil(nullptr) {}
-  NodeIterator(Node *p) : node(p), nil(nullptr) {}
-  NodeIterator(const NodeIterator &it) : node(it.node), nil(nullptr) {}
+  MapIterator() : node(nullptr), nil(nullptr) {}
+  MapIterator(Node *p, Node *nil) : node(p), nil(nil) {}
+  MapIterator(const MapIterator &it) : node(it.node), nil(it.nil) {}
 
-  NodeIterator &operator=(const NodeIterator &it) {
+  MapIterator &operator=(const MapIterator &it) {
     node = it.node;
     nil = it.nil;
     return *this;
   }
 
-  bool operator!=(NodeIterator const &other) const {
-    return node != other.node;
-  }
-  bool operator==(NodeIterator const &other) const {
-    return node == other.node;
+  // kind of static
+  friend
+  bool operator==(MapIterator const &lhs, MapIterator const &rhs) {
+    return lhs.node == rhs.node; // compare pointers
   }
 
-  typename NodeIterator::reference operator*() const {
+  friend
+  bool operator==(MapIterator const &lhs, MapIterator const &rhs) {
+    return !(lhs.node == rhs.node);
+  }
+
+  reference operator*() const {
     return node->value;
   }
 
-  typename NodeIterator::reference operator->() const {
+  pointer operator->() const {
     return &(node->value);
   }
 
-  //todo
-//  NodeIterator &operator++() { // prefix increment. doesn't create a copy
-//    if (node->parent == nullptr) {
-//      node = nullptr;
-//    } else if (node->parent->right.get() == node) {
-//      node = node->parent;
-//    } else {
-//      node = node->parent;
-//      if (node->right.get() != nullptr) {
-//        node = node->right.get();
-//        while (node->left.get() != nullptr) {
-//          node = node->left.get();
-//        }
-//      }
-//    }
-//    return *this;
-//  }
+
+  // find successor
+  // find predecessor
+
+  //todo inc dec
 };
 //	------------------------------------- MAP -----------------------------------------
 
 template<class Key,                                           // map::key_type
     class T,                                                   // map::mapped_type
     class Compare = less<Key>,                                // map::key_compare
-    class Alloc = std::allocator<std::pair<const Key, T> >    // map::allocator_type
+    class Alloc = ft::Allocator<std::pair<const Key, T> >    // map::allocator_type
 >
 class Map {
   //	------------------------------------- MAP TYPEDEFS -----------------------------------------
@@ -114,16 +118,16 @@ class Map {
   typedef std::ptrdiff_t difference_type;
   typedef size_t size_type;
 
-  typedef Node<value_type> Node;
+  typedef MapNode<value_type> Node;
 
-  typedef NodeIterator<value_type> iterator;
+  typedef MapIterator<value_type> iterator;
   //todo
 //  typedef NodeConstIterator<Node> const_iterator;
 //  typedef NodeConstIterator<Node> reverse_iterator;
 //  typedef NodeConstIterator<Node> const_reverse_iterator;
 
 //todo do need inherit?
- class value_compare : public std::binary_function<value_type, value_type, bool>  {
+  class value_compare : public std::binary_function<value_type, value_type, bool> {
     friend class map;
    protected:
     Compare comp;
@@ -137,6 +141,7 @@ class Map {
     }
   };
 
+//  todo constructors...
  private:
   size_type currentSize;
   key_compare key_compare_;
@@ -149,20 +154,19 @@ class Map {
     return (*((this->insert(make_pair(k, mapped_type()))).first)).second;
   }
 
-  std::pair<iterator, bool> insert(const value_type &val) {
+//  std::pair<iterator, bool> insert(const value_type &val) {
+//
+//  }
+//
+//  iterator insert(iterator position, const value_type &val) {
+//
+//  }
+//
+//  template<class InputIterator>
+//  void insert(InputIterator first, InputIterator last) {
+//
+//  }
 
-  }
-
-  iterator insert(iterator position, const value_type &val) {
-
-  }
-
-  template<class InputIterator>
-  void insert(InputIterator first, InputIterator last) {
-
-  }
-
-//  todo constructors...
 
 //  explicit Map (const key_compare& comp = key_compare(),
 //                const allocator_type& alloc = allocator_type()) {
