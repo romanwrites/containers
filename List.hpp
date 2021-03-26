@@ -284,13 +284,13 @@ class List {
 
   explicit List(size_type n, const value_type &val = value_type()) {
     ListConstructorInit();
-    shadow_constructor(n, val, ft::type_true());
+    shadow_constructor(n, val, ft::true_type());
   }
 
   template<class InputIterator>
   List(InputIterator first, InputIterator last) {
     ListConstructorInit();
-    shadow_constructor(first, last, ft::type_is_primitive<InputIterator>());
+    shadow_constructor(first, last, ft::is_primitive_type<InputIterator>());
   }
 
   List(const List &x) {
@@ -311,11 +311,11 @@ class List {
 
  private:
   template<class InputIterator>
-  void shadow_constructor(InputIterator first, InputIterator last, ft::type_false) {
+  void shadow_constructor(InputIterator first, InputIterator last, ft::false_type) {
     insert(begin(), first, last);
   }
 
-  void shadow_constructor(size_type n, const value_type &val, ft::type_true) {
+  void shadow_constructor(size_type n, const value_type &val, ft::true_type) {
     insert(begin(), n, val);
   }
 
@@ -401,18 +401,18 @@ class List {
 
   // fill
   void insert(iterator position, size_type n, const value_type &val) {
-    shadow_insert(position, n, val, ft::type_true());
+    shadow_insert(position, n, val, ft::true_type());
   }
 
   // range [first,last)
   template<class InputIterator>
   void insert(iterator position, InputIterator first, InputIterator last) {
-    shadow_insert(position, first, last, ft::type_is_primitive<InputIterator>());
+    shadow_insert(position, first, last, ft::is_primitive_type<InputIterator>());
   }
 
  private:
   template<class InputIterator>
-  void shadow_insert(iterator position, InputIterator first, InputIterator last, ft::type_false) {
+  void shadow_insert(iterator position, InputIterator first, InputIterator last, ft::false_type) {
     iterator tmp = position;
 
     while (first != last) {
@@ -422,7 +422,7 @@ class List {
     }
   }
 
-  void shadow_insert(iterator position, size_type n, const value_type &val, ft::type_true) {
+  void shadow_insert(iterator position, size_type n, const value_type &val, ft::true_type) {
     iterator tmp = position;
 
     for (size_type i = 0; i < n; i++) {
@@ -463,7 +463,7 @@ class List {
 
  private:
   template<class InputIterator>
-  void shadow_assign(InputIterator first, InputIterator last, ft::type_false) {
+  void shadow_assign(InputIterator first, InputIterator last, ft::false_type) {
     iterator it = begin();
 
     while (first != last) {
@@ -480,7 +480,7 @@ class List {
     }
   }
 
-  void shadow_assign(size_type n, const value_type &val, ft::type_true) {
+  void shadow_assign(size_type n, const value_type &val, ft::true_type) {
     iterator it = begin();
     iterator tmp = it;
 
@@ -505,11 +505,11 @@ class List {
  public:
   template<class InputIterator>
   void assign(InputIterator first, InputIterator last) {
-    shadow_assign(first, last, ft::type_is_primitive<InputIterator>());
+    shadow_assign(first, last, ft::is_primitive_type<InputIterator>());
   }
 
   void assign(size_type n, const value_type &val) {
-    shadow_assign(n, val, ft::type_true());
+    shadow_assign(n, val, ft::true_type());
   }
 
   iterator erase(iterator position) {

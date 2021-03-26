@@ -410,16 +410,16 @@ class Vector {
   }
 
   void insert(iterator position, size_type n, const value_type &val) {
-    shadow_insert(position, n, val, ft::type_true());
+    shadow_insert(position, n, val, ft::true_type());
   }
 
   template<class InputIterator>
   void insert(iterator position, InputIterator first, InputIterator last) {
-    shadow_insert(position, first, last, ft::type_is_primitive<InputIterator>());
+    shadow_insert(position, first, last, ft::is_primitive_type<InputIterator>());
   }
  private:
   template<class InputIterator>
-  void shadow_insert(iterator position, InputIterator first, InputIterator last, ft::type_false) {
+  void shadow_insert(iterator position, InputIterator first, InputIterator last, ft::false_type) {
     size_type pos = &(*position) - data;
 
     for (size_type i = 0; first != last; ++i) {
@@ -429,7 +429,7 @@ class Vector {
     }
   }
 
-  void shadow_insert(iterator position, size_type n, const value_type &val, ft::type_true) {
+  void shadow_insert(iterator position, size_type n, const value_type &val, ft::true_type) {
     size_type pos = &(*position) - data;
 
     for (size_type i = 0; i < n; ++i) {
@@ -438,13 +438,13 @@ class Vector {
     }
   }
 
-  void shadow_assign(size_type n, const value_type &val, ft::type_true) {
+  void shadow_assign(size_type n, const value_type &val, ft::true_type) {
     clear();
     insert(begin(), n, val);
   }
 
   template<class InputIterator>
-  void shadow_assign(InputIterator first, InputIterator last, ft::type_false) {
+  void shadow_assign(InputIterator first, InputIterator last, ft::false_type) {
     clear();
     insert(begin(), first, last);
   }
@@ -453,11 +453,11 @@ class Vector {
 
   template<class InputIterator>
   void assign(InputIterator first, InputIterator last) {
-    shadow_assign(first, last, ft::type_is_primitive<InputIterator>());
+    shadow_assign(first, last, ft::is_primitive_type<InputIterator>());
   }
 
   void assign(size_type n, const value_type &val) {
-    shadow_assign(n, val, ft::type_true());
+    shadow_assign(n, val, ft::true_type());
   }
 
   void clear() throw() {

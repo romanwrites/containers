@@ -1,55 +1,55 @@
 #pragma once
 
 namespace ft {
-struct type_false {};
-struct type_true {};
+struct false_type {};
+struct true_type {};
 
 template<class T>
-struct type_is_primitive : public type_false {};
+struct is_primitive_type : public false_type {};
 
 template<>
-struct type_is_primitive<bool> : public type_true {};
+struct is_primitive_type<bool> : public true_type {};
 
 template<>
-struct type_is_primitive<char> : public type_true {};
+struct is_primitive_type<char> : public true_type {};
 
 template<>
-struct type_is_primitive<char16_t> : public type_true {};
+struct is_primitive_type<char16_t> : public true_type {};
 
 template<>
-struct type_is_primitive<char32_t> : public type_true {};
+struct is_primitive_type<char32_t> : public true_type {};
 
 template<>
-struct type_is_primitive<wchar_t> : public type_true {};
+struct is_primitive_type<wchar_t> : public true_type {};
 
 template<>
-struct type_is_primitive<signed char> : public type_true {};
+struct is_primitive_type<signed char> : public true_type {};
 
 template<>
-struct type_is_primitive<short int> : public type_true {};
+struct is_primitive_type<short int> : public true_type {};
 
 template<>
-struct type_is_primitive<int> : public type_true {};
+struct is_primitive_type<int> : public true_type {};
 
 template<>
-struct type_is_primitive<long int> : public type_true {};
+struct is_primitive_type<long int> : public true_type {};
 
 template<>
-struct type_is_primitive<long long int> : public type_true {};
+struct is_primitive_type<long long int> : public true_type {};
 
 template<>
-struct type_is_primitive<unsigned char> : public type_true {};
+struct is_primitive_type<unsigned char> : public true_type {};
 
 template<>
-struct type_is_primitive<unsigned short int> : public type_true {};
+struct is_primitive_type<unsigned short int> : public true_type {};
 
 template<>
-struct type_is_primitive<unsigned int> : public type_true {};
+struct is_primitive_type<unsigned int> : public true_type {};
 
 template<>
-struct type_is_primitive<unsigned long int> : public type_true {};
+struct is_primitive_type<unsigned long int> : public true_type {};
 
 template<>
-struct type_is_primitive<unsigned long long int> : public type_true {};
+struct is_primitive_type<unsigned long long int> : public true_type {};
 
 }
