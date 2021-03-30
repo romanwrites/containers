@@ -142,11 +142,26 @@ class Map {
   };
 
 //  todo constructors...
+//  explicit Map (const key_compare& comp = key_compare(),
+//				const allocator_type& alloc = allocator_type()) : key_compare_(comp), allocator(alloc) {
+//
+//  }
+//
+//  template <class InputIterator>
+//  Map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) {
+//
+//  }
+//
+//  Map (const Map& x) {
+//
+//  }
+
  private:
-  size_type currentSize;
   key_compare key_compare_;
   value_compare value_compare_;
+  allocator_type allocator;
   Node *root;
+  size_type currentSize;
 
  public:
 
