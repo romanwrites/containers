@@ -18,6 +18,7 @@ class Allocator<void> {
 
 template<class T>
 class Allocator {
+ public:
   typedef T value_type;       //	Element type
   typedef T *pointer;          //	Pointer to element
   typedef T &reference;        //  Reference to element

@@ -125,6 +125,8 @@ class Map {
   typedef MapNode<value_type> Node;
 
   typedef MapIterator<value_type> iterator;
+
+  typedef typename Alloc::template rebind<Node>::other node_allocator_type;
   //todo
 //  typedef NodeConstIterator<Node> const_iterator;
 //  typedef NodeConstIterator<Node> reverse_iterator;
@@ -146,9 +148,10 @@ class Map {
   };
 
 //  todo constructors...
+ public:
   explicit Map(const key_compare &comp = key_compare(),
                const allocator_type &alloc = allocator_type())
-      : key_compare_(comp), allocator(alloc), root(nullptr), nil(nullptr), currentSize(0) {
+      : key_compare_(comp), allocator(alloc), nodeAllocator(allocator_type(allocator)), root(nullptr), nil(nullptr), currentSize(0) {
     nil = createNilNode();
 
   }
@@ -165,6 +168,7 @@ class Map {
  private:
   key_compare key_compare_;
   allocator_type allocator;
+  node_allocator_type nodeAllocator;
   Node *root;
   Node *nil;
   size_type currentSize;
@@ -233,8 +237,8 @@ class Map {
     }
   }
 
- private:
-
+// private:
+ public:
   iterator get(const key_type &k) {
     Node *x = root;
 
@@ -284,7 +288,8 @@ class Map {
   }
 
   Node *createNode(value_type const &value) {
-    Node *node = allocator.allocate(1);
+    Node *node = nodeAllocator.allocate(1);
+
     node->color = RedBlackTreeColor::RED;
     node->left = nil;
     node->right = nil;
@@ -296,7 +301,8 @@ class Map {
   }
 
   Node *createNilNode() {
-    Node *node = allocator.allocate(1);
+    Node *node = nodeAllocator.allocate(1);
+
     node->color = RedBlackTreeColor::RED;
     node->left = nullptr;
     node->right = nullptr;

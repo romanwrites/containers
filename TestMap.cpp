@@ -4,15 +4,15 @@
 
 namespace TestMap {
 
-void PrintTree() {
-  ft::TreePrinter tree_printer;
-
-  std::array<int, 13> arr = {931, 39, 1960, 385, 388, 2070, 185, 9, 957, 54, 904, 49800, 394};
-  for (int i = 0; i < (int)arr.size(); ++i) {
-    tree_printer.add(arr[i]);
-  }
-  tree_printer.printTree();
-}
+//void PrintTree() {
+//  ft::TreePrinter tree_printer;
+//
+//  std::array<int, 13> arr = {931, 39, 1960, 385, 388, 2070, 185, 9, 957, 54, 904, 49800, 394};
+//  for (int i = 0; i < (int)arr.size(); ++i) {
+//    tree_printer.add(arr[i]);
+//  }
+//  tree_printer.printTree();
+//}
 
 void TestEmpty() {
 //  std::map<std::string, int> m;
@@ -23,10 +23,15 @@ void TestEmpty() {
 void TestAll() {
   TestRunner tr;
 
-  std::cerr << WITH_BG << "--------------------- Running Map Tests ---------------------"
+  std::cerr << std::endl
+            << WITH_BG << "                      Running Map Tests                      "
             << RESET << std::endl;
 
   tr.RunTest(TestEmpty, "TestEmpty");
-  PrintTree();
+
+  ft::Map<std::string, int> map;
+
+
+//  PrintTree();
 }
 }

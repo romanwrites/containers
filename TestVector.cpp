@@ -305,8 +305,10 @@ void TestComparisonOperators() {
 void TestAll() {
   TestRunner tr;
 
-  std::cerr << WITH_BG << "--------------------- Running Vector Tests ---------------------"
+  std::cerr << std::endl
+            << WITH_BG << "                      Running Vector Tests                      "
             << RESET << std::endl;
+
   tr.RunTest(TestEmpty, "TestEmpty");
   tr.RunTest(TestReserve, "TestReserve");
   tr.RunTest(TestInsert, "TestInsert");
