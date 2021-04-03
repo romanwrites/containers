@@ -29,7 +29,14 @@ void TestAll() {
 
   tr.RunTest(TestEmpty, "TestEmpty");
 
-  ft::Map<std::string, int> map;
+  ft::Map<int, int> map;
+
+  map[6] = 9;
+  map[7] = 9;
+  map[4] = 9;
+  map[5] = 9;
+  map[8] = 9;
+  map.printIntTree();
 
 
 //  PrintTree();

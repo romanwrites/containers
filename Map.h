@@ -2,6 +2,11 @@
 
 #include "Allocator.h"
 #include <map>
+#include "TestRunner.h"
+
+#define RED_BG_SET "\033[38;5;202m"
+#define BLACK_BG_SET "\033[38;5;33m"
+#define RESET "\033[0m"
 
 namespace ft {
 
@@ -83,7 +88,7 @@ class MapIterator {
   }
 
   friend
-  bool operator==(MapIterator const &lhs, MapIterator const &rhs) {
+  bool operator!=(MapIterator const &lhs, MapIterator const &rhs) {
     return !(lhs.node == rhs.node);
   }
 
@@ -176,12 +181,24 @@ class Map {
  public:
 
   mapped_type &operator[](const key_type &k) {
-    return (*((this->insert(make_pair(k, mapped_type()))).first)).second;
+    return (*((this->insert(std::make_pair(k, mapped_type()))).first)).second;
   }
 
-//  std::pair<iterator, bool> insert(const value_type &val) {
-//
-//  }
+  std::pair<iterator, bool> insert(const value_type &val) {
+    Node *node;
+
+    node = put(root, val);
+
+    if (root == NULL) {
+      root = node;
+    }
+
+    std::pair<iterator, bool> res;
+    res.first = iterator(node, nil);
+    res.second = true;
+
+    return res;
+  }
 //
 //  iterator insert(iterator position, const value_type &val) {
 //
@@ -237,7 +254,7 @@ class Map {
     }
   }
 
-// private:
+// private: //todo
  public:
   iterator get(const key_type &k) {
     Node *x = root;
@@ -258,7 +275,7 @@ class Map {
   }
 
   Node *put(Node *h, value_type const &value) {
-    if (h == nil) {
+    if (h == nil || h == nullptr) {
       return createNode(value);
     }
 
@@ -271,9 +288,10 @@ class Map {
       h->right = put(h->right, value);
       h->right->parent = h;
     } else {
-      h->value = value;
+//      allocator.destroy(h->value);
+      allocator.construct(&(h->value), value); // todo fail
+//      h->value = value;
     }
-
     if (h->right->isRed() && !h->left->isRed()) {
       h = rotateLeft(h);
     }
@@ -318,7 +336,7 @@ class Map {
 
   Node *rotateLeft(Node *h) {
     if (!h->right->isRed()) {
-      return; //todo
+      return h; //todo
     }
 
     Node *x = h->right;
@@ -387,6 +405,83 @@ class Map {
 //  const_iterator find (const key_type& k) const {
 //    return const_iterator(*find(k)); //todo check
 //  }
+
+ private:
+  void fillAppend(Node *tree,
+                  bool isRight,
+                  std::string &appendLeft,
+                  std::string &appendRight) const {
+    std::string valStr = std::to_string(tree->value.first);
+
+    if (isRight) {
+      if (tree->parent != nullptr) {
+        appendLeft += "│" + std::string(valStr.length() - 1, ' ');
+      } else {
+        appendLeft += std::string(valStr.length(), ' ');
+      }
+      appendRight += std::string(valStr.length(), ' ');
+    } else {
+      appendLeft += std::string(valStr.length(), ' ');
+      if (tree->parent != nullptr) {
+        appendRight += "│" + std::string(valStr.length() - 1, ' ');
+      } else {
+        appendRight += std::string(valStr.length(), ' ');
+      }
+    }
+  }
+
+  std::string print(Node *tree, std::string space, bool isRight) const {
+    if (tree == nil) {
+      return "";
+    }
+    if (tree->parent != nil && tree->parent->parent != nil) {
+      space += " ";
+    }
+    std::string ret;
+
+    std::string appendLeft;
+    std::string appendRight;
+    fillAppend(tree, isRight, appendLeft, appendRight);
+
+    if (tree->right != nil) {
+      ret += print(tree->right, space + appendRight, true);
+    }
+
+    ret += space;
+    if (tree->parent != nil) {
+      if (tree->parent->right == tree) {
+        ret += "┌";
+      } else {
+        ret += "└";
+      }
+    }
+    if (tree->color == RedBlackTreeColor::RED) {
+      ret += std::string(RED_BG_SET + std::to_string(tree->value.first) + RESET);
+    } else {
+      ret += std::string(BLACK_BG_SET + std::to_string(tree->value.first) + RESET);
+    }
+
+    if (tree->left != nil && tree->right != nil) {
+      ret += "┤";
+    } else if (tree->left == nil && tree->right != nil) {
+      ret += "┘";
+    } else if (tree->right == nil && tree->left != nil) {
+      ret += "┐";
+    }
+    ret += "\n";
+
+    if (tree->left != nil) {
+      ret += print(tree->left, space + appendLeft, false);
+    }
+    return ret;
+  }
+
+ public:
+  void printIntTree() const {
+    if (root != nullptr) {
+      std::cout << print(root, "", true);
+    }
+  }
 
 };
 

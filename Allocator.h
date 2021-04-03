@@ -61,7 +61,7 @@ class Allocator {
       throw std::bad_alloc();
     }
 
-    return static_cast<pointer>( ::operator new(n));
+    return static_cast<pointer>( ::operator new(n * sizeof(T)));
   }
 
   void deallocate(pointer p, size_type n) {
