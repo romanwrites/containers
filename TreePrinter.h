@@ -11,11 +11,11 @@ class TreePrinter {
     Node *parent;
     Node *left;
     Node *right;
-    RB_tree_color color;
+    RedBlackTreeColor color;
     Node() {}
 
 
-    Node(int const value) : value(value), parent(nullptr), left(nullptr), right(nullptr), color(RB_tree_color::RED) {}
+    Node(int const value) : value(value), parent(nullptr), left(nullptr), right(nullptr), color(RedBlackTreeColor::RED) {}
   };
 
   Node *root;
@@ -68,7 +68,7 @@ class TreePrinter {
         ret += "└";
       }
     }
-    if (tree->color == RB_tree_color::RED) {
+    if (tree->color == RedBlackTreeColor::RED) {
       ret += std::string(RED_BG_SET + std::to_string(tree->value) + RESET);
     } else {
       ret += std::string(BLACK_BG_SET + std::to_string(tree->value) + RESET);

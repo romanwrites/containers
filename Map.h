@@ -5,7 +5,7 @@
 
 namespace ft {
 
-enum RB_tree_color {
+enum RedBlackTreeColor {
   RED = true,
   BLACK = false
 };
@@ -18,15 +18,15 @@ class MapNode {
   typedef T value_type;
 
   value_type value;
-  RB_tree_color color;
+  RedBlackTreeColor color;
   MapNode *parent;
   MapNode *left;
   MapNode *right;
 
-  MapNode() : color(RB_tree_color::BLACK), parent(nullptr), left(nullptr), right(nullptr) {}
+  MapNode() : color(RedBlackTreeColor::BLACK), parent(nullptr), left(nullptr), right(nullptr) {}
 
   MapNode(const value_type &value)
-      : color(RB_tree_color::BLACK), value(value), left(nullptr), right(nullptr), parent(nullptr) {}
+      : color(RedBlackTreeColor::BLACK), value(value), left(nullptr), right(nullptr), parent(nullptr) {}
 
   MapNode(const MapNode &o)
       : color(o.color), value(o.value), left(o.left), right(o.right), parent(o.parent) {}
@@ -37,6 +37,10 @@ class MapNode {
     left = o.left;
     right = o.right;
     parent = o.parent;
+  }
+
+  bool isRed() const {
+    return color == RedBlackTreeColor::RED;
   }
 
   virtual ~MapNode() {}
@@ -101,7 +105,7 @@ class MapIterator {
 
 template<class Key,                                           // map::key_type
     class T,                                                   // map::mapped_type
-    class Compare = less<Key>,                                // map::key_compare
+    class Compare = ft::less<Key>,                                // map::key_compare
     class Alloc = ft::Allocator<std::pair<const Key, T> >    // map::allocator_type
 >
 class Map {
@@ -142,9 +146,12 @@ class Map {
   };
 
 //  todo constructors...
-//  explicit Map (const key_compare& comp = key_compare(),
-//				const allocator_type& alloc = allocator_type())
-//				: key_compare_(comp), allocator(alloc), root(nullptr), nil(Node()), currentSize(0) { }
+  explicit Map(const key_compare &comp = key_compare(),
+               const allocator_type &alloc = allocator_type())
+      : key_compare_(comp), allocator(alloc), root(nullptr), nil(nullptr), currentSize(0) {
+    nil = createNilNode();
+
+  }
 //
 //  template <class InputIterator>
 //  Map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) {
@@ -213,26 +220,163 @@ class Map {
   }
 
   value_compare value_comp() const {
-    return value_compare_;
+    return value_compare();
   }
 
   int compareTo(const key_type &o1, const key_type &o2) {
-    if (o1 == o2) { return 0; }
-    else if (o1 < o2) { return -1; }
-    else { return 1; };
+    if (o1 == o2) {
+      return 0;
+    } else if (key_compare_(o1, o2)) {
+      return -1;
+    } else {
+      return 1;
+    }
   }
 
-  iterator find(const key_type &k) {
+ private:
+
+  iterator get(const key_type &k) {
     Node *x = root;
 
-    while (x != nullptr) {
-      int cmp = compareTo(k, x->value.first); //todo check
-      if (cmp < 0) { x = x->left; }
-      else if (cmp > 0) { x = x->right; }
-      else { return iterator(x->value); }
+    while (x != nil) {
+
+      int cmp = compareTo(k, x->value.first);
+
+      if (cmp < 0) {
+        x = x->left;
+      } else if (cmp > 0) {
+        x = x->right;
+      } else {
+        return iterator(x->value);
+      }
     }
-    return nullptr; //todo sentinel
+    return iterator(nil);
   }
+
+  Node *put(Node *h, value_type const &value) {
+    if (h == nil) {
+      return createNode(value);
+    }
+
+    int cmp = compareTo(value.first, h->value.first);
+
+    if (cmp < 0) {
+      h->left = put(h->left, value);
+      h->left->parent = h;
+    } else if (cmp > 0) {
+      h->right = put(h->right, value);
+      h->right->parent = h;
+    } else {
+      h->value = value;
+    }
+
+    if (h->right->isRed() && !h->left->isRed()) {
+      h = rotateLeft(h);
+    }
+    if (h->left->isRed() && h->left->left) {
+      h = rotateRight(h);
+    }
+    if (h->left->isRed() && h->right->isRed()) {
+      flipColors(h);
+    }
+
+    return h;
+  }
+
+  Node *createNode(value_type const &value) {
+    Node *node = allocator.allocate(1);
+    node->color = RedBlackTreeColor::RED;
+    node->left = nil;
+    node->right = nil;
+    node->parent = nil;
+
+    allocator.construct(&(node->value), value);
+
+    return node;
+  }
+
+  Node *createNilNode() {
+    Node *node = allocator.allocate(1);
+    node->color = RedBlackTreeColor::RED;
+    node->left = nullptr;
+    node->right = nullptr;
+    node->parent = nullptr;
+
+    return node;
+  }
+
+  void destroyNode(Node *node) {
+    allocator.destroy(node);
+    allocator.deallocate(node, 1);
+  }
+
+  Node *rotateLeft(Node *h) {
+    if (!h->right->isRed()) {
+      return; //todo
+    }
+
+    Node *x = h->right;
+
+    h->right = x->left;
+    if (h->right != nil) {
+      h->right->parent = h;
+    }
+
+    x->parent = h->parent;
+
+    if (x->parent == nil) {
+      root = x;
+    } else if (x->parent->left == h) {
+      x->parent->left = x;
+    } else {
+      x->parent->right = x;
+    }
+
+    x->left = h;
+    h->parent = x;
+
+    x->color = h->color;
+    h->color = RedBlackTreeColor::RED;
+    return x;
+  }
+
+  Node *rotateRight(Node *h) {
+    if (!h->right->isRed()) {
+      return h; //todo
+    }
+
+    Node *x = h->left;
+
+    h->left = x->right;
+    if (h->left != nil) {
+      h->left->parent = h;
+    }
+
+    x->parent = h->parent;
+    if (x->parent == nil) {
+      root = x;
+    } else if (x->parent->left == nil) {
+      x->parent->left = x;
+    } else {
+      x->parent->right = x;
+    }
+
+    x->right = h;
+    h->parent = x;
+
+    x->color = h->color;
+    h->color = RedBlackTreeColor::RED;
+    return h;
+  }
+
+  void flipColors(Node *h) {
+    if (!h->isRed() && h->left->isRed() && h->right->isRed()) {
+      h->color = RedBlackTreeColor::RED;
+      h->left->color = RedBlackTreeColor::BLACK;
+      h->right->color = RedBlackTreeColor::BLACK;
+    }
+  }
+
 
 //  const_iterator find (const key_type& k) const {
 //    return const_iterator(*find(k)); //todo check

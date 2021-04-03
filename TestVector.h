@@ -45,9 +45,9 @@ std::ostream &operator<<(std::ostream &os, ft::Vector<T> const &s) {
   os << "[";
   bool first = true;
   for (auto const &x : s) {
-	if (!first) {
-	  os << ", ";
-	}
+    if (!first) {
+      os << ", ";
+    }
     first = false;
     os << x;
   }
