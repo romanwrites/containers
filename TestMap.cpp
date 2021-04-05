@@ -20,6 +20,20 @@ void TestEmpty() {
 //  Assert(fm.empty() == m.empty(), HintMap("test empty"));
 }
 
+void TestSize() {
+//  std::map<std::string, int> m;
+//  ft::Map<std::string, int> fm;
+//  Assert(fm.size() == m.size(), HintMap("test empty size"));
+//
+//  m["one"] = 1;
+//  m["two"] = 2;
+//
+//  fm["one"] = 1;
+//  fm["two"] = 2;
+//
+//  Assert(fm.size() == m.size(), HintMap("test size"));
+}
+
 void TestAll() {
   TestRunner tr;
 
@@ -28,15 +42,16 @@ void TestAll() {
             << RESET << std::endl;
 
   tr.RunTest(TestEmpty, "TestEmpty");
+  tr.RunTest(TestSize, "TestSize");
 
   ft::Map<int, int> map;
 
-  map[6] = 9;
-  map[7] = 9;
-  map[4] = 9;
-  map[5] = 9;
-  map[8] = 9;
-  map.printIntTree();
+//  map[6] = 9;
+//  map[7] = 9;
+//  map[4] = 9;
+//  map[5] = 9;
+//  map[8] = 9;
+//  map.printIntTree();
 
 
 //  PrintTree();
