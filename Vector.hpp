@@ -69,12 +69,34 @@ class V_iterator {
     return ptr[idx];
   }
 
-  bool operator==(iterator rhs) const throw() {
-    return ptr == rhs.ptr;
+  friend bool operator==(iterator const &lhs,
+                         iterator const &rhs) {
+    return lhs.ptr == rhs.ptr;
   }
 
-  bool operator!=(iterator rhs) const throw() {
-    return ptr != rhs.ptr;
+  friend bool operator!=(iterator const &lhs,
+                         iterator const &rhs) {
+    return lhs.ptr != rhs.ptr;
+  }
+
+  friend bool operator<(iterator const &lhs,
+                         iterator const &rhs) {
+    return lhs.ptr < rhs.ptr;
+  }
+
+  friend bool operator>(iterator const &lhs,
+                         iterator const &rhs) {
+    return lhs.ptr > rhs.ptr;
+  }
+
+  friend bool operator<=(iterator const &lhs,
+                         iterator const &rhs) {
+    return lhs.ptr <= rhs.ptr;
+  }
+
+  friend bool operator>=(iterator const &lhs,
+                         iterator const &rhs) {
+    return lhs.ptr >= rhs.ptr;
   }
 
   iterator operator+(int n) throw() {
@@ -95,22 +117,6 @@ class V_iterator {
   iterator operator-=(int n) throw() {
     ptr -= n;
     return *this;
-  }
-
-  bool operator<(iterator const &rhs) {
-    return ptr < rhs.ptr;
-  }
-
-  bool operator>(iterator const &rhs) {
-    return ptr > rhs.ptr;
-  }
-
-  bool operator<=(iterator const &rhs) {
-    return ptr <= rhs.ptr;
-  }
-
-  bool operator>=(iterator const &rhs) {
-    return ptr >= rhs.ptr;
   }
 
  private:
