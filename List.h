@@ -143,28 +143,14 @@ class BidirectionalListIt {
     return &(this->ptr->value);
   }
 
-  bool operator==(const BidirectionalListIt &rhs) const {
-    return ptr == rhs.ptr;
+  friend bool operator==(const BidirectionalListIt &lhs,
+                         const BidirectionalListIt &rhs) {
+    return lhs.ptr == rhs.ptr;
   }
 
-  bool operator!=(const BidirectionalListIt &rhs) const {
-    return !(rhs == *this);
-  }
-
-  bool operator<(const BidirectionalListIt &rhs) const {
-    return ptr < rhs.ptr;
-  }
-
-  bool operator>(const BidirectionalListIt &rhs) const {
-    return rhs < *this;
-  }
-
-  bool operator<=(const BidirectionalListIt &rhs) const {
-    return !(rhs < *this);
-  }
-
-  bool operator>=(const BidirectionalListIt &rhs) const {
-    return !(*this < rhs);
+  friend bool operator!=(const BidirectionalListIt &lhs,
+                         const BidirectionalListIt &rhs) {
+    return lhs.ptr != rhs.ptr;
   }
 
   BidirectionalListIt &operator++() {
