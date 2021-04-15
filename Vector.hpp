@@ -4,6 +4,7 @@
 #include <vector>
 #include "Traits.h"
 #include "List.h"
+#include "ReverseIterator.h"
 
 namespace ft {
 //	------------------------------------- VECTOR ITERATOR -----------------------------------------
@@ -244,8 +245,8 @@ class Vector {
   typedef value_type const *const_pointer;
   typedef V_iterator<T> iterator;
   typedef V_iterator<T> const const_iterator;
-  typedef V_reverse_iterator<T> reverse_iterator;
-  typedef V_reverse_iterator<T> const const_reverse_iterator;
+  typedef ft::reverse_iterator<T> reverse_iterator;
+  typedef ft::reverse_iterator<T> const const_reverse_iterator;
   typedef size_t size_type;
   typedef Alloc allocator_type;
   typedef ptrdiff_t difference_type;
