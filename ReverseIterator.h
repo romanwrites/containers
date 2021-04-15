@@ -1,6 +1,7 @@
 #pragma once
 #include "IteratorTraits.h"
-
+#include <iterator>
+#include <utility>
 namespace ft {
 
 template<class Iterator>
@@ -129,5 +130,7 @@ bool operator>=(const reverse_iterator<Iterator> &lhs,
                 const reverse_iterator<Iterator> &rhs) {
   return lhs.base() >= rhs.base();
 }
+
+// On cplusplus.com nothing is said about comparing the values of const and non const for std c++98
 
 }
