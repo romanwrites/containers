@@ -10,4 +10,5 @@ add_executable(main
         TestVector.cpp
         TestRunner.cpp
         TestMap.cpp
-        TestQueue.cpp)
+        TestQueue.cpp
+        TestStack.cpp)

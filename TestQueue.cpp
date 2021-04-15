@@ -145,8 +145,6 @@ void TestAll() {
   tr.RunTest(TestBack, "TestBack");
   tr.RunTest(TestPop, "TestPop");
   tr.RunTest(TestRelationalOperators, "TestRelationalOperators");
-
-  ft::Queue<int> queue;
 }
 
 }
