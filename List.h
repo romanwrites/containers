@@ -3,6 +3,7 @@
 #include <memory>
 #include <list>
 #include "Traits.h"
+#include "ReverseIterator.h"
 
 namespace ft {
 
@@ -48,8 +49,6 @@ class List;
 template<class Category, class Iter>
 class BidirectionalListIt;
 
-template<class Category, class Iter>
-class BidirectionalListReverseIt;
 //	------------------------------------- LIST NODE -----------------------------------------
 template<class T>
 class NodeList {
@@ -64,7 +63,6 @@ class NodeList {
   NodeList(const value_type &value) : next(nullptr), prev(nullptr), value(value) {}
   friend class List<T>;
   friend class BidirectionalListIt<iterator_category, T>;
-  friend class BidirectionalListReverseIt<iterator_category, T>;
 
   NodeList &operator=(const NodeList<value_type> &obj) {
     next = obj.next;
@@ -176,64 +174,6 @@ class BidirectionalListIt {
   }
 };
 
-//	------------------------------------- LIST REVERSE ITERATOR -----------------------------------------
-template<class Category, class Iter>
-class BidirectionalListReverseIt : public BidirectionalListIt<Category, Iter> {
- private:
-//  NodeList<Iter> *ptr;
-  friend class List<Iter>;
- public:
-  typedef std::ptrdiff_t difference_type;
-  typedef Iter value_type;
-  typedef Iter const const_value_type;
-  typedef std::bidirectional_iterator_tag iterator_category;
-  typedef value_type &reference;
-  typedef value_type *pointer;
-  typedef const_value_type &const_reference;
-  typedef const_value_type *const_pointer;
-  typedef size_t size_type;
-  typedef BidirectionalListReverseIt<Category, Iter> reverse_iterator;
-  typedef BidirectionalListIt<Category, Iter> iterator;
-  typedef BidirectionalListIt<Category, Iter> base_iterator;
-
-  explicit BidirectionalListReverseIt() throw(): base_iterator() {}
-  explicit BidirectionalListReverseIt(NodeList<Iter> *p) throw(): base_iterator(p) {}
-  explicit BidirectionalListReverseIt(const NodeList<const Iter> *p) throw() {
-    this->ptr = const_cast<NodeList<const Iter> *>(p);
-  }
-  BidirectionalListReverseIt(const BidirectionalListReverseIt &p) throw() {
-    this->ptr = p.ptr;
-  }
-  ~BidirectionalListReverseIt() {}
-
-  BidirectionalListReverseIt &operator=(const BidirectionalListReverseIt &rhs) {
-    this->ptr = rhs.ptr;
-    return *this;
-  }
-
-  reverse_iterator &operator++() {
-    this->ptr = this->ptr->prev;
-    return *this;
-  }
-
-  reverse_iterator operator++(int) {
-    reverse_iterator clone(*this);
-    this->ptr = this->ptr->prev;
-    return clone;
-  }
-
-  reverse_iterator &operator--() {
-    this->ptr = this->ptr->next;
-    return *this;
-  }
-
-  reverse_iterator operator--(int) {
-    reverse_iterator clone(*this);
-    this->ptr = this->ptr->next;
-    return clone;
-  }
-};
-
 //	------------------------------------- LIST CONTAINER -----------------------------------------
 template<class T, class Alloc>
 class List {
@@ -248,8 +188,8 @@ class List {
   typedef std::bidirectional_iterator_tag iterator_category;
   typedef BidirectionalListIt<iterator_category, T> iterator;
   typedef BidirectionalListIt<iterator_category, T> const_iterator;
-  typedef BidirectionalListReverseIt<iterator_category, T> reverse_iterator;
-  typedef BidirectionalListReverseIt<iterator_category, T> const_reverse_iterator;
+  typedef ft::reverse_iterator<iterator> reverse_iterator;
+  typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
   typedef std::allocator<value_type> allocator_type;
 
  private:
@@ -324,19 +264,19 @@ class List {
   }
 
   reverse_iterator rbegin() {
-    return reverse_iterator(shadow->prev);
+    return reverse_iterator(end());
   }
 
   reverse_iterator rend() {
-    return reverse_iterator(shadow);
+    return reverse_iterator(begin());
   }
 
   const_reverse_iterator rbegin() const {
-    return reverse_iterator(shadow->prev);
+    return reverse_iterator(end());
   }
 
   const_reverse_iterator rend() const {
-    return reverse_iterator(shadow);
+    return reverse_iterator(begin());
   }
 
   value_type &at(int idx) {
