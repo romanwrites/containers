@@ -29,10 +29,13 @@
 
 class TestRunner {
  public:
+
+
+
   template<class TestFunc>
   void RunTest(TestFunc func, std::string const &test_name) {
     try {
-      func();
+      func(*this);
       // Use cerr to not mix tests output and program output
       std::cerr << KHAKI_SET << test_name << ": "
                 << SPRING_GREEN_SET << "OK" << RESET << std::endl;
@@ -49,7 +52,24 @@ class TestRunner {
     }
   }
 
+  TestRunner(const std::string &container_name = "") : containerName(container_name) {
+    runningWhichTests();
+  }
+
+  void runningWhichTests() const {
+    std::cerr << std::endl
+              << WITH_BG << "                      Running "
+                  + containerName
+                  + " Tests                      "
+              << RESET << std::endl;
+  }
+
+  std::string hintMessage(std::string const &str) const {
+    return containerName + ": " + str;
+  }
+
  private:
+  std::string containerName;
   int fail_count = 0;
 };
 

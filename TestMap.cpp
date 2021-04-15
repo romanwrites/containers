@@ -14,13 +14,15 @@ namespace TestMap {
 //  tree_printer.printTree();
 //}
 
-void TestEmpty() {
+void TestEmpty(TestRunner const &tr) {
+  (void)tr;
 //  std::map<std::string, int> m;
 //  ft::Map<std::string, int> fm;
 //  Assert(fm.empty() == m.empty(), HintMap("test empty"));
 }
 
-void TestSize() {
+void TestSize(TestRunner const &tr) {
+  (void)tr;
 //  std::map<std::string, int> m;
 //  ft::Map<std::string, int> fm;
 //  Assert(fm.size() == m.size(), HintMap("test empty size"));
@@ -35,11 +37,7 @@ void TestSize() {
 }
 
 void TestAll() {
-  TestRunner tr;
-
-  std::cerr << std::endl
-            << WITH_BG << "                      Running Map Tests                      "
-            << RESET << std::endl;
+  TestRunner tr("Map");
 
   tr.RunTest(TestEmpty, "TestEmpty");
   tr.RunTest(TestSize, "TestSize");
