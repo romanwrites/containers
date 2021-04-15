@@ -10,12 +10,14 @@
 #include <algorithm>
 #include <functional>
 #include <string>
-#include "List.hpp"
+#include "List.h"
 #include "TestList.h"
 #include "Vector.hpp"
 #include "TestVector.h"
 #include "Map.h"
 #include "TestMap.h"
+#include "Queue.h"
+#include "TestQueue.h"
 
 #define GREEN(x) ("\033[32m" + x + "\033[0m")
 #define RED_SET "\033[0;31m"
