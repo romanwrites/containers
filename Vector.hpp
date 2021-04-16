@@ -5,138 +5,22 @@
 #include "Traits.h"
 #include "List.h"
 #include "ReverseIterator.h"
+#include "VectorIterator.h"
 
 namespace ft {
-//	------------------------------------- VECTOR ITERATOR -----------------------------------------
-template<class T>
-class V_iterator {
- public:
-  typedef T *pointer;
-  typedef T &reference;
-  typedef const T *const_pointer;
-  typedef const T &const_reference;
-  typedef V_iterator iterator;
-
-  V_iterator() throw() {
-    ptr = nullptr;
-  }
-
-  V_iterator(pointer p) throw() {
-    ptr = p;
-  }
-
-  V_iterator(V_iterator const &p) throw() {
-    *this = p;
-  }
-
-  virtual ~V_iterator() throw() {}
-
-  iterator &operator=(V_iterator const &p) throw() {
-    ptr = p.ptr;
-    return *this;
-  }
-
-  iterator &operator++() throw() {
-    ptr++;
-    return *this;
-  }
-
-  iterator operator++(int) throw() {
-    V_iterator it = *this;
-    ++(*this);
-    return it;
-  }
-
-  iterator &operator--() throw() {
-    ptr--;
-    return *this;
-  }
-
-  iterator operator--(int) throw() {
-    iterator it = *this;
-    --(*this);
-    return it;
-  }
-
-  reference operator*() const throw() {
-    return *ptr;
-  }
-
-  pointer operator->() const throw() {
-    return ptr;
-  }
-
-  reference operator[](int idx) const throw() {
-    return ptr[idx];
-  }
-
-  friend bool operator==(iterator const &lhs,
-                         iterator const &rhs) {
-    return lhs.ptr == rhs.ptr;
-  }
-
-  friend bool operator!=(iterator const &lhs,
-                         iterator const &rhs) {
-    return lhs.ptr != rhs.ptr;
-  }
-
-  friend bool operator<(iterator const &lhs,
-                         iterator const &rhs) {
-    return lhs.ptr < rhs.ptr;
-  }
-
-  friend bool operator>(iterator const &lhs,
-                         iterator const &rhs) {
-    return lhs.ptr > rhs.ptr;
-  }
-
-  friend bool operator<=(iterator const &lhs,
-                         iterator const &rhs) {
-    return lhs.ptr <= rhs.ptr;
-  }
-
-  friend bool operator>=(iterator const &lhs,
-                         iterator const &rhs) {
-    return lhs.ptr >= rhs.ptr;
-  }
-
-  iterator operator+(int n) throw() {
-    iterator ret(ptr + n);
-    return ret;
-  }
-
-  iterator operator-(int n) throw() {
-    iterator ret(ptr - n);
-    return ret;
-  }
-
-  iterator operator+=(int n) throw() {
-    ptr += n;
-    return *this;
-  }
-
-  iterator operator-=(int n) throw() {
-    ptr -= n;
-    return *this;
-  }
-
- private:
-  T *ptr;
-};
-
 //	------------------------------------- VECTOR -----------------------------------------
 template<class T, typename Alloc = std::allocator<T> > // pass any type and compiler auto generate Vector parametrized with this type
 class Vector {
  public:
   typedef T value_type;
-  typedef value_type &reference;
-  typedef value_type *pointer;
-  typedef value_type const &const_reference;
-  typedef value_type const *const_pointer;
-  typedef V_iterator<T> iterator;
-  typedef V_iterator<T> const const_iterator;
-  typedef ft::reverse_iterator<T> reverse_iterator;
-  typedef ft::reverse_iterator<T> const const_reverse_iterator;
+  typedef value_type& reference;
+  typedef value_type* pointer;
+  typedef const value_type& const_reference;
+  typedef const value_type* const_pointer;
+  typedef VectorIterator<T> iterator;
+  typedef VectorConstIterator<T> const_iterator;
+  typedef ft::reverse_iterator<iterator> reverse_iterator;
+  typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
   typedef size_t size_type;
   typedef Alloc allocator_type;
   typedef ptrdiff_t difference_type;
@@ -448,8 +332,8 @@ bool operator==(const Vector<T, Alloc> &lhs, const Vector<T, Alloc> &rhs) {
     return false;
   }
 
-  typename ft::Vector<T>::iterator itLhs = lhs.begin();
-  typename ft::Vector<T>::iterator itRhs = rhs.begin();
+  typename ft::Vector<T>::const_iterator itLhs = lhs.begin();
+  typename ft::Vector<T>::const_iterator itRhs = rhs.begin();
 
   while (itLhs != lhs.end() && itRhs != rhs.end()) {
     if (*itLhs != *itRhs) {
@@ -468,10 +352,10 @@ bool operator!=(const Vector<T, Alloc> &lhs, const Vector<T, Alloc> &rhs) {
 
 template<class T, class Alloc>
 bool operator<(const Vector<T, Alloc> &lhs, const Vector<T, Alloc> &rhs) {
-  typename ft::Vector<T, Alloc>::iterator first1 = lhs.begin();
-  typename ft::Vector<T, Alloc>::iterator first2 = rhs.begin();
-  typename ft::Vector<T, Alloc>::iterator last1 = lhs.end();
-  typename ft::Vector<T, Alloc>::iterator last2 = rhs.end();
+  typename ft::Vector<T, Alloc>::const_iterator first1 = lhs.begin();
+  typename ft::Vector<T, Alloc>::const_iterator first2 = rhs.begin();
+  typename ft::Vector<T, Alloc>::const_iterator last1 = lhs.end();
+  typename ft::Vector<T, Alloc>::const_iterator last2 = rhs.end();
 
   return lexicographical_compare(first1, last1, first2, last2, ft::less<T>());
 }
