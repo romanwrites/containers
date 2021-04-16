@@ -234,11 +234,6 @@ class VectorConstIterator {
 
  private:
   pointer ptr;
-
- public:
-  pointer p() const {
-    return ptr;
-  }
 };
 
 }

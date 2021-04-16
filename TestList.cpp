@@ -41,7 +41,7 @@ void TestInsert(TestRunner const &tr) {
 
   std::list<int> l;
   ft::List<int> fl;
-  std::vector<int> vv{0,1,2,3,4,5,6,7,8,9};
+  std::vector<int> vv{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
   l.insert(l.begin(), vv.begin(), vv.end());
   fl.insert(fl.begin(), vv.begin(), vv.end());
@@ -482,9 +482,27 @@ void TestUnique(TestRunner const &tr) {
   AssertEqual(ftlst, lst, tr.hintMessage("Test unique() greater"));
 }
 
+void ProcessConstIteratorTests(std::list<int> const &lst, ft::List<int> const &ftlst, TestRunner const &tr) {
+  auto itlst = lst.begin();
+  auto itftlst = ftlst.begin();
+
+  for (int i = 0; itlst != lst.end() && itftlst != ftlst.end() && i < (int) lst.size(); ++itlst, ++itftlst, ++i) {
+    Assert(*itlst == *itftlst, tr.hintMessage("const_iterator, iteration: " + std::to_string(i)));
+  }
+}
+
+void TestConstIterator(TestRunner const &tr) {
+  std::vector<int> v{2, 4, 6, 1, -5, -6, -1, 3, 7, 0, 0, 0, 4, 2, 1, -3, 5, 8, 10, 10, 11, -10, -10, 22, 21};
+  std::list<int> lst(v.begin(), v.end());
+  ft::List<int> ftlst(v.begin(), v.end());
+
+  ProcessConstIteratorTests(lst, ftlst, tr);
+}
+
 void TestAll() {
   TestRunner tr("List");
 
+  tr.RunTest(TestConstIterator, "TestConstIterator");
   tr.RunTest(TestBeginEnd, "TestBeginEnd");
   tr.RunTest(TestRbeginRend, "TestRbeginRend");
   tr.RunTest(TestInsert, "TestListInsert");
