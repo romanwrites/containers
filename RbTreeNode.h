@@ -7,53 +7,37 @@ enum RbTreeColor {
 
 class RbTreeNodeBase {
  public:
-  typedef RbTreeNodeBase* base_ptr;
-  typedef const RbTreeNodeBase* const_base_ptr;
+  typedef RbTreeNodeBase *base_ptr;
+  typedef const RbTreeNodeBase *const_base_ptr;
 
   RbTreeColor color;
-  RbTreeNodeBase *parent;
-  RbTreeNodeBase *left;
-  RbTreeNodeBase *right;
-};
+  base_ptr parent;
+  base_ptr left;
+  base_ptr right;
 
+  // Constructors and Coplien
+  RbTreeNodeBase() : color(RbTreeColor::BLACK), parent(nullptr), left(nullptr), right(nullptr) {}
 
-//	------------------------------------- RB TREE NODE -----------------------------------------
-template<class T>
-class RbTreeNode : public RbTreeNodeBase{
+  RbTreeNodeBase(const RbTreeNodeBase &o)
+      : color(o.color), parent(o.parent), left(o.left), right(o.right) {}
 
- public:
-  typedef T value_type;
-  typedef RbTreeNodeBase* base_ptr;
-  typedef const RbTreeNodeBase* const_base_ptr;
+  virtual ~RbTreeNodeBase() {}
 
-  value_type value;
-  RbTreeColor color;
-  RbTreeNode *parent;
-  RbTreeNode *left;
-  RbTreeNode *right;
+  RbTreeNodeBase &operator=(const RbTreeNodeBase &o) {
+    this->color = o.color;
+    this->left = o.left;
+    this->right = o.right;
+    this->parent = o.parent;
 
-  RbTreeNode() : color(RbTreeColor::BLACK), parent(nullptr), left(nullptr), right(nullptr) {}
-
-  RbTreeNode(const value_type &value)
-      : color(RbTreeColor::BLACK), value(value), left(nullptr), right(nullptr), parent(nullptr) {}
-
-  RbTreeNode(const RbTreeNode &o)
-      : color(o.color), value(o.value), left(o.left), right(o.right), parent(o.parent) {}
-
-  RbTreeNode &operator=(const RbTreeNode &o) {
-    color = o.color;
-    value = o.value;
-    left = o.left;
-    right = o.right;
-    parent = o.parent;
+    return *this;
   }
 
+  // Methods
   bool isRed() const {
-    return color == RbTreeColor::RED;
+    return this->color == RbTreeColor::RED;
   }
 
-  virtual ~RbTreeNode() {}
-
+  // Static methods
   static base_ptr minimum(base_ptr x) {
     while (x->left != NULL) {
       x = x->left;
@@ -81,6 +65,88 @@ class RbTreeNode : public RbTreeNodeBase{
     }
     return x;
   }
+
+  static base_ptr local_increment(base_ptr x) throw() {
+    if (x->right != 0) {
+      x = x->right;
+      while (x->left != 0) {
+        x = x->left;
+      }
+    } else {
+      base_ptr y = x->parent;
+      while (x == y->right) {
+        x = y;
+        y = y->parent;
+      }
+      if (x->right != y)
+        x = y;
+    }
+    return x;
+  }
+
+  base_ptr increment(base_ptr x) throw() {
+    return local_increment(x);
+  }
+
+  const_base_ptr increment(const_base_ptr x) throw() {
+    return local_increment(const_cast<base_ptr >(x));
+  }
+
+  static base_ptr local_decrement(base_ptr x) throw() {
+    if (x->isRed() && x->parent->parent == x)
+      x = x->right;
+    else if (x->left != 0) {
+      base_ptr y = x->left;
+      while (y->right != 0) {
+        y = y->right;
+      }
+      x = y;
+    } else {
+      base_ptr y = x->parent;
+      while (x == y->left) {
+        x = y;
+        y = y->parent;
+      }
+      x = y;
+    }
+    return x;
+  }
+
+  base_ptr decrement(base_ptr x) throw() {
+    return local_decrement(x);
+  }
+
+  const_base_ptr decrement(const_base_ptr x) throw() {
+    return local_decrement(const_cast<base_ptr>(x));
+  }
+
 };
 
+//	------------------------------------- RB TREE NODE -----------------------------------------
+template<class T>
+class RbTreeNode : public RbTreeNodeBase {
 
+ public:
+  typedef T value_type;
+
+  value_type value;
+
+  //  Constructors
+  RbTreeNode() : RbTreeNodeBase(), value(NULL) {}
+
+  RbTreeNode(const value_type &value) : RbTreeNodeBase(), value(value) {}
+
+  RbTreeNode(const RbTreeNode &o) : RbTreeNodeBase(o), value(o.value) {}
+
+  RbTreeNode &operator=(const RbTreeNode &o) {
+    this->color = o.color;
+    this->value = o.value;
+    this->left = o.left;
+    this->right = o.right;
+    this->parent = o.parent;
+
+    return *this;
+  }
+
+  virtual ~RbTreeNode() {}
+};
