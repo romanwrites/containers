@@ -55,10 +55,11 @@ class NodeList {
  public:
   typedef T value_type;
   typedef std::bidirectional_iterator_tag iterator_category;
- private:
   NodeList<T> *next;
   NodeList<T> *prev;
   value_type value;
+
+ private:
   NodeList() : next(nullptr), prev(nullptr), value(value_type()) {}
   NodeList(const value_type &value) : next(nullptr), prev(nullptr), value(value) {}
   friend class List<T>;
@@ -100,7 +101,6 @@ class NodeList {
 template<class Category, class Iter>
 class BidirectionalListIt {
  protected:
-  NodeList<Iter> *ptr;
   friend class List<Iter>;
  public:
   typedef std::ptrdiff_t difference_type;
@@ -109,8 +109,6 @@ class BidirectionalListIt {
   typedef std::bidirectional_iterator_tag iterator_category;
   typedef value_type &reference;
   typedef value_type *pointer;
-  typedef const_value_type &const_reference;
-  typedef const_value_type *const_pointer;
   typedef size_t size_type;
   typedef BidirectionalListIt<Category, Iter> iterator;
 
@@ -125,50 +123,122 @@ class BidirectionalListIt {
     return *this;
   }
 
-  reference operator*() {
+  reference operator*() const {
     return this->ptr->value;
   }
 
-  const_reference operator*() const {
-    return this->ptr->value;
-  }
-
-  pointer operator->() {
+  pointer operator->() const {
     return &(this->ptr->value);
   }
 
-  const_pointer operator->() const {
-    return &(this->ptr->value);
-  }
-
-  friend bool operator==(const BidirectionalListIt &lhs,
-                         const BidirectionalListIt &rhs) {
+  friend bool operator==(const iterator &lhs,
+                         const iterator &rhs) {
     return lhs.ptr == rhs.ptr;
   }
 
-  friend bool operator!=(const BidirectionalListIt &lhs,
-                         const BidirectionalListIt &rhs) {
+  friend bool operator!=(const iterator &lhs,
+                         const iterator &rhs) {
     return lhs.ptr != rhs.ptr;
   }
 
-  BidirectionalListIt &operator++() {
+  iterator &operator++() {
     ptr = ptr->next;
     return *this;
   }
 
-  BidirectionalListIt operator++(int) {
-    BidirectionalListIt clone(*this);
+  iterator operator++(int) {
+    iterator clone(*this);
     ptr = ptr->next;
     return clone;
   }
 
-  BidirectionalListIt &operator--() {
+  iterator &operator--() {
     ptr = ptr->prev;
     return *this;
   }
 
-  BidirectionalListIt operator--(int) {
-    BidirectionalListIt clone(*this);
+  iterator operator--(int) {
+    iterator clone(*this);
+    ptr = ptr->prev;
+    return clone;
+  }
+
+ private:
+  NodeList<Iter> *ptr;
+
+ public:
+  pointer p() const {
+    return ptr;
+  }
+};
+
+//	------------------------------------- LIST ITERATOR -----------------------------------------
+template<class Category, class Iter>
+class BidirectionalConstListIt {
+ protected:
+  NodeList<Iter> *ptr;
+  friend class List<Iter>;
+ public:
+  typedef std::ptrdiff_t difference_type;
+  typedef Iter value_type;
+  typedef Iter const const_value_type;
+  typedef std::bidirectional_iterator_tag iterator_category;
+  typedef const value_type &reference;
+  typedef const value_type *pointer;
+  typedef size_t size_type;
+  typedef BidirectionalConstListIt<Category, Iter> iterator;
+
+  explicit BidirectionalConstListIt() throw(): ptr(nullptr) {}
+
+  explicit BidirectionalConstListIt(NodeList<Iter> *p) throw(): ptr(p) {}
+
+  BidirectionalConstListIt(const BidirectionalConstListIt &p) throw(): ptr(p.ptr) {}
+
+  BidirectionalConstListIt(const BidirectionalListIt<Category, Iter> &p) throw(): ptr(p.p()) {}
+
+  ~BidirectionalConstListIt() {}
+
+  BidirectionalConstListIt &operator=(const BidirectionalConstListIt &rhs) {
+    ptr = rhs.ptr;
+    return *this;
+  }
+
+  reference operator*() const {
+    return this->ptr->value;
+  }
+
+  pointer operator->() const {
+    return &(this->ptr->value);
+  }
+
+  friend bool operator==(const iterator &lhs,
+                         const iterator &rhs) {
+    return lhs.ptr == rhs.ptr;
+  }
+
+  friend bool operator!=(const iterator &lhs,
+                         const iterator &rhs) {
+    return lhs.ptr != rhs.ptr;
+  }
+
+  iterator &operator++() {
+    ptr = ptr->next;
+    return *this;
+  }
+
+  iterator operator++(int) {
+    iterator clone(*this);
+    ptr = ptr->next;
+    return clone;
+  }
+
+  iterator &operator--() {
+    ptr = ptr->prev;
+    return *this;
+  }
+
+  iterator operator--(int) {
+    iterator clone(*this);
     ptr = ptr->prev;
     return clone;
   }
@@ -187,7 +257,7 @@ class List {
   typedef size_t size_type;
   typedef std::bidirectional_iterator_tag iterator_category;
   typedef BidirectionalListIt<iterator_category, T> iterator;
-  typedef BidirectionalListIt<iterator_category, T> const_iterator;
+  typedef BidirectionalConstListIt<iterator_category, T> const_iterator;
   typedef ft::reverse_iterator<iterator> reverse_iterator;
   typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
   typedef std::allocator<value_type> allocator_type;
@@ -256,11 +326,11 @@ class List {
   }
 
   const_iterator begin() const {
-    return iterator(shadow->next);
+    return const_iterator(shadow->next);
   }
 
   const_iterator end() const {
-    return iterator(shadow);
+    return const_iterator(shadow);
   }
 
   reverse_iterator rbegin() {
@@ -272,11 +342,11 @@ class List {
   }
 
   const_reverse_iterator rbegin() const {
-    return reverse_iterator(end());
+    return const_reverse_iterator(end());
   }
 
   const_reverse_iterator rend() const {
-    return reverse_iterator(begin());
+    return const_reverse_iterator(begin());
   }
 
   value_type &at(int idx) {
@@ -721,8 +791,8 @@ bool operator==(ft::List<T, Alloc> const &lhs, ft::List<T, Alloc> const &rhs) {
     return false;
   }
 
-  typename ft::List<T>::iterator itLhs = lhs.begin();
-  typename ft::List<T>::iterator itRhs = rhs.begin();
+  typename ft::List<T>::const_iterator itLhs = lhs.begin();
+  typename ft::List<T>::const_iterator itRhs = rhs.begin();
 
   while (itLhs != lhs.end() && itRhs != rhs.end()) {
     if (*itLhs != *itRhs) {
@@ -741,10 +811,10 @@ bool operator!=(ft::List<T, Alloc> const &lhs, ft::List<T, Alloc> const &rhs) {
 
 template<class T, class Alloc>
 bool operator<(ft::List<T, Alloc> const &lhs, ft::List<T, Alloc> const &rhs) {
-  typename ft::List<T, Alloc>::iterator first1 = lhs.begin();
-  typename ft::List<T, Alloc>::iterator first2 = rhs.begin();
-  typename ft::List<T, Alloc>::iterator last1 = lhs.end();
-  typename ft::List<T, Alloc>::iterator last2 = rhs.end();
+  typename ft::List<T, Alloc>::const_iterator first1 = lhs.begin();
+  typename ft::List<T, Alloc>::const_iterator first2 = rhs.begin();
+  typename ft::List<T, Alloc>::const_iterator last1 = lhs.end();
+  typename ft::List<T, Alloc>::const_iterator last2 = rhs.end();
 
   return lexicographical_compare(first1, last1, first2, last2, ft::less<T>());
 }
