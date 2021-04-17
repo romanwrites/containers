@@ -113,9 +113,11 @@ class BidirectionalListIt {
   typedef BidirectionalListIt<Category, Iter> iterator;
 
   explicit BidirectionalListIt() throw(): ptr(nullptr) {}
+
   explicit BidirectionalListIt(NodeList<Iter> *p) throw(): ptr(p) {}
-  explicit BidirectionalListIt(const NodeList<const Iter> *p) throw(): ptr(const_cast<NodeList<const Iter> *>(p)) {}
+
   BidirectionalListIt(const BidirectionalListIt &p) throw(): ptr(p.ptr) {}
+
   ~BidirectionalListIt() {}
 
   BidirectionalListIt &operator=(const BidirectionalListIt &rhs) {
