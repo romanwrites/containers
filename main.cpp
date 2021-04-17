@@ -7,9 +7,9 @@
 int main() {
   TestList::TestAll();
   TestVector::TestAll();
-  TestMap::TestAll();
   TestQueue::TestAll();
   TestStack::TestAll();
+  TestMap::TestAll();
 
   return 0;
 }

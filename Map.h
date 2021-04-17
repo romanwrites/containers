@@ -3,6 +3,7 @@
 #include "Allocator.h"
 #include <map>
 #include "TestRunner.h"
+#include "RedBlackTree.h"
 
 #define RED_BG_SET "\033[38;5;202m"
 #define BLACK_BG_SET "\033[38;5;33m"
@@ -10,102 +11,6 @@
 
 namespace ft {
 
-enum RedBlackTreeColor {
-  RED = true,
-  BLACK = false
-};
-
-//	------------------------------------- MAP NODE -----------------------------------------
-template<class T>
-class MapNode {
-
- public:
-  typedef T value_type;
-
-  value_type value;
-  RedBlackTreeColor color;
-  MapNode *parent;
-  MapNode *left;
-  MapNode *right;
-
-  MapNode() : color(RedBlackTreeColor::BLACK), parent(nullptr), left(nullptr), right(nullptr) {}
-
-  MapNode(const value_type &value)
-      : color(RedBlackTreeColor::BLACK), value(value), left(nullptr), right(nullptr), parent(nullptr) {}
-
-  MapNode(const MapNode &o)
-      : color(o.color), value(o.value), left(o.left), right(o.right), parent(o.parent) {}
-
-  MapNode &operator=(const MapNode &o) {
-    color = o.color;
-    value = o.value;
-    left = o.left;
-    right = o.right;
-    parent = o.parent;
-  }
-
-  bool isRed() const {
-    return color == RedBlackTreeColor::RED;
-  }
-
-  virtual ~MapNode() {}
-};
-
-//	------------------------------------- MAP ITERATOR -----------------------------------------
-template<class P>
-class MapIterator {
- public:
-  typedef P iterator_type;
-  typedef std::bidirectional_iterator_tag iterator_category;
-  typedef iterator_type value_type;
-  typedef ptrdiff_t difference_type;
-  typedef P &reference;
-  typedef P *pointer;
-  typedef MapNode<P> Node;
-
-  // add const in const iterator
-
- private:
-  Node *node;
-  const Node *nil; //todo what's inside?
-
- public:
-  //  Is default-constructible, copy-constructible, copy-assignable and destructible
-  MapIterator() : node(nullptr), nil(nullptr) {}
-  MapIterator(Node *p, Node *nil) : node(p), nil(nil) {}
-  MapIterator(const MapIterator &it) : node(it.node), nil(it.nil) {}
-
-  MapIterator &operator=(const MapIterator &it) {
-    node = it.node;
-    nil = it.nil;
-    return *this;
-  }
-
-  // kind of static
-  friend
-  bool operator==(MapIterator const &lhs, MapIterator const &rhs) {
-    return lhs.node == rhs.node; // compare pointers
-  }
-
-  friend
-  bool operator!=(MapIterator const &lhs, MapIterator const &rhs) {
-    return !(lhs.node == rhs.node);
-  }
-
-  reference operator*() const {
-    return node->value;
-  }
-
-  pointer operator->() const {
-    return &(node->value);
-  }
-
-
-  // find successor
-  // find predecessor
-
-  //todo inc dec
-};
 //	------------------------------------- MAP -----------------------------------------
 
 template<class Key,                                           // map::key_type
@@ -114,6 +19,7 @@ template<class Key,                                           // map::key_type
     class Alloc = ft::Allocator<std::pair<const Key, T> >    // map::allocator_type
 >
 class Map {
+ public:
   //	------------------------------------- MAP TYPEDEFS -----------------------------------------
   typedef Key key_type;
   typedef T mapped_type;
@@ -127,9 +33,9 @@ class Map {
   typedef std::ptrdiff_t difference_type;
   typedef size_t size_type;
 
-  typedef MapNode<value_type> Node;
+  typedef RbTreeNode<value_type> Node;
 
-  typedef MapIterator<value_type> iterator;
+  typedef RbTreeIterator<value_type> iterator;
 
   typedef typename Alloc::template rebind<Node>::other node_allocator_type;
   //todo
@@ -156,7 +62,12 @@ class Map {
  public:
   explicit Map(const key_compare &comp = key_compare(),
                const allocator_type &alloc = allocator_type())
-      : key_compare_(comp), allocator(alloc), nodeAllocator(allocator_type(allocator)), root(nullptr), nil(nullptr), currentSize(0) {
+      : key_compare_(comp),
+        allocator(alloc),
+        nodeAllocator(allocator_type(allocator)),
+        root(nullptr),
+        nil(nullptr),
+        currentSize(0) {
     nil = createNilNode();
 
   }
@@ -233,7 +144,7 @@ class Map {
   }
 
   size_type size() const {
-    return size;
+    return currentSize;
   }
 
   key_compare key_comp() const {
@@ -308,7 +219,7 @@ class Map {
   Node *createNode(value_type const &value) {
     Node *node = nodeAllocator.allocate(1);
 
-    node->color = RedBlackTreeColor::RED;
+    node->color = RbTreeColor::RED;
     node->left = nil;
     node->right = nil;
     node->parent = nil;
@@ -321,7 +232,7 @@ class Map {
   Node *createNilNode() {
     Node *node = nodeAllocator.allocate(1);
 
-    node->color = RedBlackTreeColor::RED;
+    node->color = RbTreeColor::RED;
     node->left = nullptr;
     node->right = nullptr;
     node->parent = nullptr;
@@ -360,7 +271,7 @@ class Map {
     h->parent = x;
 
     x->color = h->color;
-    h->color = RedBlackTreeColor::RED;
+    h->color = RbTreeColor::RED;
     return x;
   }
 
@@ -389,15 +300,15 @@ class Map {
     h->parent = x;
 
     x->color = h->color;
-    h->color = RedBlackTreeColor::RED;
+    h->color = RbTreeColor::RED;
     return h;
   }
 
   void flipColors(Node *h) {
     if (!h->isRed() && h->left->isRed() && h->right->isRed()) {
-      h->color = RedBlackTreeColor::RED;
-      h->left->color = RedBlackTreeColor::BLACK;
-      h->right->color = RedBlackTreeColor::BLACK;
+      h->color = RbTreeColor::RED;
+      h->left->color = RbTreeColor::BLACK;
+      h->right->color = RbTreeColor::BLACK;
     }
   }
 
@@ -455,7 +366,7 @@ class Map {
         ret += "└";
       }
     }
-    if (tree->color == RedBlackTreeColor::RED) {
+    if (tree->color == RbTreeColor::RED) {
       ret += std::string(RED_BG_SET + std::to_string(tree->value.first) + RESET);
     } else {
       ret += std::string(BLACK_BG_SET + std::to_string(tree->value.first) + RESET);

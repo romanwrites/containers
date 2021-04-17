@@ -15,10 +15,9 @@ namespace TestMap {
 //}
 
 void TestEmpty(TestRunner const &tr) {
-  (void)tr;
-//  std::map<std::string, int> m;
-//  ft::Map<std::string, int> fm;
-//  Assert(fm.empty() == m.empty(), HintMap("test empty"));
+  std::map<std::string, int> m;
+  ft::Map<std::string, int> fm;
+  Assert(fm.empty() == m.empty(), tr.hintMessage("empty"));
 }
 
 void TestSize(TestRunner const &tr) {
