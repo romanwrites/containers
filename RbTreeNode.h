@@ -7,15 +7,15 @@ enum RbTreeColor {
 
 class RbTreeNodeBase {
  public:
-  typedef RbTreeNodeBase *base_ptr;
-  typedef const RbTreeNodeBase *const_base_ptr;
+  typedef RbTreeNodeBase* base_ptr;
+  typedef const RbTreeNodeBase* const_base_ptr;
 
   RbTreeColor color;
   base_ptr parent;
   base_ptr left;
   base_ptr right;
 
-  // Constructors and Coplien
+  // Constructors and Coplien --------------------------------------------------------
   RbTreeNodeBase() : color(RbTreeColor::BLACK), parent(nullptr), left(nullptr), right(nullptr) {}
 
   RbTreeNodeBase(const RbTreeNodeBase &o)
@@ -32,74 +32,76 @@ class RbTreeNodeBase {
     return *this;
   }
 
-  // Methods
+  // Methods --------------------------------------------------------
   bool isRed() const {
     return this->color == RbTreeColor::RED;
   }
 
-  // Static methods
-  static base_ptr minimum(base_ptr x) {
-    while (x->left != NULL) {
+  // Static methods --------------------------------------------------------
+  static base_ptr minimum(base_ptr x, const_base_ptr nil) {
+    while (x->left != nil) {
       x = x->left;
     }
     return x;
   }
 
-  static const_base_ptr minimum(const_base_ptr x) {
-    while (x->left != NULL) {
-      x = x->left;
-    }
-    return x;
-  }
+//  static const_base_ptr minimum(const_base_ptr x) {
+//    while (x->left != NULL) {
+//      x = x->left;
+//    }
+//    return x;
+//  }
 
-  static base_ptr maximum(base_ptr x) {
-    while (x->right != NULL) {
+  static base_ptr maximum(base_ptr x, const_base_ptr nil) {
+    while (x->right != nil) {
       x = x->right;
     }
     return x;
   }
 
-  static const_base_ptr maximum(const_base_ptr x) {
-    while (x->right != NULL) {
-      x = x->right;
-    }
-    return x;
-  }
+//  static const_base_ptr maximum(const_base_ptr x, ) {
+//    while (x->right != nil) {
+//      x = x->right;
+//    }
+//    return x;
+//  }
 
-  static base_ptr local_increment(base_ptr x) throw() {
-    if (x->right != 0) {
-      x = x->right;
-      while (x->left != 0) {
-        x = x->left;
-      }
+  static base_ptr increment(base_ptr x, const_base_ptr nil) throw() {
+    if (x->right != nil) {
+      // find min of right subtree
+      x = minimum(x->right, nil);
     } else {
       base_ptr y = x->parent;
       while (x == y->right) {
         x = y;
         y = y->parent;
       }
-      if (x->right != y)
+      if (x->right != y) {
         x = y;
+      }
     }
     return x;
   }
 
-  base_ptr increment(base_ptr x) throw() {
-    return local_increment(x);
-  }
+//  base_ptr increment(base_ptr x) throw() {
+//    return local_increment(x);
+//  }
+//
+//  const_base_ptr increment(const_base_ptr x) throw() {
+//    return local_increment(const_cast<base_ptr >(x));
+//  }
 
-  const_base_ptr increment(const_base_ptr x) throw() {
-    return local_increment(const_cast<base_ptr >(x));
-  }
-
-  static base_ptr local_decrement(base_ptr x) throw() {
-    if (x->isRed() && x->parent->parent == x)
-      x = x->right;
-    else if (x->left != 0) {
+  static base_ptr decrement(base_ptr x, const_base_ptr nil) throw() {
+//    if (x->isRed() && x->parent->parent == x) {
+//      x = x->right;
+//    } // todo wtf?
+//    else if (x->left != nil) {
+    if (x->left != nil) {
       base_ptr y = x->left;
-      while (y->right != 0) {
-        y = y->right;
-      }
+      y = maximum(y, nil);
+//      while (y->right != nil) {
+//        y = y->right;
+//      }
       x = y;
     } else {
       base_ptr y = x->parent;
@@ -112,13 +114,13 @@ class RbTreeNodeBase {
     return x;
   }
 
-  base_ptr decrement(base_ptr x) throw() {
-    return local_decrement(x);
-  }
-
-  const_base_ptr decrement(const_base_ptr x) throw() {
-    return local_decrement(const_cast<base_ptr>(x));
-  }
+//  base_ptr decrement(base_ptr x) throw() {
+//    return local_decrement(x);
+//  }
+//
+//  const_base_ptr decrement(const_base_ptr x) throw() {
+//    return local_decrement(const_cast<base_ptr>(x));
+//  }
 
 };
 
@@ -131,7 +133,7 @@ class RbTreeNode : public RbTreeNodeBase {
 
   value_type value;
 
-  //  Constructors
+  // Constructors --------------------------------------------------------
   RbTreeNode() : RbTreeNodeBase(), value(NULL) {}
 
   RbTreeNode(const value_type &value) : RbTreeNodeBase(), value(value) {}

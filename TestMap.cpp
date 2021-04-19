@@ -49,8 +49,5 @@ void TestAll() {
 //  map[5] = 9;
 //  map[8] = 9;
 //  map.printIntTree();
-
-
-//  PrintTree();
 }
 }

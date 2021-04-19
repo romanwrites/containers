@@ -3,7 +3,7 @@
 #include "Allocator.h"
 #include <map>
 #include "TestRunner.h"
-#include "RedBlackTree.h"
+#include "RbTreeIterator.h"
 
 #define RED_BG_SET "\033[38;5;202m"
 #define BLACK_BG_SET "\033[38;5;33m"
@@ -233,9 +233,9 @@ class Map {
     Node *node = nodeAllocator.allocate(1);
 
     node->color = RbTreeColor::RED;
-    node->left = nullptr;
-    node->right = nullptr;
-    node->parent = nullptr;
+    node->left = node;
+    node->right = node;
+    node->parent = node;
 
     return node;
   }
