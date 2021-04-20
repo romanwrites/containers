@@ -16,12 +16,18 @@ class RbTreeNodeBase {
   base_ptr right;
 
   // Constructors and Coplien --------------------------------------------------------
-  RbTreeNodeBase() : color(RbTreeColor::BLACK), parent(nullptr), left(nullptr), right(nullptr) {}
+  RbTreeNodeBase() : color(BLACK), parent(nullptr), left(nullptr), right(nullptr) {
+    std::cout << "constructor BASE" << std::endl;
+  }
 
   RbTreeNodeBase(const RbTreeNodeBase &o)
-      : color(o.color), parent(o.parent), left(o.left), right(o.right) {}
+      : color(o.color), parent(o.parent), left(o.left), right(o.right) {
+    std::cout << "copy constructor BASE" << std::endl;
+  }
 
-  virtual ~RbTreeNodeBase() {}
+  virtual ~RbTreeNodeBase() {
+    std::cout << "destructor BASE" << std::endl;
+  }
 
   RbTreeNodeBase &operator=(const RbTreeNodeBase &o) {
     this->color = o.color;
@@ -34,7 +40,7 @@ class RbTreeNodeBase {
 
   // Methods --------------------------------------------------------
   bool isRed() const {
-    return this->color == RbTreeColor::RED;
+    return this->color == RED;
   }
 
   // Static methods --------------------------------------------------------
@@ -136,9 +142,13 @@ class RbTreeNode : public RbTreeNodeBase {
   // Constructors --------------------------------------------------------
   RbTreeNode() : RbTreeNodeBase(), value(NULL) {}
 
-  RbTreeNode(const value_type &value) : RbTreeNodeBase(), value(value) {}
+  RbTreeNode(const value_type &value) : RbTreeNodeBase(), value(value) {
+    std::cout << "constructor NODE" << std::endl;
+  }
 
-  RbTreeNode(const RbTreeNode &o) : RbTreeNodeBase(o), value(o.value) {}
+  RbTreeNode(const RbTreeNode &o) : RbTreeNodeBase(o), value(o.value) {
+    std::cout << "copy constructor NODE" << std::endl;
+  }
 
   RbTreeNode &operator=(const RbTreeNode &o) {
     this->color = o.color;
@@ -150,5 +160,7 @@ class RbTreeNode : public RbTreeNodeBase {
     return *this;
   }
 
-  virtual ~RbTreeNode() {}
+  virtual ~RbTreeNode() {
+    std::cout << "destructor NODE" << std::endl;
+  }
 };

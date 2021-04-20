@@ -219,7 +219,7 @@ class Map {
   Node *createNode(value_type const &value) {
     Node *node = nodeAllocator.allocate(1);
 
-    node->color = RbTreeColor::RED;
+    node->color = RED;
     node->left = nil;
     node->right = nil;
     node->parent = nil;
@@ -232,7 +232,7 @@ class Map {
   Node *createNilNode() {
     Node *node = nodeAllocator.allocate(1);
 
-    node->color = RbTreeColor::RED;
+    node->color = RED;
     node->left = node;
     node->right = node;
     node->parent = node;
@@ -271,7 +271,7 @@ class Map {
     h->parent = x;
 
     x->color = h->color;
-    h->color = RbTreeColor::RED;
+    h->color = RED;
     return x;
   }
 
@@ -300,15 +300,15 @@ class Map {
     h->parent = x;
 
     x->color = h->color;
-    h->color = RbTreeColor::RED;
+    h->color = RED;
     return h;
   }
 
   void flipColors(Node *h) {
     if (!h->isRed() && h->left->isRed() && h->right->isRed()) {
-      h->color = RbTreeColor::RED;
-      h->left->color = RbTreeColor::BLACK;
-      h->right->color = RbTreeColor::BLACK;
+      h->color = RED;
+      h->left->color = BLACK;
+      h->right->color = BLACK;
     }
   }
 
