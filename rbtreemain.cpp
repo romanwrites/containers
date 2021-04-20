@@ -4,7 +4,7 @@
 int main() {
 //  template<typename Key, typename Val, typename KeyOfValue,
 //      typename Compare, typename Alloc = ft::Allocator<Val> >
-  ft::RbTree<int, std::pair<const int, int>, int, ft::less<int> > tree((ft::less<int>()), ft::Allocator<int>());
+  ft::RbTree<int, std::pair<const int, int>, int, ft::less<int> > tree((ft::less<int>()), ft::Allocator<int>(), false);
 
   tree.insert(std::make_pair(5, 5));
   tree.insert(std::make_pair(3, 3));
@@ -27,6 +27,7 @@ int main() {
   }
   std::cout << std::endl;
 
-//  std::cout << tree.find(std::make_pair(6,6))->value.first << std::endl;
+  std::cout << "find: " << tree.find(std::make_pair(6,6))->value.first << std::endl;
 
+  std::cout << "count: " << tree.count(6) << std::endl;
 }

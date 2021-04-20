@@ -35,7 +35,7 @@ class RbTree {
   Node *root;
   Node *nil;
   size_type currentSize;
-  bool uniqueTree;
+  bool isUniqueTree;
 
  public:
 
@@ -48,7 +48,7 @@ class RbTree {
         root(NULL),
         nil(NULL), // maybe call static method, but how to pass nodeAllocator
         currentSize(0),
-        uniqueTree(uniqueTree) {
+        isUniqueTree(uniqueTree) {
     nil = createNilNode();
     root = nil;
   }
@@ -63,7 +63,7 @@ class RbTree {
     this->root = x.root;
     this->nil = x.nil;
     this->comp = x.comp;
-    this->uniqueTree = x.uniqueTree;
+    this->isUniqueTree = x.isUniqueTree;
     return *this;
   }
 
@@ -83,6 +83,37 @@ class RbTree {
   // 6. remove rebalance
   //   a. rotations
   //   b. transplant
+
+  Node *find(const key_type &key) const {
+    Node *node;
+
+    for (node = root; node != nil && node->value.first != key;) {
+      if (comp(key, node->value.first)) {
+        node = reinterpret_cast<Node *>(node->left);
+      } else {
+        node = reinterpret_cast<Node *>(node->right);
+      }
+    }
+
+    return node;
+  }
+
+  size_type count(const key_type &k) const {
+    if (isUniqueTree) {
+      if (find(k) != nil) {
+        return 1;
+      }
+      return 0;
+    }
+
+    size_type i = 0;
+    for (iterator it = begin(); it != end(); ++it) {
+      if (it->first == k) {
+        ++i;
+      }
+    }
+    return i;
+  }
 
   void destroyNode(Node *node) {
     nodeAllocator.destroy(reinterpret_cast<RbTreeNode<Val> *>(node));
@@ -107,7 +138,7 @@ class RbTree {
             currentSize++;
             return std::make_pair(iterator(node->left, nil), true);
           }
-        } else if (uniqueTree && !comp(node->value.first, val.first)) {
+        } else if (isUniqueTree && !comp(node->value.first, val.first)) {
           return std::make_pair(iterator(node, nil), false);
         } else {
           if (node->right != nil) {
@@ -120,17 +151,19 @@ class RbTree {
         }
       }
     }
-    std::cout << "LOOK HERE!!!!!!!! HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << std::endl;
+    std::cout
+        << "LOOK HERE!!!!!!!! HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        << std::endl;
     return std::make_pair(iterator(nil, nil), false);
   }
 
-  iterator begin() {
+  iterator begin() const {
     base_ptr ptr = RbTreeNodeBase::minimum(root, nil);
 
     return iterator(reinterpret_cast<Node *>(ptr), nil);
   }
 
-  iterator end() {
+  iterator end() const {
     base_ptr ptr = RbTreeNodeBase::maximum(root, nil);
 
     iterator it = iterator(reinterpret_cast<Node *>(ptr), nil);
@@ -139,18 +172,21 @@ class RbTree {
   }
 
   Node *find(value_type val) {
-    Node *node;
-
-    for (node = root; node != nil && node->value.first != val.first; ) {
-      if (comp(val.first, node->value.first)) {
-        node = reinterpret_cast<Node *>(node->left);
-      } else {
-        node = reinterpret_cast<Node *>(node->right);
-      }
-    }
-
-    return node;
+    return find(val.first);
+//    Node *node;
+//
+//    for (node = root; node != nil && node->value.first != val.first; ) {
+//      if (comp(val.first, node->value.first)) {
+//        node = reinterpret_cast<Node *>(node->left);
+//      } else {
+//        node = reinterpret_cast<Node *>(node->right);
+//      }
+//    }
+//
+//    return node;
   }
+
+
 
  private:
 
