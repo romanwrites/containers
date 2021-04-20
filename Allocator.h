@@ -12,8 +12,11 @@ class Allocator<void> {
   typedef void *pointer;
   typedef const void *const_pointer;
   typedef void value_type;
+
   template<class U>
-  struct rebind { typedef Allocator<U> other; };
+  struct rebind {
+    typedef Allocator<U> other;
+  };
 };
 
 template<class T>
