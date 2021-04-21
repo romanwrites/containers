@@ -15,6 +15,7 @@ class RbTree {
   typedef RbTreeNode<Val> *link_type;
   typedef const RbTreeNode<Val> *const_link_type;
   typedef typename Alloc::template rebind<RbTreeNode<Val> >::other node_allocator_type;
+  typedef typename Alloc::template rebind<RbTreeNodeBase>::other node_base_allocator_type;
   typedef Key key_type;
   typedef Val value_type;
   typedef value_type *pointer;
@@ -27,11 +28,13 @@ class RbTree {
   typedef RbTreeNode<Val> Node;
   typedef Compare key_compare;
   typedef RbTreeIterator<Val> iterator;
+  typedef RbTreeConstIterator<Val> const_iterator;
 
  private:
   key_compare comp;
   node_allocator_type nodeAllocator;
   allocator_type allocator; // only needed in get_allocator()
+  node_base_allocator_type baseAllocator;
   Node *root;
   Node *nil;
   size_type currentSize;
@@ -45,6 +48,7 @@ class RbTree {
       : comp(comp),
         nodeAllocator(alloc),
         allocator(alloc),
+        baseAllocator(alloc),
         root(NULL),
         nil(NULL), // maybe call static method, but how to pass nodeAllocator
         currentSize(0),
@@ -76,7 +80,7 @@ class RbTree {
   // 1. insert ✅
   //   a. find insert point
   // 2. find ✅
-  // 3. count
+  // 3. count ✅
   // 4. remove tree
   // 5. rebalance (rbtree insert fix)
   //   a. rotations
@@ -107,7 +111,7 @@ class RbTree {
     }
 
     size_type i = 0;
-    for (iterator it = begin(); it != end(); ++it) {
+    for (auto it = begin(); it != end(); ++it) {
       if (it->first == k) {
         ++i;
       }
@@ -116,7 +120,7 @@ class RbTree {
   }
 
   void destroyNode(Node *node) {
-    nodeAllocator.destroy(reinterpret_cast<RbTreeNode<Val> *>(node));
+    nodeAllocator.destroy(node);
     nodeAllocator.deallocate(node, 1);
   }
 
@@ -157,16 +161,30 @@ class RbTree {
     return std::make_pair(iterator(nil, nil), false);
   }
 
-  iterator begin() const {
+  const_iterator begin() const {
+    base_ptr ptr = RbTreeNodeBase::minimum(root, nil);
+
+    return const_iterator(reinterpret_cast<Node *>(ptr), nil);
+  }
+
+  iterator begin() {
     base_ptr ptr = RbTreeNodeBase::minimum(root, nil);
 
     return iterator(reinterpret_cast<Node *>(ptr), nil);
   }
 
-  iterator end() const {
+  iterator end() {
     base_ptr ptr = RbTreeNodeBase::maximum(root, nil);
 
     iterator it = iterator(reinterpret_cast<Node *>(ptr), nil);
+
+    return ++it;
+  }
+
+  const_iterator end() const {
+    base_ptr ptr = RbTreeNodeBase::maximum(root, nil);
+
+    const_iterator it = const_iterator(reinterpret_cast<Node *>(ptr), nil);
 
     return ++it;
   }
@@ -186,19 +204,28 @@ class RbTree {
 //    return node;
   }
 
+  bool empty() const {
+    return currentSize == 0;
+  }
 
+  size_type size() const {
+    return currentSize;
+  }
+
+  size_type max_size() const {
+    return nodeAllocator.max_size();
+  }
 
  private:
-
-  typedef typename Alloc::template rebind<RbTreeNodeBase>::other node_base_allocator_type;
 
   Node *createNode(Node *parent, value_type val) {
     Node *node = nodeAllocator.allocate(1);
 
     // Constructing NODE BASE is needed because of inheritance
-    node_base_allocator_type a;
-    a.construct(node, *node);
-//    nodeAllocator.construct(node, Node(val)); // or inefficient method
+    // efficient method. calling only copy constructor
+    baseAllocator.construct(node, *node);
+    // inefficient method
+    // nodeAllocator.construct(node, Node(val));
 
     allocator.construct(&(node->value), val);
     node->color = RED;

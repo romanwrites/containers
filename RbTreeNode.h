@@ -89,6 +89,23 @@ class RbTreeNodeBase {
     return x;
   }
 
+  static const_base_ptr increment(const_base_ptr x, const_base_ptr nil) throw() {
+    if (x->right != nil) {
+      // find min of right subtree
+      x = minimum(x->right, nil);
+    } else {
+      base_ptr y = x->parent;
+      while (x == y->right) {
+        x = y;
+        y = y->parent;
+      }
+      if (x->right != y) {
+        x = y;
+      }
+    }
+    return x;
+  }
+
 //  base_ptr increment(base_ptr x) throw() {
 //    return local_increment(x);
 //  }
@@ -98,6 +115,30 @@ class RbTreeNodeBase {
 //  }
 
   static base_ptr decrement(base_ptr x, const_base_ptr nil) throw() {
+//    if (x->isRed() && x->parent->parent == x) {
+//      x = x->right;
+//    } // todo wtf?
+//    else if (x->left != nil) {
+    if (x->left != nil) {
+      base_ptr y = x->left;
+      y = maximum(y, nil);
+//      while (y->right != nil) {
+//        y = y->right;
+//      }
+      x = y;
+    } else {
+      base_ptr y = x->parent;
+      while (x == y->left) {
+        x = y;
+        y = y->parent;
+      }
+      x = y;
+    }
+    return x;
+  }
+
+
+  static const_base_ptr decrement(const_base_ptr x, const_base_ptr nil) throw() {
 //    if (x->isRed() && x->parent->parent == x) {
 //      x = x->right;
 //    } // todo wtf?
@@ -138,6 +179,10 @@ class RbTreeNode : public RbTreeNodeBase {
   typedef T value_type;
 
   value_type value;
+
+  value_type *val() {
+    return &value;
+  }
 
   // Constructors --------------------------------------------------------
   RbTreeNode() : RbTreeNodeBase(), value(NULL) {}
