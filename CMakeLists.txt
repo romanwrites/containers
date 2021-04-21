@@ -12,3 +12,6 @@ add_executable(main
         TestMap.cpp
         TestQueue.cpp
         TestStack.cpp)
+
+add_executable(rbtreemain
+        rbtreemain.cpp)

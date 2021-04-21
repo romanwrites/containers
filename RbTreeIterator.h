@@ -42,11 +42,11 @@ class RbTreeIterator {
   virtual ~RbTreeIterator() {}
 
   reference operator*() const {
-    return static_cast<link_type>(node)->value;
+    return *static_cast<link_type>(node)->val;
   }
 
   pointer operator->() const {
-    return &(static_cast<link_type>(node)->value);
+    return static_cast<link_type>(node)->val();
   }
 
   iterator &operator++() {
@@ -79,72 +79,73 @@ class RbTreeIterator {
     return x.node != y.node;
   }
 };
-//
-////	------------------------------------- RB TREE ITERATOR -----------------------------------------
-//template<typename T>
-//class RbTreeConstIterator {
-// public:
-//  typedef T value_type;
-//  typedef T &reference;
-//  typedef T *pointer;
-//  typedef std::bidirectional_iterator_tag iterator_category;
-//  typedef ptrdiff_t difference_type;
-//  typedef RbTreeConstIterator<T> iterator;
-//  typedef RbTreeNodeBase::const_base_ptr base_ptr;
-//  typedef RbTreeNodeBase::const_base_ptr const_base_ptr;
-//  typedef RbTreeNode<T> *link_type;
-//
-//  const_base_ptr node;
-//  const_base_ptr nil;
-//
-//  // Constructors --------------------------------------------------------
-//  // Is default-constructible, copy-constructible, copy-assignable and destructible
-//  RbTreeConstIterator() : node(NULL), nil(NULL) {}
-//
-//  explicit RbTreeConstIterator(base_ptr x, const_base_ptr nil) : node(x), nil(nil) {}
-//
-//  RbTreeConstIterator(iterator &p) : node(p.x), nil(p.nil) {}
-//  RbTreeConstIterator(RbTreeIterator<T> &p) : node(p.x), nil(p.nil) {}
-//
-//  virtual ~RbTreeConstIterator() {}
-//
-//  reference operator*() const {
-//    return *static_cast<link_type>(this->node)->value();
-//  }
-//
-//  pointer operator->() const {
-//    return static_cast<link_type> (this->node)->value();
-//  }
-//
-//  iterator &operator++() {
-//    this->node = RbTreeNodeBase::increment(this->node, this->nil);
-//    return *this;
-//  }
-//
-//  iterator operator++(int) {
-//    iterator copy = *this;
-//    ++(*this);
-//    return copy;
-//  }
-//
-//  iterator &operator--() {
-//    this->node = RbTreeNodeBase::decrement(this->node, this->nil);
-//    return *this;
-//  }
-//
-//  iterator operator--(int) {
-//    iterator copy = *this;
-//    --(*this);
-//    return copy;
-//  }
-//
-//  friend bool operator==(const iterator &x, const iterator &y) {
-//    return x.node == y.node;
-//  }
-//
-//  friend bool operator!=(const iterator &x, const iterator &y) {
-//    return x.node != y.node;
-//  }
-//};
+
+//	------------------------------------- RB TREE CONST ITERATOR -----------------------------------------
+template<typename T>
+class RbTreeConstIterator {
+ public:
+  typedef T value_type;
+  typedef const T& reference;
+  typedef const T* pointer;
+  typedef std::bidirectional_iterator_tag iterator_category;
+  typedef ptrdiff_t difference_type;
+  typedef RbTreeConstIterator<T> iterator;
+  typedef RbTreeNodeBase::const_base_ptr base_ptr;
+  typedef RbTreeNodeBase::const_base_ptr const_base_ptr;
+  typedef RbTreeNode<T> *link_type;
+  typedef const RbTreeNode<T> *const_link_type;
+
+  const_base_ptr node;
+  const_base_ptr nil;
+
+  // Constructors --------------------------------------------------------
+  // Is default-constructible, copy-constructible, copy-assignable and destructible
+  RbTreeConstIterator() : node(NULL), nil(NULL) {}
+
+  explicit RbTreeConstIterator(base_ptr x, const_base_ptr nil) : node(x), nil(nil) {}
+
+  RbTreeConstIterator(iterator const &p) : node(p.node), nil(p.nil) {}
+  RbTreeConstIterator(RbTreeIterator<T> &p) : node(p.x), nil(p.nil) {}
+
+  virtual ~RbTreeConstIterator() {}
+
+  reference operator*() const {
+    return *static_cast<const_link_type>(node)->val();
+  }
+
+  pointer operator->() const {
+    return static_cast<const_link_type>(node)->val();
+  }
+
+  iterator &operator++() {
+    this->node = RbTreeNodeBase::increment(this->node, this->nil);
+    return *this;
+  }
+
+  iterator operator++(int) {
+    iterator copy = *this;
+    ++(*this);
+    return copy;
+  }
+
+  iterator &operator--() {
+    this->node = RbTreeNodeBase::decrement(this->node, this->nil);
+    return *this;
+  }
+
+  iterator operator--(int) {
+    iterator copy = *this;
+    --(*this);
+    return copy;
+  }
+
+  friend bool operator==(const iterator &x, const iterator &y) {
+    return x.node == y.node;
+  }
+
+  friend bool operator!=(const iterator &x, const iterator &y) {
+    return x.node != y.node;
+  }
+};
 
 }
