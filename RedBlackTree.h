@@ -3,6 +3,7 @@
 #include "RbTreeIterator.h"
 #include "Allocator.h"
 #include "Compare.h"
+#include "ReverseIterator.h"
 
 namespace ft {
 
@@ -29,6 +30,8 @@ class RbTree {
   typedef Compare key_compare;
   typedef RbTreeIterator<Val> iterator;
   typedef RbTreeConstIterator<Val> const_iterator;
+  typedef ReverseIterator<iterator> reverse_iterator;
+  typedef ReverseIterator<const_iterator> const_reverse_iterator;
 
  private:
   key_compare comp;
@@ -161,6 +164,25 @@ class RbTree {
     return std::make_pair(iterator(nil, nil), false);
   }
 
+
+
+  Node *find(value_type val) {
+    return find(val.first);
+  }
+
+  bool empty() const {
+    return currentSize == 0;
+  }
+
+  size_type size() const {
+    return currentSize;
+  }
+
+  size_type max_size() const {
+    return nodeAllocator.max_size();
+  }
+
+  // ITERATORS ----------------------------------------------------------------------
   const_iterator begin() const {
     base_ptr ptr = RbTreeNodeBase::minimum(root, nil);
 
@@ -189,31 +211,20 @@ class RbTree {
     return ++it;
   }
 
-  Node *find(value_type val) {
-    return find(val.first);
-//    Node *node;
-//
-//    for (node = root; node != nil && node->value.first != val.first; ) {
-//      if (comp(val.first, node->value.first)) {
-//        node = reinterpret_cast<Node *>(node->left);
-//      } else {
-//        node = reinterpret_cast<Node *>(node->right);
-//      }
-//    }
-//
-//    return node;
+  reverse_iterator rbegin() {
+    return reverse_iterator(end());
   }
 
-  bool empty() const {
-    return currentSize == 0;
+  const_reverse_iterator rbegin() const {
+    return const_reverse_iterator(end());
   }
 
-  size_type size() const {
-    return currentSize;
+  reverse_iterator rend() {
+    return reverse_iterator(begin());
   }
 
-  size_type max_size() const {
-    return nodeAllocator.max_size();
+  const_reverse_iterator rend() const {
+    return const_reverse_iterator(begin());
   }
 
  private:

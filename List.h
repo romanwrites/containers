@@ -232,8 +232,8 @@ class List {
   typedef std::bidirectional_iterator_tag iterator_category;
   typedef BidirectionalListIt<iterator_category, T> iterator;
   typedef BidirectionalConstListIt<iterator_category, T> const_iterator;
-  typedef ft::reverse_iterator<iterator> reverse_iterator;
-  typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+  typedef ft::ReverseIterator<iterator> reverse_iterator;
+  typedef ft::ReverseIterator<const_iterator> const_reverse_iterator;
   typedef std::allocator<value_type> allocator_type;
 
  private:

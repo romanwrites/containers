@@ -177,10 +177,14 @@ class RbTreeNode : public RbTreeNodeBase {
 
  public:
   typedef T value_type;
+  typedef const T const_value_type;
 
   value_type value;
 
   value_type *val() {
+    return &value;
+  }
+  const_value_type *val() const {
     return &value;
   }
 

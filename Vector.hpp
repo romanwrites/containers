@@ -19,8 +19,8 @@ class Vector {
   typedef const value_type* const_pointer;
   typedef VectorIterator<T> iterator;
   typedef VectorConstIterator<T> const_iterator;
-  typedef ft::reverse_iterator<iterator> reverse_iterator;
-  typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+  typedef ft::ReverseIterator<iterator> reverse_iterator;
+  typedef ft::ReverseIterator<const_iterator> const_reverse_iterator;
   typedef size_t size_type;
   typedef Alloc allocator_type;
   typedef ptrdiff_t difference_type;

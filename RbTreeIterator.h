@@ -46,7 +46,6 @@ class RbTreeIterator {
   }
 
   pointer operator->() const {
-//    return &(static_cast<link_type>(node)->value);
     return static_cast<link_type>(node)->val();
   }
 
@@ -81,13 +80,13 @@ class RbTreeIterator {
   }
 };
 
-//	------------------------------------- RB TREE ITERATOR -----------------------------------------
+//	------------------------------------- RB TREE CONST ITERATOR -----------------------------------------
 template<typename T>
 class RbTreeConstIterator {
  public:
   typedef T value_type;
-  typedef T &reference;
-  typedef T *pointer;
+  typedef const T& reference;
+  typedef const T* pointer;
   typedef std::bidirectional_iterator_tag iterator_category;
   typedef ptrdiff_t difference_type;
   typedef RbTreeConstIterator<T> iterator;
@@ -105,18 +104,17 @@ class RbTreeConstIterator {
 
   explicit RbTreeConstIterator(base_ptr x, const_base_ptr nil) : node(x), nil(nil) {}
 
-  RbTreeConstIterator(iterator &p) : node(p.node), nil(p.nil) {}
+  RbTreeConstIterator(iterator const &p) : node(p.node), nil(p.nil) {}
   RbTreeConstIterator(RbTreeIterator<T> &p) : node(p.x), nil(p.nil) {}
 
   virtual ~RbTreeConstIterator() {}
 
   reference operator*() const {
-//    return static_cast<link_type>(node)->value;
-    return *static_cast<link_type>(node)->val();
+    return *static_cast<const_link_type>(node)->val();
   }
 
   pointer operator->() const {
-    return static_cast<link_type>(node)->val();
+    return static_cast<const_link_type>(node)->val();
   }
 
   iterator &operator++() {
