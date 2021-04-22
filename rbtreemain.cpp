@@ -26,15 +26,15 @@ int main() {
   tree.insert(std::make_pair(5, 5));
   tree.insert(std::make_pair(3, 3));
   tree.insert(std::make_pair(7, 7));
-  tree.insert(std::make_pair(1, 1));
   tree.insert(std::make_pair(2, 2));
+  tree.insert(std::make_pair(1, 1));
   tree.insert(std::make_pair(6, 6));
   tree.insert(std::make_pair(10, 10));
 
   tree.insert(std::make_pair(3, 3));
   tree.insert(std::make_pair(7, 7));
-  tree.insert(std::make_pair(1, 1));
   tree.insert(std::make_pair(2, 2));
+  tree.insert(std::make_pair(1, 1));
   tree.insert(std::make_pair(6, 6));
   tree.insert(std::make_pair(10, 10));
   tree.printIntTree();

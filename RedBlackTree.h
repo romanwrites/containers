@@ -75,8 +75,12 @@ class RbTree {
   }
 
   ~RbTree() {
-//    todo
-//    _M_erase(begin());
+    std::cout << "destructor RBTREE called" << std::endl;
+    std::cout << "--------------------------CALL ERASE-----------------------" << std::endl;
+    erase(begin(), end());
+    std::cout << "--------------------------NIL NODE ERASE-----------------------" << std::endl;
+    nodeAllocator.deallocate(nil, 1);
+    std::cout << "--------------------------FULLY ERASED-----------------------" << std::endl;
   }
 
   // PLAN
@@ -89,7 +93,7 @@ class RbTree {
   //   a. rotations
   // 6. remove rebalance
   //   a. rotations
-  //   b. transplant
+  //   b. transplant ✅
 
   Node *find(const key_type &key) const {
     Node *node;
@@ -164,7 +168,42 @@ class RbTree {
     return std::make_pair(iterator(nil, nil), false);
   }
 
+  void transplant(Node *treeWhereToPlace, Node *treeToPlace) {
+    if (treeWhereToPlace->parent == nil) {  // u is root
+      root = treeToPlace;
+    } else if (treeWhereToPlace == treeWhereToPlace->parent->left) { // u is left child
+      treeWhereToPlace->parent->left = treeToPlace;
+    } else { // u is right child
+      treeWhereToPlace->parent->right = treeToPlace;
+    }
 
+    if (treeToPlace != nil) {
+      treeToPlace->parent = treeWhereToPlace->parent;
+    }
+  }
+
+  void removeNode(Node *z) {
+    if (z->left == nil) {
+      transplant(z, reinterpret_cast<Node *>(z->right));
+      destroyNode(z);
+    } else if (z->right == nil) {
+      transplant(z, reinterpret_cast<Node *>(z->left));
+      destroyNode(z);
+    } else {
+      RbTreeNodeBase *tmp = RbTreeNodeBase::minimum(reinterpret_cast<base_ptr>(z->right),
+                                                    reinterpret_cast<const_base_ptr>(nil)); //minimum element in right subtree
+      Node *y = reinterpret_cast<Node *>(tmp);
+      if (y->parent != z) {
+        transplant(y, reinterpret_cast<Node *>(y->right));
+        y->right = z->right;
+        y->right->parent = y;
+      }
+      transplant(z, y);
+      y->left = z->left;
+      y->left->parent = y;
+      destroyNode(z);
+    }
+  }
 
   Node *find(value_type val) {
     return find(val.first);
@@ -182,31 +221,59 @@ class RbTree {
     return nodeAllocator.max_size();
   }
 
+  void erase(iterator position) {
+    removeNode(reinterpret_cast<Node *>(position.node));
+  }
+
+  size_type erase(const key_type &k) {
+    size_type i = 0;
+
+    for (iterator it = begin(); it != end();) {
+      if (it->first == k) {
+        iterator tmp = it;
+        ++it;
+        erase(tmp);
+        ++i;
+        continue;
+      }
+      ++it;
+    }
+
+    return i;
+  }
+
+  void erase(iterator first, iterator last) {
+    while (first != last) {
+      iterator tmp = first;
+      int i = tmp->first;
+      ++first;
+      erase(tmp);
+      std::cout << "--------------------------" << std::to_string(i) << " ERASED-----------------------" << std::endl;
+      printIntTree();
+    }
+  }
+
   // ITERATORS ----------------------------------------------------------------------
   const_iterator begin() const {
-    base_ptr ptr = RbTreeNodeBase::minimum(root, nil);
+    base_ptr ptr = RbTreeNodeBase::minimum(reinterpret_cast<base_ptr>(root), reinterpret_cast<const_base_ptr>(nil));
 
     return const_iterator(reinterpret_cast<Node *>(ptr), nil);
   }
 
   iterator begin() {
-    base_ptr ptr = RbTreeNodeBase::minimum(root, nil);
+    base_ptr ptr = RbTreeNodeBase::minimum(reinterpret_cast<base_ptr>(root), reinterpret_cast<const_base_ptr>(nil));
 
     return iterator(reinterpret_cast<Node *>(ptr), nil);
   }
 
   iterator end() {
-    base_ptr ptr = RbTreeNodeBase::maximum(root, nil);
-
-    iterator it = iterator(reinterpret_cast<Node *>(ptr), nil);
+    iterator it = iterator(reinterpret_cast<Node *>(nil), nil);
 
     return ++it;
   }
 
   const_iterator end() const {
-    base_ptr ptr = RbTreeNodeBase::maximum(root, nil);
-
-    const_iterator it = const_iterator(reinterpret_cast<Node *>(ptr), nil);
+    const_iterator it = const_iterator(reinterpret_cast<Node *>(nil), nil);
 
     return ++it;
   }
