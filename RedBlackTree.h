@@ -82,7 +82,6 @@ class RbTree {
     erase(begin(), end());
     std::cout << "--------------------------NIL NODE ERASE-----------------------" << std::endl;
     nodeAllocator.deallocate(nil, 1);
-//    destroyNode(nil);
     std::cout << "--------------------------FULLY ERASED-----------------------" << std::endl;
   }
 
@@ -91,26 +90,12 @@ class RbTree {
   //   a. find insert point
   // 2. find ✅
   // 3. count ✅
-  // 4. remove tree
+  // 4. remove tree ✅
   // 5. rebalance (rbtree insert fix)
   //   a. rotations
   // 6. remove rebalance
   //   a. rotations
   //   b. transplant ✅
-
-  Node *find(const key_type &key) const {
-    Node *node;
-
-    for (node = root; node != nil && node->value.first != key;) {
-      if (comp(key, node->value.first)) {
-        node = reinterpret_cast<Node *>(node->left);
-      } else {
-        node = reinterpret_cast<Node *>(node->right);
-      }
-    }
-
-    return node;
-  }
 
   size_type count(const key_type &k) const {
     if (isUniqueTree) {
@@ -127,25 +112,6 @@ class RbTree {
       }
     }
     return i;
-  }
-
-  void destroyNode(Node *node) {
-    nodeAllocator.destroy(node);
-    nodeAllocator.deallocate(node, 1);
-  }
-
-  std::pair<iterator, bool> insertNilNodeWrapper(base_ptr node) {
-    if (nil->left != nil &&
-        reinterpret_cast<Node *>(node)->val()->first
-        <= reinterpret_cast<Node *>(nil->left)->val()->first) {
-      nil->left = node;
-    }
-    if (nil->right != nil &&
-        reinterpret_cast<Node *>(node)->val()->first
-        >= reinterpret_cast<Node *>(nil->right)->val()->first) {
-      nil->right = node;
-    }
-    return std::make_pair(iterator(node, nil), true);
   }
 
   std::pair<iterator, bool> insert(value_type val) {
@@ -196,29 +162,6 @@ class RbTree {
 
     if (treeToPlace != nil) {
       treeToPlace->parent = treeWhereToPlace->parent;
-    }
-  }
-
-  void removeNode(Node *z) {
-    if (z->left == nil) {
-      transplant(z, reinterpret_cast<Node *>(z->right));
-      destroyNode(z);
-    } else if (z->right == nil) {
-      transplant(z, reinterpret_cast<Node *>(z->left));
-      destroyNode(z);
-    } else {
-      RbTreeNodeBase *tmp = RbTreeNodeBase::minimum(reinterpret_cast<base_ptr>(z->right),
-                                                    reinterpret_cast<const_base_ptr>(nil)); //minimum element in right subtree
-      Node *y = reinterpret_cast<Node *>(tmp);
-      if (y->parent != z) {
-        transplant(y, reinterpret_cast<Node *>(y->right));
-        y->right = z->right;
-        y->right->parent = y;
-      }
-      transplant(z, y);
-      y->left = z->left;
-      y->left->parent = y;
-      destroyNode(z);
     }
   }
 
@@ -335,6 +278,63 @@ class RbTree {
     return node;
   }
 
+  void destroyNode(Node *node) {
+    nodeAllocator.destroy(node);
+    nodeAllocator.deallocate(node, 1);
+  }
+
+  void removeNode(Node *z) {
+    if (z->left == nil) {
+      transplant(z, reinterpret_cast<Node *>(z->right));
+      destroyNode(z);
+    } else if (z->right == nil) {
+      transplant(z, reinterpret_cast<Node *>(z->left));
+      destroyNode(z);
+    } else {
+      RbTreeNodeBase *tmp = RbTreeNodeBase::minimum(reinterpret_cast<base_ptr>(z->right),
+                                                    reinterpret_cast<const_base_ptr>(nil)); //minimum element in right subtree
+      Node *y = reinterpret_cast<Node *>(tmp);
+      if (y->parent != z) {
+        transplant(y, reinterpret_cast<Node *>(y->right));
+        y->right = z->right;
+        y->right->parent = y;
+      }
+      transplant(z, y);
+      y->left = z->left;
+      y->left->parent = y;
+      destroyNode(z);
+    }
+  }
+
+  std::pair<iterator, bool> insertNilNodeWrapper(base_ptr node) {
+    if (nil->left != nil &&
+        reinterpret_cast<Node *>(node)->val()->first
+            <= reinterpret_cast<Node *>(nil->left)->val()->first) {
+      nil->left = node;
+    }
+    if (nil->right != nil &&
+        reinterpret_cast<Node *>(node)->val()->first
+            >= reinterpret_cast<Node *>(nil->right)->val()->first) {
+      nil->right = node;
+    }
+    return std::make_pair(iterator(node, nil), true);
+  }
+
+  Node *find(const key_type &key) const {
+    Node *node;
+
+    for (node = root; node != nil && node->value.first != key;) {
+      if (comp(key, node->value.first)) {
+        node = reinterpret_cast<Node *>(node->left);
+      } else {
+        node = reinterpret_cast<Node *>(node->right);
+      }
+    }
+
+    return node;
+  }
+
+// -------------------------------------------- PRINT INTEGER TREE ------------------------------------
  private:
   void fillAppend(Node *tree,
                   bool isRight,
