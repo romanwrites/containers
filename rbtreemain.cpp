@@ -24,30 +24,37 @@ int main() {
   ft::RbTree<int, std::pair<const int, int>, int, ft::less<int> > tree((ft::less<int>()), ft::Allocator<int>(), true);
 
   tree.insert(std::make_pair(5, 5));
+  tree.printIntTree();
   tree.insert(std::make_pair(3, 3));
+  tree.printIntTree();
   tree.insert(std::make_pair(7, 7));
+  tree.printIntTree();
   tree.insert(std::make_pair(2, 2));
+  tree.printIntTree();
   tree.insert(std::make_pair(1, 1));
+  tree.printIntTree();
   tree.insert(std::make_pair(6, 6));
-  tree.insert(std::make_pair(10, 10));
-
-  tree.insert(std::make_pair(3, 3));
-  tree.insert(std::make_pair(7, 7));
-  tree.insert(std::make_pair(2, 2));
-  tree.insert(std::make_pair(1, 1));
-  tree.insert(std::make_pair(6, 6));
+  tree.printIntTree();
   tree.insert(std::make_pair(10, 10));
   tree.printIntTree();
 
-  TestConstIterator(tree);
-  TestReverseIterator(tree);
+//  tree.insert(std::make_pair(3, 3));
+//  tree.insert(std::make_pair(7, 7));
+//  tree.insert(std::make_pair(2, 2));
+//  tree.insert(std::make_pair(1, 1));
+//  tree.insert(std::make_pair(6, 6));
+//  tree.insert(std::make_pair(10, 10));
+//  tree.printIntTree();
 
-  for (auto it = tree.begin(); it != tree.end(); ++it) {
-    std::cout << it->first << " ";
-  }
-  std::cout << std::endl;
-
-  std::cout << "find: " << tree.find(std::make_pair(6, 6))->value.first << std::endl;
-
-  std::cout << "count: " << tree.count(6) << std::endl;
+//  TestConstIterator(tree);
+//  TestReverseIterator(tree);
+//
+//  for (auto it = tree.begin(); it != tree.end(); ++it) {
+//    std::cout << it->first << " ";
+//  }
+//  std::cout << std::endl;
+//
+//  std::cout << "find: " << tree.find(std::make_pair(6, 6))->value.first << std::endl;
+//
+//  std::cout << "count: " << tree.count(6) << std::endl;
 }

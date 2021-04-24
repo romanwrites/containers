@@ -117,9 +117,11 @@ class RbTree {
   std::pair<iterator, bool> insert(value_type val) {
     if (root == nil) {
       root = createNode(nil, val);
-      nil->left = root;
-      nil->right = root;
-      return std::make_pair(iterator(root, nil), true);
+      return insertNilNodeWrapper(root);
+//      nil->left = root;
+//      nil->right = root;
+//      insertionFixup(root);
+//      return std::make_pair(iterator(root, nil), true);
     } else {
       Node *node = root;
 
@@ -270,7 +272,7 @@ class RbTree {
     Node *node = nodeAllocator.allocate(1);
 //    baseAllocator.construct(node, *node); //todo
 
-    node->color = RED;
+    node->color = BLACK;
     node->left = node;
     node->right = node;
     node->parent = node;
@@ -281,6 +283,86 @@ class RbTree {
   void destroyNode(Node *node) {
     nodeAllocator.destroy(node);
     nodeAllocator.deallocate(node, 1);
+  }
+
+  void leftRotate(base_ptr x) {
+    base_ptr y = x->right;
+    x->right = y->left;
+    if (y->left != nil) {
+      y->left->parent = x;
+    }
+    y->parent = x->parent;
+    if (x->parent == nil) { //x is root
+      root = reinterpret_cast<Node *>(y);
+    } else if (x == x->parent->left) { //x is left child
+      x->parent->left = y;
+    } else { //x is right child
+      x->parent->right = y;
+    }
+    y->left = x;
+    x->parent = y;
+  }
+
+  void rightRotate(base_ptr x) {
+    base_ptr y = x->left;
+    x->left = y->right;
+    if (y->right != nil) {
+      y->right->parent = x;
+    }
+    y->parent = x->parent;
+    if (x->parent == nil) { //x is root
+      root = reinterpret_cast<Node *>(y);
+    } else if (x == x->parent->right) { //x is left child
+      x->parent->right = y;
+    } else { //x is right child
+      x->parent->left = y;
+    }
+    y->right = x;
+    x->parent = y;
+  }
+
+//  https://www.codesdope.com/course/data-structures-red-black-trees-insertion/
+  void insertionFixup(base_ptr z) {
+    while (z->parent->isRed()) {
+      if (z->parent == z->parent->parent->left) { //z.parent is the left child
+
+        base_ptr y = z->parent->parent->right; //uncle of z
+
+        if (y->isRed()) { //case 1
+          z->parent->color = BLACK;
+          y->color = BLACK;
+          z->parent->parent->color = RED;
+          z = z->parent->parent;
+        } else { //case2 or case3
+          if (z == z->parent->right) { //case2
+            z = z->parent; //marked z.parent as new z
+            leftRotate(z);
+          }
+          //case3
+          z->parent->color = BLACK; //made parent black
+          z->parent->parent->color = RED; //made parent red
+          rightRotate(z->parent->parent);
+        }
+      } else { //z.parent is the right child
+        base_ptr y = z->parent->parent->left; //uncle of z
+
+        if (y->color == RED) {
+          z->parent->color = BLACK;
+          y->color = BLACK;
+          z->parent->parent->color = RED;
+          z = z->parent->parent;
+        } else {
+          if (z == z->parent->left) {
+            z = z->parent; //marked z.parent as new z
+            rightRotate(z);
+          }
+          z->parent->color = BLACK; //made parent black
+          z->parent->parent->color = RED; //made parent red
+          leftRotate(z->parent->parent);
+        }
+      }
+    }
+    root->color = BLACK;
   }
 
   void removeNode(Node *z) {
@@ -304,6 +386,7 @@ class RbTree {
       y->left->parent = y;
       destroyNode(z);
     }
+    currentSize--;
   }
 
   std::pair<iterator, bool> insertNilNodeWrapper(base_ptr node) {
@@ -317,6 +400,20 @@ class RbTree {
             >= reinterpret_cast<Node *>(nil->right)->val()->first) {
       nil->right = node;
     }
+
+    // root node case
+    if (nil->left == nil) {
+      nil->left = node;
+    }
+    if (nil->right == nil) {
+      nil->right = node;
+    }
+    std::cout << "-------------------------BEFORE INSERTIONFIXUP------------------" << std::endl;
+    printIntTree();
+    insertionFixup(node);
+    std::cout << "-------------------------------------------------------------" << std::endl;
+
+    currentSize++;
     return std::make_pair(iterator(node, nil), true);
   }
 
