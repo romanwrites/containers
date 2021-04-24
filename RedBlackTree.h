@@ -33,6 +33,8 @@ class RbTree {
   typedef ReverseIterator<iterator> reverse_iterator;
   typedef ReverseIterator<const_iterator> const_reverse_iterator;
 
+//  nil->left contains begin node
+//  nil->right contains pre-end node
  private:
   key_compare comp;
   node_allocator_type nodeAllocator;
@@ -80,6 +82,7 @@ class RbTree {
     erase(begin(), end());
     std::cout << "--------------------------NIL NODE ERASE-----------------------" << std::endl;
     nodeAllocator.deallocate(nil, 1);
+//    destroyNode(nil);
     std::cout << "--------------------------FULLY ERASED-----------------------" << std::endl;
   }
 
@@ -131,6 +134,20 @@ class RbTree {
     nodeAllocator.deallocate(node, 1);
   }
 
+  std::pair<iterator, bool> insertNilNodeWrapper(base_ptr node) {
+    if (nil->left != nil &&
+        reinterpret_cast<Node *>(node)->val()->first
+        <= reinterpret_cast<Node *>(nil->left)->val()->first) {
+      nil->left = node;
+    }
+    if (nil->right != nil &&
+        reinterpret_cast<Node *>(node)->val()->first
+        >= reinterpret_cast<Node *>(nil->right)->val()->first) {
+      nil->right = node;
+    }
+    return std::make_pair(iterator(node, nil), true);
+  }
+
   std::pair<iterator, bool> insert(value_type val) {
     if (root == nil) {
       root = createNode(nil, val);
@@ -147,7 +164,7 @@ class RbTree {
           } else {
             node->left = createNode(node, val);
             currentSize++;
-            return std::make_pair(iterator(node->left, nil), true);
+            return insertNilNodeWrapper(node->left);
           }
         } else if (isUniqueTree && !comp(node->value.first, val.first)) {
           return std::make_pair(iterator(node, nil), false);
@@ -157,7 +174,7 @@ class RbTree {
           } else {
             node->right = createNode(node, val);
             currentSize++;
-            return std::make_pair(iterator(node->right, nil), true);
+            return insertNilNodeWrapper(node->right);
           }
         }
       }
@@ -245,7 +262,7 @@ class RbTree {
   void erase(iterator first, iterator last) {
     while (first != last) {
       iterator tmp = first;
-      int i = tmp->first;
+      int i = tmp->first;//todo remove debug print
       ++first;
       erase(tmp);
       std::cout << "--------------------------" << std::to_string(i) << " ERASED-----------------------" << std::endl;
@@ -255,27 +272,19 @@ class RbTree {
 
   // ITERATORS ----------------------------------------------------------------------
   const_iterator begin() const {
-    base_ptr ptr = RbTreeNodeBase::minimum(reinterpret_cast<base_ptr>(root), reinterpret_cast<const_base_ptr>(nil));
-
-    return const_iterator(reinterpret_cast<Node *>(ptr), nil);
+    return const_iterator(reinterpret_cast<Node *>(nil->left), nil);
   }
 
   iterator begin() {
-    base_ptr ptr = RbTreeNodeBase::minimum(reinterpret_cast<base_ptr>(root), reinterpret_cast<const_base_ptr>(nil));
-
-    return iterator(reinterpret_cast<Node *>(ptr), nil);
+    return iterator(reinterpret_cast<Node *>(nil->left), nil);
   }
 
   iterator end() {
-    iterator it = iterator(reinterpret_cast<Node *>(nil), nil);
-
-    return ++it;
+    return iterator(reinterpret_cast<Node *>(nil), nil);
   }
 
   const_iterator end() const {
-    const_iterator it = const_iterator(reinterpret_cast<Node *>(nil), nil);
-
-    return ++it;
+    return const_iterator(reinterpret_cast<Node *>(nil), nil);
   }
 
   reverse_iterator rbegin() {
@@ -316,6 +325,7 @@ class RbTree {
 
   Node *createNilNode() {
     Node *node = nodeAllocator.allocate(1);
+//    baseAllocator.construct(node, *node); //todo
 
     node->color = RED;
     node->left = node;

@@ -93,6 +93,8 @@ class RbTreeNodeBase {
     if (x->right != nil) {
       // find min of right subtree
       x = minimum(x->right, nil);
+    } else if (x == nil->right) {
+      x = x->right;
     } else {
       base_ptr y = x->parent;
       while (x == y->right) {
