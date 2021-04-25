@@ -153,18 +153,18 @@ class RbTree {
     return std::make_pair(iterator(nil, nil), false);
   }
 
-  void transplant(Node *treeWhereToPlace, Node *treeToPlace) {
+  void transplant(base_ptr treeWhereToPlace, base_ptr treeToPlace) {
     if (treeWhereToPlace->parent == nil) {  // u is root
-      root = treeToPlace;
+      root = reinterpret_cast<Node *>(treeToPlace);
     } else if (treeWhereToPlace == treeWhereToPlace->parent->left) { // u is left child
       treeWhereToPlace->parent->left = treeToPlace;
     } else { // u is right child
       treeWhereToPlace->parent->right = treeToPlace;
     }
 
-    if (treeToPlace != nil) {
+//    if (treeToPlace != nil) {
       treeToPlace->parent = treeWhereToPlace->parent;
-    }
+//    }
   }
 
   Node *find(value_type val) {
@@ -181,6 +181,10 @@ class RbTree {
 
   size_type max_size() const {
     return nodeAllocator.max_size();
+  }
+
+  allocator_type get_allocator() const {
+    return allocator;
   }
 
   void erase(iterator position) {
@@ -346,7 +350,7 @@ class RbTree {
       } else { //z.parent is the right child
         base_ptr y = z->parent->parent->left; //uncle of z
 
-        if (y->color == RED) {
+        if (y->isRed()) {
           z->parent->color = BLACK;
           y->color = BLACK;
           z->parent->parent->color = RED;
@@ -365,27 +369,106 @@ class RbTree {
     root->color = BLACK;
   }
 
-  void removeNode(Node *z) {
+//  https://www.codesdope.com/course/data-structures-red-black-trees-deletion/
+  void deletionFixup(base_ptr x) {
+    while (x != root && x->color == BLACK) {
+      if (x == x->parent->left) {
+        base_ptr w = x->parent->right;
+        if (w->isRed()) {
+          w->color = BLACK;
+          x->parent->color = RED;
+          leftRotate(x->parent);
+          w = x->parent->right;
+        }
+        if (w->left->color == BLACK && w->right->color == BLACK) {
+          w->color = RED;
+          x = x->parent;
+        } else {
+          if (w->right->color == BLACK) {
+            w->left->color = BLACK;
+            w->color = RED;
+            rightRotate(w);
+            w = x->parent->right;
+          }
+          w->color = x->parent->color;
+          x->parent->color = BLACK;
+          w->right->color = BLACK;
+          leftRotate(x->parent);
+          x = root;
+        }
+      } else {
+        base_ptr w = x->parent->left;
+        if (w->isRed()) {
+          w->color = BLACK;
+          x->parent->color = RED;
+          rightRotate(x->parent);
+          w = x->parent->left;
+        }
+        if (w->right->color == BLACK && w->left->color == BLACK) {
+          w->color = RED;
+          x = x->parent;
+        } else {
+          if (w->left->color == BLACK) {
+            w->right->color = BLACK;
+            w->color = RED;
+            leftRotate(w);
+            w = x->parent->left;
+          }
+          w->color = x->parent->color;
+          x->parent->color = BLACK;
+          w->left->color = BLACK;
+          rightRotate(x->parent);
+          x = root;
+        }
+      }
+    }
+    x->color = BLACK;
+  }
+
+  void removeNode(base_ptr z) {
+    base_ptr y = z;
+    base_ptr x;
+    RbTreeColor yOriginalColor = y->color;
+
     if (z->left == nil) {
+      x = z->right;
       transplant(z, reinterpret_cast<Node *>(z->right));
-      destroyNode(z);
+//      destroyNode(z);
     } else if (z->right == nil) {
+      x = z->left;
       transplant(z, reinterpret_cast<Node *>(z->left));
-      destroyNode(z);
+//      destroyNode(z);
     } else {
-      RbTreeNodeBase *tmp = RbTreeNodeBase::minimum(reinterpret_cast<base_ptr>(z->right),
+      y = RbTreeNodeBase::minimum(reinterpret_cast<base_ptr>(z->right),
                                                     reinterpret_cast<const_base_ptr>(nil)); //minimum element in right subtree
-      Node *y = reinterpret_cast<Node *>(tmp);
-      if (y->parent != z) {
-        transplant(y, reinterpret_cast<Node *>(y->right));
+      yOriginalColor = y->color;
+      x = y->right;
+      if (y->parent == z) {
+        x->parent = z;
+      } else {
+        transplant(y, y->right);
         y->right = z->right;
         y->right->parent = y;
       }
       transplant(z, y);
       y->left = z->left;
       y->left->parent = y;
-      destroyNode(z);
+      y->color = z->color;
+//      destroyNode(z);
     }
+    if (yOriginalColor == BLACK) {
+      deletionFixup(x);
+    }
+    if (x == nil->left) {
+      iterator it = begin();
+      ++it;
+      nil->left = it.node;
+    } else if (x == nil->right) {
+      iterator it = iterator(x, nil);
+      --it;
+      nil->right = it.node;
+    }
+    destroyNode(reinterpret_cast<Node *>(x));
     currentSize--;
   }
 
