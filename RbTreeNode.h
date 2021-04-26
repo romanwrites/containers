@@ -51,26 +51,12 @@ class RbTreeNodeBase {
     return x;
   }
 
-//  static const_base_ptr minimum(const_base_ptr x) {
-//    while (x->left != NULL) {
-//      x = x->left;
-//    }
-//    return x;
-//  }
-
   static base_ptr maximum(base_ptr x, const_base_ptr nil) {
     while (x->right != nil) {
       x = x->right;
     }
     return x;
   }
-
-//  static const_base_ptr maximum(const_base_ptr x, ) {
-//    while (x->right != nil) {
-//      x = x->right;
-//    }
-//    return x;
-//  }
 
   static base_ptr increment(base_ptr x, const_base_ptr nil) throw() {
     if (x->right != nil) {
@@ -108,25 +94,10 @@ class RbTreeNodeBase {
     return x;
   }
 
-//  base_ptr increment(base_ptr x) throw() {
-//    return local_increment(x);
-//  }
-//
-//  const_base_ptr increment(const_base_ptr x) throw() {
-//    return local_increment(const_cast<base_ptr >(x));
-//  }
-
   static base_ptr decrement(base_ptr x, const_base_ptr nil) throw() {
-//    if (x->isRed() && x->parent->parent == x) {
-//      x = x->right;
-//    } // todo wtf?
-//    else if (x->left != nil) {
     if (x->left != nil) {
       base_ptr y = x->left;
       y = maximum(y, nil);
-//      while (y->right != nil) {
-//        y = y->right;
-//      }
       x = y;
     } else {
       base_ptr y = x->parent;
@@ -141,16 +112,9 @@ class RbTreeNodeBase {
 
 
   static const_base_ptr decrement(const_base_ptr x, const_base_ptr nil) throw() {
-//    if (x->isRed() && x->parent->parent == x) {
-//      x = x->right;
-//    } // todo wtf?
-//    else if (x->left != nil) {
     if (x->left != nil) {
       base_ptr y = x->left;
       y = maximum(y, nil);
-//      while (y->right != nil) {
-//        y = y->right;
-//      }
       x = y;
     } else {
       base_ptr y = x->parent;
@@ -162,14 +126,6 @@ class RbTreeNodeBase {
     }
     return x;
   }
-
-//  base_ptr decrement(base_ptr x) throw() {
-//    return local_decrement(x);
-//  }
-//
-//  const_base_ptr decrement(const_base_ptr x) throw() {
-//    return local_decrement(const_cast<base_ptr>(x));
-//  }
 
 };
 

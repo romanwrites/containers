@@ -163,7 +163,7 @@ class RbTree {
     }
 
 //    if (treeToPlace != nil) {
-      treeToPlace->parent = treeWhereToPlace->parent;
+    treeToPlace->parent = treeWhereToPlace->parent;
 //    }
   }
 
@@ -440,7 +440,7 @@ class RbTree {
 //      destroyNode(z);
     } else {
       y = RbTreeNodeBase::minimum(reinterpret_cast<base_ptr>(z->right),
-                                                    reinterpret_cast<const_base_ptr>(nil)); //minimum element in right subtree
+                                  reinterpret_cast<const_base_ptr>(nil)); //minimum element in right subtree
       yOriginalColor = y->color;
       x = y->right;
       if (y->parent == z) {
