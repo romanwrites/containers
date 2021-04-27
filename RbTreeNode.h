@@ -59,6 +59,10 @@ class RbTreeNodeBase {
   }
 
   static base_ptr increment(base_ptr x, const_base_ptr nil) throw() {
+    if (x->parent == nil && x->left == nil && x->right == nil) {
+      x = const_cast<base_ptr>(nil);
+      return x;
+    }
     if (x == nil) {
       x = nil->left;
       return x;
@@ -80,6 +84,10 @@ class RbTreeNodeBase {
   }
 
   static const_base_ptr increment(const_base_ptr x, const_base_ptr nil) throw() {
+    if (x->parent == nil && x->left == nil && x->right == nil) {
+      x = const_cast<base_ptr>(nil);
+      return x;
+    }
     if (x == nil) {
       x = nil->left;
       return x;

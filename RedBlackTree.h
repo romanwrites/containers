@@ -207,11 +207,11 @@ class RbTree {
   void erase(iterator first, iterator last) {
     while (first != last) {
       iterator tmp = first;
-      int i = tmp->first;//todo remove debug print
+//      int i = tmp->first;//todo remove debug print
       ++first;
       erase(tmp);
-      std::cout << "--------------------------" << std::to_string(i) << " ERASED-----------------------" << std::endl;
-      printIntTree();
+//      std::cout << "--------------------------" << std::to_string(i) << " ERASED-----------------------" << std::endl;
+//      printIntTree();
     }
   }
 
@@ -421,45 +421,45 @@ class RbTree {
     x->color = BLACK;
   }
 
-  void removeNode(base_ptr z) {
-    base_ptr y = z;
+  void removeNode(base_ptr nodeToDelete) {
+    base_ptr y = nodeToDelete;
     base_ptr x;
     RbTreeColor yOriginalColor = y->color;
 
-    if (z == nil->left) {
+    if (nodeToDelete == nil->left) {
       iterator it = begin();
       ++it;
       nil->left = it.node;
-    } else if (z == nil->right) {
-      iterator it = iterator(z, nil);
+    } else if (nodeToDelete == nil->right) {
+      iterator it = iterator(nodeToDelete, nil);
       --it;
       nil->right = it.node;
     }
 
-    if (z->left == nil) {
-      x = z->right;
-      transplant(z, reinterpret_cast<Node *>(z->right));
+    if (nodeToDelete->left == nil) {
+      x = nodeToDelete->right;
+      transplant(nodeToDelete, reinterpret_cast<Node *>(nodeToDelete->right));
 //      destroyNode(z);
-    } else if (z->right == nil) {
-      x = z->left;
-      transplant(z, reinterpret_cast<Node *>(z->left));
+    } else if (nodeToDelete->right == nil) {
+      x = nodeToDelete->left;
+      transplant(nodeToDelete, reinterpret_cast<Node *>(nodeToDelete->left));
 //      destroyNode(z);
     } else {
-      y = RbTreeNodeBase::minimum(reinterpret_cast<base_ptr>(z->right),
+      y = RbTreeNodeBase::minimum(reinterpret_cast<base_ptr>(nodeToDelete->right),
                                   reinterpret_cast<const_base_ptr>(nil)); //minimum element in right subtree
       yOriginalColor = y->color;
       x = y->right;
-      if (y->parent == z) {
-        x->parent = z;
+      if (y->parent == nodeToDelete) {
+        x->parent = nodeToDelete;
       } else {
         transplant(y, y->right);
-        y->right = z->right;
+        y->right = nodeToDelete->right;
         y->right->parent = y;
       }
-      transplant(z, y);
-      y->left = z->left;
+      transplant(nodeToDelete, y);
+      y->left = nodeToDelete->left;
       y->left->parent = y;
-      y->color = z->color;
+      y->color = nodeToDelete->color;
 //      destroyNode(z);
     }
 
@@ -467,8 +467,8 @@ class RbTree {
       deletionFixup(x);
     }
 
-    if (x != nil) {
-      destroyNode(reinterpret_cast<Node *>(x));
+    if (nodeToDelete != nil) {
+      destroyNode(reinterpret_cast<Node *>(nodeToDelete));
     }
     currentSize--;
   }
@@ -492,10 +492,10 @@ class RbTree {
     if (nil->right == nil) {
       nil->right = node;
     }
-    std::cout << "-------------------------BEFORE INSERTIONFIXUP------------------" << std::endl;
-    printIntTree();
+//    std::cout << "-------------------------BEFORE INSERTIONFIXUP------------------" << std::endl;
+//    printIntTree();
     insertionFixup(node);
-    std::cout << "-------------------------------------------------------------" << std::endl;
+//    std::cout << "-------------------------------------------------------------" << std::endl;
 
     currentSize++;
     return std::make_pair(iterator(node, nil), true);
