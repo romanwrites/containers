@@ -59,6 +59,10 @@ class RbTreeNodeBase {
   }
 
   static base_ptr increment(base_ptr x, const_base_ptr nil) throw() {
+    if (x == nil) {
+      x = nil->left;
+      return x;
+    }
     if (x->right != nil) {
       // find min of right subtree
       x = minimum(x->right, nil);
@@ -76,6 +80,10 @@ class RbTreeNodeBase {
   }
 
   static const_base_ptr increment(const_base_ptr x, const_base_ptr nil) throw() {
+    if (x == nil) {
+      x = nil->left;
+      return x;
+    }
     if (x->right != nil) {
       // find min of right subtree
       x = minimum(x->right, nil);
@@ -95,6 +103,10 @@ class RbTreeNodeBase {
   }
 
   static base_ptr decrement(base_ptr x, const_base_ptr nil) throw() {
+    if (x == nil) {
+      x = nil->right;
+      return x;
+    }
     if (x->left != nil) {
       base_ptr y = x->left;
       y = maximum(y, nil);
@@ -112,6 +124,10 @@ class RbTreeNodeBase {
 
 
   static const_base_ptr decrement(const_base_ptr x, const_base_ptr nil) throw() {
+    if (x == nil) {
+      x = nil->right;
+      return x;
+    }
     if (x->left != nil) {
       base_ptr y = x->left;
       y = maximum(y, nil);

@@ -118,10 +118,6 @@ class RbTree {
     if (root == nil) {
       root = createNode(nil, val);
       return insertNilNodeWrapper(root);
-//      nil->left = root;
-//      nil->right = root;
-//      insertionFixup(root);
-//      return std::make_pair(iterator(root, nil), true);
     } else {
       Node *node = root;
 
@@ -430,6 +426,16 @@ class RbTree {
     base_ptr x;
     RbTreeColor yOriginalColor = y->color;
 
+    if (z == nil->left) {
+      iterator it = begin();
+      ++it;
+      nil->left = it.node;
+    } else if (z == nil->right) {
+      iterator it = iterator(z, nil);
+      --it;
+      nil->right = it.node;
+    }
+
     if (z->left == nil) {
       x = z->right;
       transplant(z, reinterpret_cast<Node *>(z->right));
@@ -456,19 +462,14 @@ class RbTree {
       y->color = z->color;
 //      destroyNode(z);
     }
+
     if (yOriginalColor == BLACK) {
       deletionFixup(x);
     }
-    if (x == nil->left) {
-      iterator it = begin();
-      ++it;
-      nil->left = it.node;
-    } else if (x == nil->right) {
-      iterator it = iterator(x, nil);
-      --it;
-      nil->right = it.node;
+
+    if (x != nil) {
+      destroyNode(reinterpret_cast<Node *>(x));
     }
-    destroyNode(reinterpret_cast<Node *>(x));
     currentSize--;
   }
 

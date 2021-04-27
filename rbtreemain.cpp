@@ -54,6 +54,13 @@ int main() {
   }
   std::cout << std::endl;
 
+  auto it = tree.end();
+  --it;
+  for (; it != tree.begin(); --it) {
+    std::cout << it->first << " ";
+  }
+  std::cout << std::endl;
+
   std::cout << "find: " << tree.find(std::make_pair(6, 6))->value.first << std::endl;
 
   std::cout << "count: " << tree.count(6) << std::endl;
