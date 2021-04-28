@@ -33,8 +33,6 @@ class RbTree {
   typedef ReverseIterator<iterator> reverse_iterator;
   typedef ReverseIterator<const_iterator> const_reverse_iterator;
 
-//  nil->left contains begin node
-//  nil->right contains pre-end node
  private:
   key_compare comp;
   node_allocator_type nodeAllocator;
@@ -84,18 +82,6 @@ class RbTree {
     nodeAllocator.deallocate(nil, 1);
     std::cout << "--------------------------FULLY ERASED-----------------------" << std::endl;
   }
-
-  // PLAN
-  // 1. insert ✅
-  //   a. find insert point
-  // 2. find ✅
-  // 3. count ✅
-  // 4. remove tree ✅
-  // 5. rebalance (rbtree insert fix)
-  //   a. rotations
-  // 6. remove rebalance
-  //   a. rotations
-  //   b. transplant ✅
 
   size_type count(const key_type &k) const {
     if (isUniqueTree) {
@@ -158,9 +144,7 @@ class RbTree {
       treeWhereToPlace->parent->right = treeToPlace;
     }
 
-//    if (treeToPlace != nil) {
     treeToPlace->parent = treeWhereToPlace->parent;
-//    }
   }
 
   Node *find(value_type val) {
@@ -207,11 +191,8 @@ class RbTree {
   void erase(iterator first, iterator last) {
     while (first != last) {
       iterator tmp = first;
-//      int i = tmp->first;//todo remove debug print
       ++first;
       erase(tmp);
-//      std::cout << "--------------------------" << std::to_string(i) << " ERASED-----------------------" << std::endl;
-//      printIntTree();
     }
   }
 
@@ -270,7 +251,6 @@ class RbTree {
 
   Node *createNilNode() {
     Node *node = nodeAllocator.allocate(1);
-//    baseAllocator.construct(node, *node); //todo
 
     node->color = BLACK;
     node->left = node;
@@ -439,11 +419,9 @@ class RbTree {
     if (nodeToDelete->left == nil) {
       x = nodeToDelete->right;
       transplant(nodeToDelete, reinterpret_cast<Node *>(nodeToDelete->right));
-//      destroyNode(z);
     } else if (nodeToDelete->right == nil) {
       x = nodeToDelete->left;
       transplant(nodeToDelete, reinterpret_cast<Node *>(nodeToDelete->left));
-//      destroyNode(z);
     } else {
       y = RbTreeNodeBase::minimum(reinterpret_cast<base_ptr>(nodeToDelete->right),
                                   reinterpret_cast<const_base_ptr>(nil)); //minimum element in right subtree
@@ -492,10 +470,7 @@ class RbTree {
     if (nil->right == nil) {
       nil->right = node;
     }
-//    std::cout << "-------------------------BEFORE INSERTIONFIXUP------------------" << std::endl;
-//    printIntTree();
     insertionFixup(node);
-//    std::cout << "-------------------------------------------------------------" << std::endl;
 
     currentSize++;
     return std::make_pair(iterator(node, nil), true);
