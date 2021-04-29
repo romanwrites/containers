@@ -3,7 +3,7 @@
 #include "Allocator.h"
 #include <map>
 #include "TestRunner.h"
-#include "RbTreeIterator.h"
+#include "RedBlackTree.h"
 
 #define RED_BG_SET "\033[38;5;202m"
 #define BLACK_BG_SET "\033[38;5;33m"
@@ -57,6 +57,9 @@ class Map {
       return comp(x.first, y.first);
     }
   };
+  //  template<typename Key, typename Val, typename KeyOfValue,
+//      typename Compare, typename Alloc = ft::Allocator<Val> >
+  RbTree<key_type, value_type, value_type, Compare, Alloc> tree;
 
 //  todo constructors...
  public:
@@ -140,11 +143,11 @@ class Map {
 
  public:
   bool empty() const {
-    return currentSize == 0; //mock todo implement
+    return tree.empty(); //mock todo implement
   }
 
   size_type size() const {
-    return currentSize;
+    return tree.size();
   }
 
   key_compare key_comp() const {
@@ -164,159 +167,6 @@ class Map {
       return 1;
     }
   }
-
-// private: //todo
- public:
-  iterator get(const key_type &k) {
-    Node *x = root;
-
-    while (x != nil) {
-
-      int cmp = compareTo(k, x->value.first);
-
-      if (cmp < 0) {
-        x = x->left;
-      } else if (cmp > 0) {
-        x = x->right;
-      } else {
-        return iterator(x->value);
-      }
-    }
-    return iterator(nil);
-  }
-
-  Node *put(Node *h, value_type const &value) {
-    if (h == nil || h == nullptr) {
-      return createNode(value);
-    }
-
-    int cmp = compareTo(value.first, h->value.first);
-
-    if (cmp < 0) {
-      h->left = put(h->left, value);
-      h->left->parent = h;
-    } else if (cmp > 0) {
-      h->right = put(h->right, value);
-      h->right->parent = h;
-    } else {
-//      allocator.destroy(h->value);
-      allocator.construct(&(h->value), value); // todo fail
-//      h->value = value;
-    }
-    if (h->right->isRed() && !h->left->isRed()) {
-      h = rotateLeft(h);
-    }
-    if (h->left->isRed() && h->left->left) {
-      h = rotateRight(h);
-    }
-    if (h->left->isRed() && h->right->isRed()) {
-      flipColors(h);
-    }
-
-    return h;
-  }
-
-  Node *createNode(value_type const &value) {
-    Node *node = nodeAllocator.allocate(1);
-
-    node->color = RED;
-    node->left = nil;
-    node->right = nil;
-    node->parent = nil;
-
-    allocator.construct(&(node->value), value);
-
-    return node;
-  }
-
-  Node *createNilNode() {
-    Node *node = nodeAllocator.allocate(1);
-
-    node->color = RED;
-    node->left = node;
-    node->right = node;
-    node->parent = node;
-
-    return node;
-  }
-
-  void destroyNode(Node *node) {
-    allocator.destroy(node);
-    allocator.deallocate(node, 1);
-  }
-
-  Node *rotateLeft(Node *h) {
-    if (!h->right->isRed()) {
-      return h; //todo
-    }
-
-    Node *x = h->right;
-
-    h->right = x->left;
-    if (h->right != nil) {
-      h->right->parent = h;
-    }
-
-    x->parent = h->parent;
-
-    if (x->parent == nil) {
-      root = x;
-    } else if (x->parent->left == h) {
-      x->parent->left = x;
-    } else {
-      x->parent->right = x;
-    }
-
-    x->left = h;
-    h->parent = x;
-
-    x->color = h->color;
-    h->color = RED;
-    return x;
-  }
-
-  Node *rotateRight(Node *h) {
-    if (!h->right->isRed()) {
-      return h; //todo
-    }
-
-    Node *x = h->left;
-
-    h->left = x->right;
-    if (h->left != nil) {
-      h->left->parent = h;
-    }
-
-    x->parent = h->parent;
-    if (x->parent == nil) {
-      root = x;
-    } else if (x->parent->left == nil) {
-      x->parent->left = x;
-    } else {
-      x->parent->right = x;
-    }
-
-    x->right = h;
-    h->parent = x;
-
-    x->color = h->color;
-    h->color = RED;
-    return h;
-  }
-
-  void flipColors(Node *h) {
-    if (!h->isRed() && h->left->isRed() && h->right->isRed()) {
-      h->color = RED;
-      h->left->color = BLACK;
-      h->right->color = BLACK;
-    }
-  }
-
-
-//  const_iterator find (const key_type& k) const {
-//    return const_iterator(*find(k)); //todo check
-//  }
-
 };
 
 }
