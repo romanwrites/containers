@@ -36,6 +36,9 @@ class Map {
   typedef RbTreeNode<value_type> Node;
 
   typedef RbTreeIterator<value_type> iterator;
+  typedef RbTreeConstIterator<value_type> const_iterator;
+  typedef ReverseIterator<iterator> reverse_iterator;
+  typedef ReverseIterator<const_iterator> const_reverse_iterator;
 
   typedef typename Alloc::template rebind<Node>::other node_allocator_type;
   //todo
@@ -59,38 +62,37 @@ class Map {
   };
   //  template<typename Key, typename Val, typename KeyOfValue,
 //      typename Compare, typename Alloc = ft::Allocator<Val> >
+
+
   RbTree<key_type, value_type, value_type, Compare, Alloc> tree;
 
 //  todo constructors...
  public:
   explicit Map(const key_compare &comp = key_compare(),
-               const allocator_type &alloc = allocator_type())
-      : key_compare_(comp),
-        allocator(alloc),
-        nodeAllocator(allocator_type(allocator)),
-        root(nullptr),
-        nil(nullptr),
-        currentSize(0) {
-    nil = createNilNode();
-
+               const allocator_type &alloc = allocator_type()) {
+    this->tree = new RbTree<key_type, value_type, value_type, Compare, Alloc>(comp, alloc);
   }
-//
-//  template <class InputIterator>
-//  Map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) {
-//
-//  }
-//
-//  Map (const Map& x) {
-//    Map(x.begin(), x.end(), x.key_compare_, x.allocator);
-//  }
 
- private:
-  key_compare key_compare_;
-  allocator_type allocator;
-  node_allocator_type nodeAllocator;
-  Node *root;
-  Node *nil;
-  size_type currentSize;
+  template <class InputIterator>
+  Map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) {
+    this->tree = new RbTree<key_type, value_type, value_type, Compare, Alloc>(comp, alloc);
+    insert(first, last);
+  }
+
+  Map (const Map& x) {
+    this->tree = new RbTree<key_type, value_type, value_type, Compare, Alloc>;
+    insert(x.begin(), x.end());
+  }
+
+  ~Map() {
+    delete tree;
+  }
+
+  Map& operator=(const Map& x) {
+    this->tree = x.tree;
+
+    return *this;
+  }
 
  public:
 
@@ -99,47 +101,17 @@ class Map {
   }
 
   std::pair<iterator, bool> insert(const value_type &val) {
-    Node *node;
-
-    node = put(root, val);
-
-    if (root == NULL) {
-      root = node;
-    }
-
-    std::pair<iterator, bool> res;
-    res.first = iterator(node, nil);
-    res.second = true;
-
-    return res;
+    return tree.insert(val);
   }
-//
-//  iterator insert(iterator position, const value_type &val) {
-//
-//  }
-//
-//  template<class InputIterator>
-//  void insert(InputIterator first, InputIterator last) {
-//
-//  }
 
+  iterator insert(iterator position, const value_type &val) {
+    return tree.insert(position, val);
+  }
 
-//  explicit Map (const key_compare& comp = key_compare(),
-//                const allocator_type& alloc = allocator_type()) {
-//    key_compare_ = comp;
-//
-//  }
-//
-//  template <class InputIterator>
-//  Map (InputIterator first, InputIterator last,
-//  const key_compare& comp = key_compare(),
-//  const allocator_type& alloc = allocator_type()) {
-//
-//  }
-//
-//  Map (const Map& x) {
-//
-//  }
+  template<class InputIterator>
+  void insert(InputIterator first, InputIterator last) {
+    tree.insert(first, last);
+  }
 
  public:
   bool empty() const {
@@ -151,22 +123,47 @@ class Map {
   }
 
   key_compare key_comp() const {
-    return key_compare_;
+    return tree.key_comp();
   }
 
   value_compare value_comp() const {
     return value_compare();
   }
 
-  int compareTo(const key_type &o1, const key_type &o2) {
-    if (o1 == o2) {
-      return 0;
-    } else if (key_compare_(o1, o2)) {
-      return -1;
-    } else {
-      return 1;
-    }
+  // ITERATORS ----------------------------------------------------------------------
+  const_iterator begin() const {
+    return tree.begin();
   }
+
+  iterator begin() {
+    return tree.begin();
+  }
+
+  iterator end() {
+    return tree.end();
+  }
+
+  const_iterator end() const {
+    return tree.end();
+  }
+
+  reverse_iterator rbegin() {
+    return tree.rbegin();
+  }
+
+  const_reverse_iterator rbegin() const {
+    return tree.rbegin();
+  }
+
+  reverse_iterator rend() {
+    return tree.rend();
+  }
+
+  const_reverse_iterator rend() const {
+    return tree.rend();
+  }
+
+
 };
 
 }
