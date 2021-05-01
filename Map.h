@@ -73,13 +73,16 @@ class Map {
     this->tree = new RbTree<key_type, value_type, value_type, Compare, Alloc>(comp, alloc);
   }
 
-  template <class InputIterator>
-  Map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) {
+  template<class InputIterator>
+  Map(InputIterator first,
+      InputIterator last,
+      const key_compare &comp = key_compare(),
+      const allocator_type &alloc = allocator_type()) {
     this->tree = new RbTree<key_type, value_type, value_type, Compare, Alloc>(comp, alloc);
     insert(first, last);
   }
 
-  Map (const Map& x) {
+  Map(const Map &x) {
     this->tree = new RbTree<key_type, value_type, value_type, Compare, Alloc>;
     insert(x.begin(), x.end());
   }
@@ -88,7 +91,7 @@ class Map {
     delete tree;
   }
 
-  Map& operator=(const Map& x) {
+  Map &operator=(const Map &x) {
     this->tree = x.tree;
 
     return *this;
@@ -113,13 +116,26 @@ class Map {
     tree.insert(first, last);
   }
 
- public:
-  bool empty() const {
-    return tree.empty(); //mock todo implement
+  void erase(iterator position) {
+    tree.erase(position);
   }
 
-  size_type size() const {
-    return tree.size();
+  size_type erase(const key_type &k) {
+    tree.erase(k);
+  }
+
+  void erase(iterator first, iterator last) {
+    tree.erase(first, last);
+  }
+
+  void swap(Map &x) {
+    RbTree<key_type, value_type, value_type, Compare, Alloc> tmp(this->tree);
+    this->tree = x.tree;
+    x.tree = tmp;
+  }
+
+  void clear() {
+    tree.erase(tree.begin(), tree.end());
   }
 
   key_compare key_comp() const {
@@ -127,7 +143,56 @@ class Map {
   }
 
   value_compare value_comp() const {
-    return value_compare();
+    return tree.value_comp();
+  }
+
+  iterator find(const key_type &k) {
+    return tree.find();
+  }
+
+  const_iterator find(const key_type &k) const {
+    return tree.find();
+  }
+
+  size_type count(const key_type &k) const {
+    return tree.count(k);
+  }
+
+  iterator lower_bound(const key_type &k) {
+    return tree.lower_bound();
+  }
+
+  const_iterator lower_bound(const key_type &k) const {
+    return tree.lower_bound();
+  }
+
+  iterator upper_bound(const key_type &k) {
+    return tree.upper_bound();
+  }
+
+  const_iterator upper_bound(const key_type &k) const {
+    return tree.upper_bound();
+  }
+
+  std::pair<const_iterator, const_iterator> equal_range(const key_type &k) const {
+    return tree.equal_range(k);
+  }
+
+  std::pair<iterator, iterator> equal_range(const key_type &k) {
+    return tree.equal_range(k);
+  }
+
+  allocator_type get_allocator() const {
+    return tree.get_allocator();
+  }
+
+ public:
+  bool empty() const {
+    return tree.empty(); //mock todo implement
+  }
+
+  size_type size() const {
+    return tree.size();
   }
 
   // ITERATORS ----------------------------------------------------------------------
@@ -163,6 +228,9 @@ class Map {
     return tree.rend();
   }
 
+  size_type max_size() const {
+    return tree.max_size();
+  }
 
 };
 
