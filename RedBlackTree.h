@@ -101,6 +101,19 @@ class RbTree {
     return i;
   }
 
+  template<class InputIterator>
+  void insert(InputIterator first, InputIterator last) {
+    while (first != last) {
+      insert(*first);
+      ++first;
+    }
+  }
+
+  iterator insert(iterator position, const value_type &val) {
+    (void)position;
+    return insert(val).first;
+  }
+
   std::pair<iterator, bool> insert(value_type val) {
     if (root == nil) {
       root = createNode(nil, val);
@@ -159,6 +172,7 @@ class RbTree {
   }
 
   size_type max_size() const {
+    // using my Allocator:
     return nodeAllocator.max_size();
   }
 

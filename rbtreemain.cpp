@@ -19,8 +19,6 @@ void TestReverseIterator(ft::RbTree<int, std::pair<const int, int>, int, ft::les
 }
 
 int main() {
-//  template<typename Key, typename Val, typename KeyOfValue,
-//      typename Compare, typename Alloc = ft::Allocator<Val> >
   ft::RbTree<int, std::pair<const int, int>, int, ft::less<int> > tree((ft::less<int>()), ft::Allocator<int>(), true);
 
 //  tree.insert(std::make_pair(5, 5));
