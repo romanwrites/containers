@@ -32,8 +32,6 @@
 class TestRunner {
  public:
 
-
-
   template<class TestFunc>
   void RunTest(TestFunc func, std::string const &test_name) {
     try {
@@ -101,10 +99,3 @@ std::ostream &operator<<(std::ostream &os, std::set<T> const &s) {
   }
   return os << "}";
 }
-
-std::string HintList(std::string const &str);
-std::string HintVector(std::string const &str);
-std::string HintMap(std::string const &str);
-std::string HintSet(std::string const &str);
-std::string HintStack(std::string const &str);
-std::string HintQueue(std::string const &str);

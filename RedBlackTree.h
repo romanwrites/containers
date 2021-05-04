@@ -75,12 +75,13 @@ class RbTree {
   }
 
   ~RbTree() {
-    std::cout << "destructor RBTREE called" << std::endl;
-    std::cout << "--------------------------CALL ERASE-----------------------" << std::endl;
+//    std::cout << "destructor RBTREE called" << std::endl;
+//    std::cout << "--------------------------CALL ERASE-----------------------" << std::endl;
     erase(begin(), end());
-    std::cout << "--------------------------NIL NODE ERASE-----------------------" << std::endl;
+//    std::cout << "--------------------------NIL NODE ERASE-----------------------" << std::endl;
+//  deallocate nil
     nodeAllocator.deallocate(nil, 1);
-    std::cout << "--------------------------FULLY ERASED-----------------------" << std::endl;
+//    std::cout << "--------------------------FULLY ERASED-----------------------" << std::endl;
   }
 
   size_type count(const key_type &k) const {
@@ -113,7 +114,6 @@ class RbTree {
             node = reinterpret_cast<Node *>(node->left);
           } else {
             node->left = createNode(node, val);
-            currentSize++;
             return insertNilNodeWrapper(node->left);
           }
         } else if (isUniqueTree && !comp(node->value.first, val.first)) {
@@ -123,7 +123,6 @@ class RbTree {
             node = reinterpret_cast<Node *>(node->right);
           } else {
             node->right = createNode(node, val);
-            currentSize++;
             return insertNilNodeWrapper(node->right);
           }
         }

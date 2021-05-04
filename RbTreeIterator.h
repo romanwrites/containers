@@ -42,7 +42,7 @@ class RbTreeIterator {
   virtual ~RbTreeIterator() {}
 
   reference operator*() const {
-    return *static_cast<link_type>(node)->val;
+    return *static_cast<link_type>(node)->val();
   }
 
   pointer operator->() const {
@@ -105,7 +105,7 @@ class RbTreeConstIterator {
   explicit RbTreeConstIterator(base_ptr x, const_base_ptr nil) : node(x), nil(nil) {}
 
   RbTreeConstIterator(iterator const &p) : node(p.node), nil(p.nil) {}
-  RbTreeConstIterator(RbTreeIterator<T> &p) : node(p.x), nil(p.nil) {}
+  RbTreeConstIterator(RbTreeIterator<T> const &p) : node(p.node), nil(p.nil) {}
 
   virtual ~RbTreeConstIterator() {}
 
