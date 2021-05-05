@@ -84,7 +84,15 @@ void TestConstructors(TestRunner const &tr) {
 void TestTestAssignationOperatorConst(std::map<int, int> const &m, ft::Map<int, int> const &fm, TestRunner const &tr) {
   std::map<int, int> m2 = m;
   ft::Map<int, int> fm2 = fm;
-  AssertEqual(fm2, m2, tr.hintMessage("operator= const"));
+  AssertEqual(fm2, m2, tr.hintMessage("operator= from const"));
+
+  m2 = std::map<int, int>();
+  fm2 = ft::Map<int, int>();
+  AssertEqual(fm2, m2, tr.hintMessage("operator= empty constructor on non const"));
+
+  m2 = m;
+  fm2 = fm;
+  AssertEqual(fm2, m2, tr.hintMessage("operator= assign again from const"));
 }
 
 void TestAssignationOperator(TestRunner const &tr) {
@@ -100,6 +108,14 @@ void TestAssignationOperator(TestRunner const &tr) {
   std::map<int, int> m2 = m;
   ft::Map<int, int> fm2 = fm;
   AssertEqual(fm2, m2, tr.hintMessage("operator="));
+
+  m = std::map<int, int>();
+  fm = ft::Map<int, int>();
+  AssertEqual(fm, m, tr.hintMessage("operator= empty constructor"));
+
+  m = m2;
+  fm = fm2;
+  AssertEqual(fm, m, tr.hintMessage("operator= assign again"));
 
   TestTestAssignationOperatorConst(m, fm, tr);
 }

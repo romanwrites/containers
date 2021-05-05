@@ -73,6 +73,14 @@ void TestTestAssignationOperatorConst(std::multimap<int, int> const &m, ft::Mult
   std::multimap<int, int> m2 = m;
   ft::MultiMap<int, int> fm2 = fm;
   AssertEqual(fm2, m2, tr.hintMessage("operator= const"));
+
+  m2 = std::multimap<int, int>();
+  fm2 = ft::MultiMap<int, int>();
+  AssertEqual(fm2, m2, tr.hintMessage("operator= empty constructor on non const"));
+
+  m2 = m;
+  fm2 = fm;
+  AssertEqual(fm2, m2, tr.hintMessage("operator= assign again from const"));
 }
 
 void TestAssignationOperator(TestRunner const &tr) {
@@ -89,6 +97,14 @@ void TestAssignationOperator(TestRunner const &tr) {
   std::multimap<int, int> m2 = m;
   ft::MultiMap<int, int> fm2 = fm;
   AssertEqual(fm2, m2, tr.hintMessage("operator="));
+
+  m = std::multimap<int, int>();
+  fm = ft::MultiMap<int, int>();
+  AssertEqual(fm, m, tr.hintMessage("operator= empty constructor"));
+
+  m = m2;
+  fm = fm2;
+  AssertEqual(fm, m, tr.hintMessage("operator= assign again"));
 
   TestTestAssignationOperatorConst(m, fm, tr);
 }

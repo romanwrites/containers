@@ -76,17 +76,16 @@ class RbTree {
   }
 
   RbTree &operator=(const RbTree &x) {
-    this->currentSize = x.currentSize;
-    this->nodeAllocator = x.nodeAllocator;
-    this->root = x.root;
-    this->nil = x.nil;
-    this->comp = x.comp;
-    this->isUniqueTree = x.isUniqueTree;
+    if (this != &x) {
+      clear();
+      this->comp = x.comp;
+      insert(x.begin(), x.end());
+    }
     return *this;
   }
 
   ~RbTree() {
-    erase(begin(), end());
+    clear();
     nodeAllocator.deallocate(nil, 1);
   }
 
@@ -267,6 +266,7 @@ class RbTree {
 
   void clear() {
     erase(begin(), end());
+    root = nil;
   }
 
   key_compare key_comp() const {

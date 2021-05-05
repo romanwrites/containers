@@ -83,7 +83,7 @@ class Map {
   }
 
   Map &operator=(const Map &x) {
-    this->tree = x.tree;
+    *this->tree = *x.tree;
 
     return *this;
   }

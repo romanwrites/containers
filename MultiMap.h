@@ -82,7 +82,7 @@ class MultiMap {
   }
 
   MultiMap &operator=(const MultiMap &x) {
-    this->tree = x.tree;
+    *this->tree = *x.tree;
 
     return *this;
   }
