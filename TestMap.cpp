@@ -1,5 +1,4 @@
 #include "TestRunner.h"
-#include <array>
 
 namespace TestMap {
 
@@ -65,8 +64,6 @@ void TestConstructors(TestRunner const &tr) {
   ft::Map<int, int> fm;
   AssertEqual(fm, m, tr.hintMessage("empty constructor"));
 
-  srand(time(NULL));
-
   for (int i = 0; i < 20; ++i) {
     int r = rand() % 100 + 1;
     m.insert(std::make_pair(r, r));
@@ -94,8 +91,6 @@ void TestAssignationOperator(TestRunner const &tr) {
   std::map<int, int> m;
   ft::Map<int, int> fm;
 
-  srand(time(NULL));
-
   for (int i = 0; i < 20; ++i) {
     int r = rand() % 100 + 1;
     m.insert(std::make_pair(r, r));
@@ -122,8 +117,6 @@ void TestConstIterator(std::map<int, int> const &m, ft::Map<int, int> const &fm,
 void TestIterator(TestRunner const &tr) {
   std::map<int, int> m;
   ft::Map<int, int> fm;
-
-  srand(time(NULL));
 
   for (int i = 0; i < 20; ++i) {
     int r = rand() % 100 + 1;
@@ -155,8 +148,6 @@ void TestConstReverseIterator(std::map<int, int> const &m, ft::Map<int, int> con
 void TestReverseIterator(TestRunner const &tr) {
   std::map<int, int> m;
   ft::Map<int, int> fm;
-
-  srand(time(NULL));
 
   for (int i = 0; i < 20; ++i) {
     int r = rand() % 100 + 1;
@@ -321,8 +312,8 @@ void TestCount(TestRunner const &tr) {
   }
 
   Assert(m.count(0) == fm.count(0), tr.hintMessage("count 0"));
-  Assert(m.count(199) == fm.count(199), tr.hintMessage("count 0"));
-  Assert(m.count(-1) == fm.count(-1), tr.hintMessage("count 0"));
+  Assert(m.count(199) == fm.count(199), tr.hintMessage("count 199"));
+  Assert(m.count(-1) == fm.count(-1), tr.hintMessage("count -1"));
 
   TestFindConst(m, fm, tr);
 }
@@ -332,7 +323,8 @@ void TestLowerBoundConst(std::map<int, int> const &m, ft::Map<int, int> const &f
   Assert(m.lower_bound(42)->first == fm.lower_bound(42)->first, tr.hintMessage("lower_bound 42 const"));
   Assert(m.lower_bound(199)->first == fm.lower_bound(199)->first, tr.hintMessage("lower_bound 199 const"));
   Assert(m.lower_bound(-1)->first == fm.lower_bound(-1)->first, tr.hintMessage("lower_bound -1 const"));
-  Assert((m.lower_bound(2000) == m.end()) && (fm.lower_bound(2000) == fm.end()), tr.hintMessage("lower_bound 2000 const"));
+  Assert((m.lower_bound(2000) == m.end()) && (fm.lower_bound(2000) == fm.end()),
+         tr.hintMessage("lower_bound 2000 const"));
 
 }
 

@@ -2,7 +2,7 @@
 
 #include "Allocator.h"
 #include <map>
-#include "TestRunner.h"
+//#include "TestRunner.h"
 #include "RedBlackTree.h"
 
 #define RED_BG_SET "\033[38;5;202m"
@@ -40,7 +40,7 @@ class Map {
 
 
   class value_compare : public std::binary_function<value_type, value_type, bool> {
-    friend class map;
+    friend class Map;
    protected:
     Compare comp;
     explicit value_compare(Compare c) : comp(c) {}
@@ -61,8 +61,7 @@ class Map {
  public:
   explicit Map(const key_compare &comp = key_compare(),
                const allocator_type &alloc = allocator_type()) {
-//    treeAllocator.allocate()
-    this->tree = new RbTree<key_type, value_type, value_type, Compare, Alloc>(comp, alloc);
+    this->tree = new RbTree<key_type, value_type, value_type, Compare, Alloc>(UNIQUE, comp, alloc);
   }
 
   template<class InputIterator>
@@ -70,12 +69,12 @@ class Map {
       InputIterator last,
       const key_compare &comp = key_compare(),
       const allocator_type &alloc = allocator_type()) {
-    this->tree = new RbTree<key_type, value_type, value_type, Compare, Alloc>(comp, alloc);
+    this->tree = new RbTree<key_type, value_type, value_type, Compare, Alloc>(UNIQUE, comp, alloc);
     insert(first, last);
   }
 
   Map(const Map &x) {
-    this->tree = new RbTree<key_type, value_type, value_type, Compare, Alloc>;
+    this->tree = new RbTree<key_type, value_type, value_type, Compare, Alloc>(UNIQUE);
     insert(x.begin(), x.end());
   }
 
