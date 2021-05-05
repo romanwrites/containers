@@ -9,6 +9,11 @@
 
 namespace ft {
 
+enum Uniqueness {
+  UNIQUE = true,
+  NOT_UNIQUE = false
+};
+
 template<typename Key, typename Val, typename KeyOfValue,
     typename Compare, typename Alloc = ft::Allocator<Val> >
 class RbTree {
@@ -43,13 +48,17 @@ class RbTree {
   Node *root;
   Node *nil;
   size_type currentSize;
-  bool isUniqueTree;
+  Uniqueness isUniqueTree;
+
+  bool isUnique() const {
+    return isUniqueTree == UNIQUE;
+  }
 
  public:
 
-  explicit RbTree(const key_compare &comp = key_compare(),
-                  const allocator_type &alloc = allocator_type(),
-                  bool uniqueTree = true)
+  explicit RbTree(Uniqueness uniqueTree = UNIQUE,
+                  const key_compare &comp = key_compare(),
+                  const allocator_type &alloc = allocator_type())
       : comp(comp),
         nodeAllocator(alloc),
         allocator(alloc),
@@ -81,8 +90,9 @@ class RbTree {
     nodeAllocator.deallocate(nil, 1);
   }
 
+ public:
   size_type count(const key_type &k) const {
-    if (isUniqueTree) {
+    if (isUnique()) {
       if (find(k).node != nil) {
         return 1;
       }
@@ -126,7 +136,7 @@ class RbTree {
             node->left = createNode(node, val);
             return insertNilNodeWrapper(node->left);
           }
-        } else if (isUniqueTree && !comp(node->value.first, val.first)) {
+        } else if (isUnique() && !comp(node->value.first, val.first)) {
           return std::make_pair(iterator(node, nil), false);
         } else {
           if (node->right != nil) {
@@ -487,11 +497,7 @@ class RbTree {
     x->color = BLACK;
   }
 
-  void removeNode(base_ptr nodeToDelete) {
-    base_ptr y = nodeToDelete;
-    base_ptr x;
-    RbTreeColor yOriginalColor = y->color;
-
+  void fixNilLeftRightDelete(base_ptr nodeToDelete) {
     if (nodeToDelete == nil->left) {
       iterator it = begin();
       ++it;
@@ -502,6 +508,14 @@ class RbTree {
       --it;
       nil->right = it.node;
     }
+  }
+
+  void removeNode(base_ptr nodeToDelete) {
+    base_ptr y = nodeToDelete;
+    base_ptr x;
+    RbTreeColor yOriginalColor = y->color;
+
+    fixNilLeftRightDelete(nodeToDelete);
 
     if (nodeToDelete->left == nil) {
       x = nodeToDelete->right;
@@ -537,17 +551,29 @@ class RbTree {
     currentSize--;
   }
 
-  std::pair<iterator, bool> insertNilNodeWrapper(base_ptr node) {
+  void fixNilLeftRightInsert(base_ptr node) {
     if (nil->left != nil &&
         reinterpret_cast<Node *>(node)->val()->first
             <= reinterpret_cast<Node *>(nil->left)->val()->first) {
-      nil->left = node;
+      if (!isUnique()) {
+        nil->left = RbTreeNodeBase::minimum(root, nil);
+      } else {
+        nil->left = node;
+      }
     }
     if (nil->right != nil &&
         reinterpret_cast<Node *>(node)->val()->first
             >= reinterpret_cast<Node *>(nil->right)->val()->first) {
-      nil->right = node;
+      if (!isUnique()) {
+        nil->right = RbTreeNodeBase::maximum(root, nil);
+      } else {
+        nil->right = node;
+      }
     }
+  }
+
+  std::pair<iterator, bool> insertNilNodeWrapper(base_ptr node) {
+    fixNilLeftRightInsert(node);
 
     // root node case
     if (nil->left == nil) {
