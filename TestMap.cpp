@@ -331,6 +331,9 @@ void TestLowerBoundConst(std::map<int, int> const &m, ft::Map<int, int> const &f
   Assert(m.lower_bound(0)->first == fm.lower_bound(0)->first, tr.hintMessage("lower_bound 0 const"));
   Assert(m.lower_bound(42)->first == fm.lower_bound(42)->first, tr.hintMessage("lower_bound 42 const"));
   Assert(m.lower_bound(199)->first == fm.lower_bound(199)->first, tr.hintMessage("lower_bound 199 const"));
+  Assert(m.lower_bound(-1)->first == fm.lower_bound(-1)->first, tr.hintMessage("lower_bound -1 const"));
+  Assert((m.lower_bound(2000) == m.end()) && (fm.lower_bound(2000) == fm.end()), tr.hintMessage("lower_bound 2000 const"));
+
 }
 
 void TestLowerBound(TestRunner const &tr) {
@@ -342,9 +345,11 @@ void TestLowerBound(TestRunner const &tr) {
     fm[i] = i;
   }
 
-  Assert(m.lower_bound(0)->first == fm.lower_bound(0)->first, tr.hintMessage("lower_bound 0 const"));
-  Assert(m.lower_bound(42)->first == fm.lower_bound(42)->first, tr.hintMessage("lower_bound 42 const"));
-  Assert(m.lower_bound(199)->first == fm.lower_bound(199)->first, tr.hintMessage("lower_bound 199 const"));
+  Assert(m.lower_bound(0)->first == fm.lower_bound(0)->first, tr.hintMessage("lower_bound 0"));
+  Assert(m.lower_bound(42)->first == fm.lower_bound(42)->first, tr.hintMessage("lower_bound 42"));
+  Assert(m.lower_bound(199)->first == fm.lower_bound(199)->first, tr.hintMessage("lower_bound 199"));
+  Assert(m.lower_bound(-1)->first == fm.lower_bound(-1)->first, tr.hintMessage("lower_bound -1"));
+  Assert((m.lower_bound(2000) == m.end()) && (fm.lower_bound(2000) == fm.end()), tr.hintMessage("lower_bound 2000"));
 
   TestLowerBoundConst(m, fm, tr);
 }
@@ -352,7 +357,10 @@ void TestLowerBound(TestRunner const &tr) {
 void TestUpperBoundConst(std::map<int, int> const &m, ft::Map<int, int> const &fm, TestRunner const &tr) {
   Assert(m.upper_bound(0)->first == fm.upper_bound(0)->first, tr.hintMessage("upper_bound 0 const"));
   Assert(m.upper_bound(42)->first == fm.upper_bound(42)->first, tr.hintMessage("upper_bound 42 const"));
+  Assert(m.upper_bound(198)->first == fm.upper_bound(198)->first, tr.hintMessage("upper_bound 198 const"));
   Assert((m.upper_bound(199) == m.end()) && (fm.upper_bound(199) == fm.end()), tr.hintMessage("upper_bound 199 const"));
+  Assert(m.upper_bound(-1)->first == fm.upper_bound(-1)->first, tr.hintMessage("upper_bound -1 const"));
+
 }
 
 void TestUpperBound(TestRunner const &tr) {
@@ -364,9 +372,11 @@ void TestUpperBound(TestRunner const &tr) {
     fm[i] = i;
   }
 
-  Assert(m.upper_bound(0)->first == fm.upper_bound(0)->first, tr.hintMessage("upper_bound 0 const"));
-  Assert(m.upper_bound(42)->first == fm.upper_bound(42)->first, tr.hintMessage("upper_bound 42 const"));
-  Assert((m.upper_bound(199) == m.end()) && (fm.upper_bound(199) == fm.end()), tr.hintMessage("upper_bound 199 const"));
+  Assert(m.upper_bound(0)->first == fm.upper_bound(0)->first, tr.hintMessage("upper_bound 0"));
+  Assert(m.upper_bound(42)->first == fm.upper_bound(42)->first, tr.hintMessage("upper_bound 42"));
+  Assert(m.upper_bound(198)->first == fm.upper_bound(198)->first, tr.hintMessage("upper_bound 198"));
+  Assert((m.upper_bound(199) == m.end()) && (fm.upper_bound(199) == fm.end()), tr.hintMessage("upper_bound 199"));
+  Assert(m.upper_bound(-1)->first == fm.upper_bound(-1)->first, tr.hintMessage("upper_bound -1"));
 
   TestUpperBoundConst(m, fm, tr);
 }
