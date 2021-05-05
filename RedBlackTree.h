@@ -520,6 +520,10 @@ class RbTree {
     erase(begin(), end());
   }
 
+  key_compare key_comp() const {
+    return comp;
+  }
+
 // -------------------------------------------- PRINT INTEGER TREE ------------------------------------
  private:
   void fillAppend(Node *tree,

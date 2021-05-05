@@ -135,7 +135,7 @@ class Map {
   }
 
   value_compare value_comp() const {
-    return tree->value_comp();
+    return value_compare();
   }
 
   iterator find(const key_type &k) {

@@ -287,6 +287,31 @@ void TestClear(TestRunner const &tr) {
   AssertEqual(m, fm, tr.hintMessage("clear"));
 }
 
+void TestFindConst(std::map<int, int> const &m, ft::Map<int, int> const &fm, TestRunner const &tr) {
+  Assert(m.find(0)->first == fm.find(0)->first, tr.hintMessage("find 0 const"));
+  Assert(m.find(42)->first == fm.find(42)->first, tr.hintMessage("find 42 const"));
+  Assert(m.find(142)->first == fm.find(142)->first, tr.hintMessage("find 142 const"));
+  Assert(m.find(199)->first == fm.find(199)->first, tr.hintMessage("find 199 const"));
+}
+
+void TestFind(TestRunner const &tr) {
+  std::map<int, int> m;
+  ft::Map<int, int> fm;
+
+  for (int i = 0; i < 200; ++i) {
+    m[i] = i;
+    fm[i] = i;
+  }
+
+  Assert(m.find(0)->first == fm.find(0)->first, tr.hintMessage("find 0"));
+  Assert(m.find(42)->first == fm.find(42)->first, tr.hintMessage("find 42"));
+  Assert(m.find(142)->first == fm.find(142)->first, tr.hintMessage("find 142"));
+  Assert(m.find(199)->first == fm.find(199)->first, tr.hintMessage("find 199"));
+
+  TestFindConst(m, fm, tr);
+}
+
+
 void TestAll() {
   TestRunner tr("Map");
 
@@ -302,6 +327,7 @@ void TestAll() {
   tr.RunTest(TestErase, "TestErase");
   tr.RunTest(TestSwap, "TestSwap");
   tr.RunTest(TestClear, "TestClear");
+  tr.RunTest(TestFind, "TestFind");
 
 }
 }
