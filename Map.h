@@ -187,30 +187,6 @@ class Map {
     return tree->size();
   }
 
-// private:
-//  const Tree &constTreeWrapper(Tree &treeToWrap) const {
-//    return treeToWrap;
-//  }
-//
-// public:
-//
-//  // ITERATORS ----------------------------------------------------------------------
-//  const_iterator begin() const {
-//    return constTreeWrapper(*tree).begin();
-//  }
-//
-//  iterator begin() {
-//    return tree->begin();
-//  }
-//
-//  iterator end() {
-//    return tree->end();
-//  }
-//
-//  const_iterator end() const {
-//    return constTreeWrapper(*tree).end();
-//  }
-
   // ITERATORS ----------------------------------------------------------------------
   const_iterator begin() const {
     return tree->begin();
@@ -223,11 +199,6 @@ class Map {
   iterator end() {
     return tree->end();
   }
-//  'ft::RbTree<std::__1::basic_string<char>, std::__1::pair<const std::__1::basic_string<char>, int>, std::__1::pair<const std::__1::basic_string<char>, int>, ft::less<std::__1::basic_string<char> >, ft::Allocator<std::__1::pair<const std::__1::basic_string<char>, int> > >::iterator'
-//  (aka 'RbTreeIterator<std::__1::pair<const std::__1::basic_string<char>, int> >')
-//
-//  'ft::Map<std::__1::basic_string<char>, int, ft::less<std::__1::basic_string<char> >, ft::Allocator<std::__1::pair<const std::__1::basic_string<char>, int> > >::const_iterator'
-//  (aka 'RbTreeConstIterator<pair<const std::__1::basic_string<char>, int> >')
 
   const_iterator end() const {
     return tree->end();
@@ -253,9 +224,11 @@ class Map {
     return tree->max_size();
   }
 
+#if PRINT_INT_TREE
   void printIntegerTree() const {
     tree->printIntTree();
   }
+#endif
 
 };
 

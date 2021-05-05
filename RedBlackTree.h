@@ -5,6 +5,8 @@
 #include "Compare.h"
 #include "ReverseIterator.h"
 
+#define PRINT_INT_TREE 0
+
 namespace ft {
 
 template<typename Key, typename Val, typename KeyOfValue,
@@ -561,6 +563,7 @@ class RbTree {
     return std::make_pair(iterator(node, nil), true);
   }
 
+#if PRINT_INT_TREE
 // -------------------------------------------- PRINT INTEGER TREE ------------------------------------
  private:
   void fillAppend(Node *tree,
@@ -638,6 +641,7 @@ class RbTree {
       std::cout << print(root, "", true);
     }
   }
+#endif
 };
 
 }
