@@ -265,6 +265,28 @@ void TestSwap(TestRunner const &tr) {
 
 }
 
+void TestClear(TestRunner const &tr) {
+  std::map<int, int> m;
+  ft::Map<int, int> fm;
+
+  for (int i = 0; i < 200; ++i) {
+    int r = rand() % 100 + 1;
+    m.insert(std::make_pair(r, r));
+    fm.insert(std::make_pair(r, r));
+  }
+
+  m.clear();
+  fm.clear();
+
+  for (int i = 0; i < 50; ++i) {
+    int r = rand() % 100 + 1;
+    m.insert(std::make_pair(r, r));
+    fm.insert(std::make_pair(r, r));
+  }
+
+  AssertEqual(m, fm, tr.hintMessage("clear"));
+}
+
 void TestAll() {
   TestRunner tr("Map");
 
@@ -279,6 +301,7 @@ void TestAll() {
   tr.RunTest(TestInsert, "TestInsert");
   tr.RunTest(TestErase, "TestErase");
   tr.RunTest(TestSwap, "TestSwap");
+  tr.RunTest(TestClear, "TestClear");
 
 }
 }

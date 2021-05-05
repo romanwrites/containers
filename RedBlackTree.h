@@ -496,6 +496,8 @@ class RbTree {
     return std::make_pair(iterator(node, nil), true);
   }
 
+ public:
+
   iterator find(const key_type &key) {
     Node *node;
 
@@ -512,6 +514,10 @@ class RbTree {
 
   const_iterator find(const key_type &k) const {
     return const_iterator(find(k));
+  }
+
+  void clear() {
+    erase(begin(), end());
   }
 
 // -------------------------------------------- PRINT INTEGER TREE ------------------------------------

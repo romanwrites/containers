@@ -127,7 +127,7 @@ class Map {
   }
 
   void clear() {
-    tree->erase(tree->begin(), tree->end());
+    tree->clear();
   }
 
   key_compare key_comp() const {
