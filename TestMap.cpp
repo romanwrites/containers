@@ -311,6 +311,22 @@ void TestFind(TestRunner const &tr) {
   TestFindConst(m, fm, tr);
 }
 
+void TestCount(TestRunner const &tr) {
+  std::map<int, int> m;
+  ft::Map<int, int> fm;
+
+  for (int i = 0; i < 200; ++i) {
+    m[i] = i;
+    fm[i] = i;
+  }
+
+  Assert(m.count(0) == fm.count(0), tr.hintMessage("count 0"));
+  Assert(m.count(199) == fm.count(199), tr.hintMessage("count 0"));
+  Assert(m.count(-1) == fm.count(-1), tr.hintMessage("count 0"));
+
+  TestFindConst(m, fm, tr);
+}
+
 
 void TestAll() {
   TestRunner tr("Map");
@@ -328,6 +344,7 @@ void TestAll() {
   tr.RunTest(TestSwap, "TestSwap");
   tr.RunTest(TestClear, "TestClear");
   tr.RunTest(TestFind, "TestFind");
+  tr.RunTest(TestCount, "TestCount");
 
 }
 }

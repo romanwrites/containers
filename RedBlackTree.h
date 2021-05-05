@@ -75,18 +75,13 @@ class RbTree {
   }
 
   ~RbTree() {
-//    std::cout << "destructor RBTREE called" << std::endl;
-//    std::cout << "--------------------------CALL ERASE-----------------------" << std::endl;
     erase(begin(), end());
-//    std::cout << "--------------------------NIL NODE ERASE-----------------------" << std::endl;
-//  deallocate nil
     nodeAllocator.deallocate(nil, 1);
-//    std::cout << "--------------------------FULLY ERASED-----------------------" << std::endl;
   }
 
   size_type count(const key_type &k) const {
     if (isUniqueTree) {
-      if (find(k) != nil) {
+      if (find(k).node != nil) {
         return 1;
       }
       return 0;
@@ -192,17 +187,6 @@ class RbTree {
       i++;
     }
 
-//    for (iterator it = begin(); it != end();) {
-//      if (it->first == k) {
-//        iterator tmp = it;
-//        ++it;
-//        erase(tmp);
-//        ++i;
-//        continue;
-//      }
-//      ++it;
-//    }
-
     return i;
   }
 
@@ -212,7 +196,6 @@ class RbTree {
       ++first;
       erase(tmp);
     }
-//    printIntTree();
   }
 
   // ITERATORS ----------------------------------------------------------------------
@@ -246,6 +229,36 @@ class RbTree {
 
   const_reverse_iterator rend() const {
     return const_reverse_iterator(begin());
+  }
+
+  iterator findNode(const key_type &key) const {
+    Node *node;
+
+    for (node = root; node != nil && node->value.first != key;) {
+      if (comp(key, node->value.first)) {
+        node = reinterpret_cast<Node *>(node->left);
+      } else {
+        node = reinterpret_cast<Node *>(node->right);
+      }
+    }
+
+    return iterator(node, nil);
+  }
+
+  iterator find(const key_type &key) {
+    return findNode(key);
+  }
+
+  const_iterator find(const key_type &k) const {
+    return const_iterator(findNode(k));
+  }
+
+  void clear() {
+    erase(begin(), end());
+  }
+
+  key_compare key_comp() const {
+    return comp;
   }
 
  private:
@@ -494,34 +507,6 @@ class RbTree {
 
     currentSize++;
     return std::make_pair(iterator(node, nil), true);
-  }
-
- public:
-
-  iterator find(const key_type &key) {
-    Node *node;
-
-    for (node = root; node != nil && node->value.first != key;) {
-      if (comp(key, node->value.first)) {
-        node = reinterpret_cast<Node *>(node->left);
-      } else {
-        node = reinterpret_cast<Node *>(node->right);
-      }
-    }
-
-    return iterator(node, nil);
-  }
-
-  const_iterator find(const key_type &k) const {
-    return const_iterator(find(k));
-  }
-
-  void clear() {
-    erase(begin(), end());
-  }
-
-  key_compare key_comp() const {
-    return comp;
   }
 
 // -------------------------------------------- PRINT INTEGER TREE ------------------------------------
