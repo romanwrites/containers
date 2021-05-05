@@ -278,7 +278,7 @@ void TestAll() {
   tr.RunTest(TestReverseIterator, "TestReverseIterator");
   tr.RunTest(TestInsert, "TestInsert");
   tr.RunTest(TestErase, "TestErase");
-//  tr.RunTest(TestSwap, "TestSwap");
+  tr.RunTest(TestSwap, "TestSwap");
 
 }
 }
