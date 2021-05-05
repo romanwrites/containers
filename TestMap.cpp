@@ -1,6 +1,5 @@
 #include "TestRunner.h"
 #include <array>
-#include "TreePrinter.h"
 
 namespace TestMap {
 
@@ -207,6 +206,65 @@ void TestInsert(TestRunner const &tr) {
   AssertEqual(m2, fm2, tr.hintMessage("insert range"));
 }
 
+void TestErase(TestRunner const &tr) {
+  std::map<int, int> m;
+  ft::Map<int, int> fm;
+
+  for (int i = 0; i < 20; ++i) {
+    int r = rand() % 100 + 1;
+    m.insert(std::make_pair(r, r));
+    fm.insert(std::make_pair(r, r));
+  }
+
+  Assert(m.erase(m.begin()->first) == fm.erase(fm.begin()->first), tr.hintMessage("erase by key"));
+  AssertEqual(m, fm, tr.hintMessage("erase by key compare maps"));
+
+  auto it = m.begin();
+  auto fit = fm.begin();
+  m.erase(it++);
+  fm.erase(fit++);
+  AssertEqual(m, fm, tr.hintMessage("erase by position"));
+
+  for (int i = 0; i < 4; ++i, ++it, ++fit) {}
+
+  m.erase(m.begin(), it);
+  fm.erase(fm.begin(), fit);
+
+  for (int i = 0; i < 5; ++i, ++it, ++fit) {}
+
+  m.erase(it, m.end());
+  fm.erase(fit, fm.end());
+
+  AssertEqual(m, fm, tr.hintMessage("erase by range"));
+}
+
+void TestSwap(TestRunner const &tr) {
+  std::map<int, int> m;
+  ft::Map<int, int> fm;
+
+  for (int i = 0; i < 20; ++i) {
+    int r = rand() % 100 + 1;
+    m.insert(std::make_pair(r, r));
+    fm.insert(std::make_pair(r, r));
+  }
+
+  std::map<int, int> m2;
+  ft::Map<int, int> fm2;
+
+  for (int i = 0; i < 50; ++i) {
+    int r = rand() % 100 + 1;
+    m.insert(std::make_pair(r, r));
+    fm.insert(std::make_pair(r, r));
+  }
+
+  m.swap(m2);
+  fm.swap(fm2);
+
+  AssertEqual(m, fm, tr.hintMessage("swap"));
+  AssertEqual(m2, fm2, tr.hintMessage("swap m2"));
+
+}
+
 void TestAll() {
   TestRunner tr("Map");
 
@@ -219,6 +277,8 @@ void TestAll() {
   tr.RunTest(TestIterator, "TestIterator");
   tr.RunTest(TestReverseIterator, "TestReverseIterator");
   tr.RunTest(TestInsert, "TestInsert");
+  tr.RunTest(TestErase, "TestErase");
+//  tr.RunTest(TestSwap, "TestSwap");
 
 }
 }

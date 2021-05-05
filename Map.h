@@ -33,17 +33,12 @@ class Map {
   typedef std::ptrdiff_t difference_type;
   typedef size_t size_type;
 
-//  typedef RbTreeNode<value_type> Node;
-
   typedef RbTreeIterator<value_type> iterator;
   typedef RbTreeConstIterator<value_type> const_iterator;
   typedef ReverseIterator<iterator> reverse_iterator;
   typedef ReverseIterator<const_iterator> const_reverse_iterator;
 
-//  typedef typename Alloc::template rebind<Node>::other node_allocator_type;
 
-
-//todo do need inherit?
   class value_compare : public std::binary_function<value_type, value_type, bool> {
     friend class map;
    protected:
@@ -118,7 +113,7 @@ class Map {
   }
 
   size_type erase(const key_type &k) {
-    tree->erase(k);
+    return tree->erase(k);
   }
 
   void erase(iterator first, iterator last) {
@@ -126,7 +121,7 @@ class Map {
   }
 
   void swap(Map &x) {
-    RbTree<key_type, value_type, value_type, Compare, Alloc> tmp(this->tree);
+    Tree *tmp = this->tree;
     this->tree = x.tree;
     x.tree = tmp;
   }
@@ -256,6 +251,10 @@ class Map {
 
   size_type max_size() const {
     return tree->max_size();
+  }
+
+  void printIntegerTree() const {
+    tree->printIntTree();
   }
 
 };

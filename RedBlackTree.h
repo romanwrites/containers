@@ -187,16 +187,21 @@ class RbTree {
   size_type erase(const key_type &k) {
     size_type i = 0;
 
-    for (iterator it = begin(); it != end();) {
-      if (it->first == k) {
-        iterator tmp = it;
-        ++it;
-        erase(tmp);
-        ++i;
-        continue;
-      }
-      ++it;
+    for (iterator it = find(k); it.node != nil; it = find(k)) {
+      erase(it);
+      i++;
     }
+
+//    for (iterator it = begin(); it != end();) {
+//      if (it->first == k) {
+//        iterator tmp = it;
+//        ++it;
+//        erase(tmp);
+//        ++i;
+//        continue;
+//      }
+//      ++it;
+//    }
 
     return i;
   }
@@ -207,6 +212,7 @@ class RbTree {
       ++first;
       erase(tmp);
     }
+//    printIntTree();
   }
 
   // ITERATORS ----------------------------------------------------------------------
@@ -369,11 +375,11 @@ class RbTree {
           leftRotate(x->parent);
           w = x->parent->right;
         }
-        if (w->left->color == BLACK && w->right->color == BLACK) {
+        if (!w->left->isRed() && !w->right->isRed()) {
           w->color = RED;
           x = x->parent;
         } else {
-          if (w->right->color == BLACK) {
+          if (!w->right->isRed()) {
             w->left->color = BLACK;
             w->color = RED;
             rightRotate(w);
@@ -393,11 +399,11 @@ class RbTree {
           rightRotate(x->parent);
           w = x->parent->left;
         }
-        if (w->right->color == BLACK && w->left->color == BLACK) {
+        if (!w->right->isRed() && !w->left->isRed()) {
           w->color = RED;
           x = x->parent;
         } else {
-          if (w->left->color == BLACK) {
+          if (!w->left->isRed()) {
             w->right->color = BLACK;
             w->color = RED;
             leftRotate(w);
@@ -423,7 +429,8 @@ class RbTree {
       iterator it = begin();
       ++it;
       nil->left = it.node;
-    } else if (nodeToDelete == nil->right) {
+    }
+    if (nodeToDelete == nil->right) {
       iterator it = iterator(nodeToDelete, nil);
       --it;
       nil->right = it.node;
@@ -441,7 +448,7 @@ class RbTree {
       yOriginalColor = y->color;
       x = y->right;
       if (y->parent == nodeToDelete) {
-        x->parent = nodeToDelete;
+        x->parent = y;
       } else {
         transplant(y, y->right);
         y->right = nodeToDelete->right;
@@ -451,7 +458,6 @@ class RbTree {
       y->left = nodeToDelete->left;
       y->left->parent = y;
       y->color = nodeToDelete->color;
-//      destroyNode(z);
     }
 
     if (yOriginalColor == BLACK) {
@@ -483,13 +489,14 @@ class RbTree {
     if (nil->right == nil) {
       nil->right = node;
     }
+
     insertionFixup(node);
 
     currentSize++;
     return std::make_pair(iterator(node, nil), true);
   }
 
-  Node *find(const key_type &key) const {
+  iterator find(const key_type &key) {
     Node *node;
 
     for (node = root; node != nil && node->value.first != key;) {
@@ -500,7 +507,11 @@ class RbTree {
       }
     }
 
-    return node;
+    return iterator(node, nil);
+  }
+
+  const_iterator find(const key_type &k) const {
+    return const_iterator(find(k));
   }
 
 // -------------------------------------------- PRINT INTEGER TREE ------------------------------------
