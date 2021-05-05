@@ -36,7 +36,7 @@ class RbTree {
  private:
   key_compare comp;
   node_allocator_type nodeAllocator;
-  allocator_type allocator; // only needed in get_allocator()
+  allocator_type allocator;
   node_base_allocator_type baseAllocator;
   Node *root;
   Node *nil;
@@ -172,7 +172,7 @@ class RbTree {
   }
 
   allocator_type get_allocator() const {
-    return allocator;
+    return allocator_type();
   }
 
   void erase(iterator position) {
@@ -303,6 +303,14 @@ class RbTree {
       }
     }
     return it;
+  }
+
+  std::pair<const_iterator, const_iterator> equal_range(const key_type &k) const {
+    return std::pair<const_iterator, const_iterator>(lower_bound(k), upper_bound(k));
+  }
+
+  std::pair<iterator, iterator> equal_range(const key_type &k) {
+    return std::pair<iterator, iterator>(lower_bound(k), upper_bound(k));
   }
 
  private:

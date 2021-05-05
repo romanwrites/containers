@@ -360,7 +360,6 @@ void TestUpperBoundConst(std::map<int, int> const &m, ft::Map<int, int> const &f
   Assert(m.upper_bound(198)->first == fm.upper_bound(198)->first, tr.hintMessage("upper_bound 198 const"));
   Assert((m.upper_bound(199) == m.end()) && (fm.upper_bound(199) == fm.end()), tr.hintMessage("upper_bound 199 const"));
   Assert(m.upper_bound(-1)->first == fm.upper_bound(-1)->first, tr.hintMessage("upper_bound -1 const"));
-
 }
 
 void TestUpperBound(TestRunner const &tr) {
@@ -379,6 +378,52 @@ void TestUpperBound(TestRunner const &tr) {
   Assert(m.upper_bound(-1)->first == fm.upper_bound(-1)->first, tr.hintMessage("upper_bound -1"));
 
   TestUpperBoundConst(m, fm, tr);
+}
+
+void TestEqualRangeConst(std::map<int, int> const &m, ft::Map<int, int> const &fm, TestRunner const &tr) {
+  auto mIters = m.equal_range(99);
+  auto fmIters = fm.equal_range(99);
+
+  for (; mIters.first != mIters.second; ++mIters.first, ++fmIters.first) {
+    Assert(mIters.first->first == fmIters.first->first, tr.hintMessage("equal_range 99"));
+  }
+  Assert(fmIters.first == fmIters.second, tr.hintMessage("equal_range 99 check iterators range"));
+
+  mIters = m.equal_range(199);
+  fmIters = fm.equal_range(199);
+
+  for (; mIters.first != mIters.second; ++mIters.first, ++fmIters.first) {
+    Assert(mIters.first->first == fmIters.first->first, tr.hintMessage("equal_range 199"));
+  }
+  Assert(fmIters.first == fmIters.second, tr.hintMessage("equal_range 199 check iterators range"));
+}
+
+void TestEqualRange(TestRunner const &tr) {
+  std::map<int, int> m;
+  ft::Map<int, int> fm;
+
+  for (int i = 0; i < 200; ++i) {
+    m[i] = i;
+    fm[i] = i;
+  }
+
+  auto mIters = m.equal_range(99);
+  auto fmIters = fm.equal_range(99);
+
+  for (; mIters.first != mIters.second; ++mIters.first, ++fmIters.first) {
+    Assert(mIters.first->first == fmIters.first->first, tr.hintMessage("equal_range 99"));
+  }
+  Assert(fmIters.first == fmIters.second, tr.hintMessage("equal_range 99 check iterators range"));
+
+  mIters = m.equal_range(199);
+  fmIters = fm.equal_range(199);
+
+  for (; mIters.first != mIters.second; ++mIters.first, ++fmIters.first) {
+    Assert(mIters.first->first == fmIters.first->first, tr.hintMessage("equal_range 199"));
+  }
+  Assert(fmIters.first == fmIters.second, tr.hintMessage("equal_range 199 check iterators range"));
+
+  TestEqualRangeConst(m, fm, tr);
 }
 
 void TestAll() {
@@ -400,5 +445,6 @@ void TestAll() {
   tr.RunTest(TestCount, "TestCount");
   tr.RunTest(TestLowerBound, "TestLowerBound");
   tr.RunTest(TestUpperBound, "TestUpperBound");
+  tr.RunTest(TestEqualRange, "TestEqualRange");
 }
 }
