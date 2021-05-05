@@ -65,7 +65,7 @@ void TestConstructors(TestRunner const &tr) {
   ft::Map<int, int> fm;
   AssertEqual(fm, m, tr.hintMessage("empty constructor"));
 
-  srand (time(NULL));
+  srand(time(NULL));
 
   for (int i = 0; i < 20; ++i) {
     int r = rand() % 100 + 1;
@@ -94,7 +94,7 @@ void TestAssignationOperator(TestRunner const &tr) {
   std::map<int, int> m;
   ft::Map<int, int> fm;
 
-  srand (time(NULL));
+  srand(time(NULL));
 
   for (int i = 0; i < 20; ++i) {
     int r = rand() % 100 + 1;
@@ -123,7 +123,7 @@ void TestIterator(TestRunner const &tr) {
   std::map<int, int> m;
   ft::Map<int, int> fm;
 
-  srand (time(NULL));
+  srand(time(NULL));
 
   for (int i = 0; i < 20; ++i) {
     int r = rand() % 100 + 1;
@@ -156,7 +156,7 @@ void TestReverseIterator(TestRunner const &tr) {
   std::map<int, int> m;
   ft::Map<int, int> fm;
 
-  srand (time(NULL));
+  srand(time(NULL));
 
   for (int i = 0; i < 20; ++i) {
     int r = rand() % 100 + 1;
@@ -190,8 +190,8 @@ void TestInsert(TestRunner const &tr) {
   auto fit = fm.begin();
 
   for (int i = 0;
-        i < 10 && it != m.end() && fit != fm.end();
-        ++i, ++it, ++fit) {
+       i < 10 && it != m.end() && fit != fm.end();
+       ++i, ++it, ++fit) {
   }
 
   int r = rand() % 100 + 1;
@@ -327,6 +327,49 @@ void TestCount(TestRunner const &tr) {
   TestFindConst(m, fm, tr);
 }
 
+void TestLowerBoundConst(std::map<int, int> const &m, ft::Map<int, int> const &fm, TestRunner const &tr) {
+  Assert(m.lower_bound(0)->first == fm.lower_bound(0)->first, tr.hintMessage("lower_bound 0 const"));
+  Assert(m.lower_bound(42)->first == fm.lower_bound(42)->first, tr.hintMessage("lower_bound 42 const"));
+  Assert(m.lower_bound(199)->first == fm.lower_bound(199)->first, tr.hintMessage("lower_bound 199 const"));
+}
+
+void TestLowerBound(TestRunner const &tr) {
+  std::map<int, int> m;
+  ft::Map<int, int> fm;
+
+  for (int i = 0; i < 200; ++i) {
+    m[i] = i;
+    fm[i] = i;
+  }
+
+  Assert(m.lower_bound(0)->first == fm.lower_bound(0)->first, tr.hintMessage("lower_bound 0 const"));
+  Assert(m.lower_bound(42)->first == fm.lower_bound(42)->first, tr.hintMessage("lower_bound 42 const"));
+  Assert(m.lower_bound(199)->first == fm.lower_bound(199)->first, tr.hintMessage("lower_bound 199 const"));
+
+  TestLowerBoundConst(m, fm, tr);
+}
+
+void TestUpperBoundConst(std::map<int, int> const &m, ft::Map<int, int> const &fm, TestRunner const &tr) {
+  Assert(m.upper_bound(0)->first == fm.upper_bound(0)->first, tr.hintMessage("upper_bound 0 const"));
+  Assert(m.upper_bound(42)->first == fm.upper_bound(42)->first, tr.hintMessage("upper_bound 42 const"));
+  Assert((m.upper_bound(199) == m.end()) && (fm.upper_bound(199) == fm.end()), tr.hintMessage("upper_bound 199 const"));
+}
+
+void TestUpperBound(TestRunner const &tr) {
+  std::map<int, int> m;
+  ft::Map<int, int> fm;
+
+  for (int i = 0; i < 200; ++i) {
+    m[i] = i;
+    fm[i] = i;
+  }
+
+  Assert(m.upper_bound(0)->first == fm.upper_bound(0)->first, tr.hintMessage("upper_bound 0 const"));
+  Assert(m.upper_bound(42)->first == fm.upper_bound(42)->first, tr.hintMessage("upper_bound 42 const"));
+  Assert((m.upper_bound(199) == m.end()) && (fm.upper_bound(199) == fm.end()), tr.hintMessage("upper_bound 199 const"));
+
+  TestUpperBoundConst(m, fm, tr);
+}
 
 void TestAll() {
   TestRunner tr("Map");
@@ -345,6 +388,7 @@ void TestAll() {
   tr.RunTest(TestClear, "TestClear");
   tr.RunTest(TestFind, "TestFind");
   tr.RunTest(TestCount, "TestCount");
-
+  tr.RunTest(TestLowerBound, "TestLowerBound");
+  tr.RunTest(TestUpperBound, "TestUpperBound");
 }
 }

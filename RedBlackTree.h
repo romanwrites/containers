@@ -105,7 +105,7 @@ class RbTree {
   }
 
   iterator insert(iterator position, const value_type &val) {
-    (void)position;
+    (void) position;
     return insert(val).first;
   }
 
@@ -259,6 +259,50 @@ class RbTree {
 
   key_compare key_comp() const {
     return comp;
+  }
+
+  iterator lower_bound(const key_type &k) {
+    iterator it = begin();
+
+    for (; it != end(); ++it) {
+      if (!(comp(it->first, k))) {
+        break;
+      }
+    }
+    return it;
+  }
+
+  const_iterator lower_bound(const key_type &k) const {
+    const_iterator it = begin();
+
+    for (; it != end(); ++it) {
+      if (!(comp(it->first, k))) {
+        break;
+      }
+    }
+    return it;
+  }
+
+  iterator upper_bound(const key_type &k) {
+    iterator it = begin();
+
+    for (; it != end(); ++it) {
+      if (comp(k, it->first)) {
+        break;
+      }
+    }
+    return it;
+  }
+
+  const_iterator upper_bound(const key_type &k) const {
+    const_iterator it = begin();
+
+    for (; it != end(); ++it) {
+      if (comp(k, it->first)) {
+        break;
+      }
+    }
+    return it;
   }
 
  private:
