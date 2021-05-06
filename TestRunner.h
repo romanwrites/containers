@@ -16,6 +16,8 @@
 #include "TestVector.h"
 #include "Map.h"
 #include "TestMap.h"
+#include "Set.h"
+#include "TestSet.h"
 #include "MultiMap.h"
 #include "TestMultiMap.h"
 #include "Queue.h"

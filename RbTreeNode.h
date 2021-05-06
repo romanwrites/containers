@@ -63,7 +63,7 @@ class RbTreeNodeBase {
     return x;
   }
 
-  static base_ptr increment(base_ptr x, const_base_ptr nil) throw() {
+  static base_ptr increment(base_ptr x, const_base_ptr nil) {
     if (x->parent == nil && x->left == nil && x->right == nil) {
       x = const_cast<base_ptr>(nil);
       return x;
@@ -88,7 +88,7 @@ class RbTreeNodeBase {
     return x;
   }
 
-  static const_base_ptr increment(const_base_ptr x, const_base_ptr nil) throw() {
+  static const_base_ptr increment(const_base_ptr x, const_base_ptr nil) {
     if (x->parent == nil && x->left == nil && x->right == nil) {
       x = const_cast<base_ptr>(nil);
       return x;
@@ -115,7 +115,7 @@ class RbTreeNodeBase {
     return x;
   }
 
-  static base_ptr decrement(base_ptr x, const_base_ptr nil) throw() {
+  static base_ptr decrement(base_ptr x, const_base_ptr nil) {
     if (x == nil) {
       x = nil->right;
       return x;
@@ -135,7 +135,7 @@ class RbTreeNodeBase {
     return x;
   }
 
-  static const_base_ptr decrement(const_base_ptr x, const_base_ptr nil) throw() {
+  static const_base_ptr decrement(const_base_ptr x, const_base_ptr nil) {
     if (x == nil) {
       x = nil->right;
       return x;
@@ -175,7 +175,8 @@ class RbTreeNode : public RbTreeNodeBase {
   }
 
   // Constructors --------------------------------------------------------
-  RbTreeNode() : RbTreeNodeBase(), value(NULL) {}
+  RbTreeNode() : RbTreeNodeBase(), value(NULL) {
+  }
 
   RbTreeNode(const value_type &value) : RbTreeNodeBase(), value(value) {
   }

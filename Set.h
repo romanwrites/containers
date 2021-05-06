@@ -28,7 +28,7 @@ class Set {
   typedef ReverseIterator<iterator> reverse_iterator;
   typedef ReverseIterator<const_iterator> const_reverse_iterator;
 
-  typedef RbTree<key_type, value_type, value_type, Compare, Alloc> Tree;
+  typedef RbTree<key_type, value_type, ft::Identity<value_type>, Compare, Alloc> Tree;
 
  private:
   Tree *tree;
@@ -38,7 +38,7 @@ class Set {
 //  empty
   explicit Set(const key_compare &comp = key_compare(),
                const allocator_type &alloc = allocator_type())
-      : tree(new RbTree<key_type, value_type, value_type, Compare, Alloc>(UNIQUE, comp, alloc)) {
+      : tree(new Tree(UNIQUE, comp, alloc)) {
   }
 
 //  range
@@ -46,12 +46,12 @@ class Set {
   Set(InputIterator first, InputIterator last,
       const key_compare &comp = key_compare(),
       const allocator_type &alloc = allocator_type())
-      : tree(new RbTree<key_type, value_type, value_type, Compare, Alloc>(UNIQUE, comp, alloc)) {
+      : tree(new Tree(UNIQUE, comp, alloc)) {
     this->tree->insert(first, last);
   }
 
 //  copy
-  Set(const Set &x) : tree(new RbTree<key_type, value_type, value_type, Compare, Alloc>(UNIQUE)) {
+  Set(const Set &x) : tree(new Tree(UNIQUE)) {
     this->tree->insert(x.begin(), x.end());
   }
 
@@ -62,6 +62,73 @@ class Set {
   Set &operator=(const Set &x) {
     this->tree = x.tree;
   }
+
+  bool empty() const {
+    return tree->empty();
+  }
+
+  size_type size() const {
+    return tree->size();
+  }
+
+  size_type max_size() const {
+    return tree->max_size();
+  }
+
+//  single element
+  std::pair<iterator, bool> insert(const value_type &val) {
+    return tree->insert(val);
+  }
+
+//  with hint
+  iterator insert(iterator position, const value_type &val) {
+    return tree->insert(position, val);
+  }
+
+//  range
+  template<class InputIterator>
+  void insert(InputIterator first, InputIterator last) {
+    tree->insert(first, last);
+  }
+
+  // ITERATORS ----------------------------------------------------------------------
+  const_iterator begin() const {
+    return tree->begin();
+  }
+
+  iterator begin() {
+    return tree->begin();
+  }
+
+  iterator end() {
+    return tree->end();
+  }
+
+  const_iterator end() const {
+    return tree->end();
+  }
+
+  reverse_iterator rbegin() {
+    return tree->rbegin();
+  }
+
+  const_reverse_iterator rbegin() const {
+    return tree->rbegin();
+  }
+
+  reverse_iterator rend() {
+    return tree->rend();
+  }
+
+  const_reverse_iterator rend() const {
+    return tree->rend();
+  }
+
+#if PRINT_INT_TREE
+  void printIntegerTree() const {
+    tree->printIntTree();
+  }
+#endif
 
 };
 

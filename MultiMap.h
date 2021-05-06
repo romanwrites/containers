@@ -52,7 +52,7 @@ class MultiMap {
     }
   };
 
-  typedef RbTree<key_type, value_type, value_type, Compare, Alloc> Tree;
+  typedef RbTree<key_type, value_type, ft::SelectFirst<value_type>, Compare, Alloc> Tree;
 
  private:
   Tree *tree;
@@ -60,7 +60,7 @@ class MultiMap {
  public:
   explicit MultiMap(const key_compare &comp = key_compare(),
                const allocator_type &alloc = allocator_type()) {
-    this->tree = new RbTree<key_type, value_type, value_type, Compare, Alloc>(NOT_UNIQUE, comp, alloc);
+    this->tree = new Tree(NOT_UNIQUE, comp, alloc);
   }
 
   template<class InputIterator>
@@ -68,12 +68,12 @@ class MultiMap {
       InputIterator last,
       const key_compare &comp = key_compare(),
       const allocator_type &alloc = allocator_type()) {
-    this->tree = new RbTree<key_type, value_type, value_type, Compare, Alloc>(NOT_UNIQUE, comp, alloc);
+    this->tree = new Tree(NOT_UNIQUE, comp, alloc);
     insert(first, last);
   }
 
   MultiMap(const MultiMap &x) {
-    this->tree = new RbTree<key_type, value_type, value_type, Compare, Alloc>(NOT_UNIQUE);
+    this->tree = new Tree(NOT_UNIQUE);
     insert(x.begin(), x.end());
   }
 
@@ -174,7 +174,7 @@ class MultiMap {
 
  public:
   bool empty() const {
-    return tree->empty(); //mock todo implement
+    return tree->empty();
   }
 
   size_type size() const {

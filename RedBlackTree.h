@@ -4,8 +4,9 @@
 #include "Allocator.h"
 #include "Compare.h"
 #include "ReverseIterator.h"
+#include "Functional.h"
 
-#define PRINT_INT_TREE 0
+#define PRINT_INT_TREE 1
 
 namespace ft {
 
@@ -100,7 +101,7 @@ class RbTree {
 
     size_type i = 0;
     for (auto it = begin(); it != end(); ++it) {
-      if (it->first == k) {
+      if (KeyOfValue()(*it) == k) {
         ++i;
       }
     }
@@ -128,14 +129,14 @@ class RbTree {
       Node *node = root;
 
       while (node != nil) {
-        if (comp(val.first, node->value.first)) {
+        if (comp(KeyOfValue()(val), KeyOfValue()(node->value))) {
           if (node->left != nil) {
             node = reinterpret_cast<Node *>(node->left);
           } else {
             node->left = createNode(node, val);
             return insertNilNodeWrapper(node->left);
           }
-        } else if (isUnique() && !comp(node->value.first, val.first)) {
+        } else if (isUnique() && !comp(KeyOfValue()(node->value), KeyOfValue()(val))) {
           return std::make_pair(iterator(node, nil), false);
         } else {
           if (node->right != nil) {
@@ -166,7 +167,7 @@ class RbTree {
   }
 
   Node *find(value_type val) {
-    return find(val.first);
+    return find(KeyOfValue()(val));
   }
 
   bool empty() const {
@@ -245,8 +246,8 @@ class RbTree {
   iterator findNode(const key_type &key) const {
     Node *node;
 
-    for (node = root; node != nil && node->value.first != key;) {
-      if (comp(key, node->value.first)) {
+    for (node = root; node != nil && KeyOfValue()(node->value) != key;) {
+      if (comp(key, KeyOfValue()(node->value))) {
         node = reinterpret_cast<Node *>(node->left);
       } else {
         node = reinterpret_cast<Node *>(node->right);
@@ -277,7 +278,7 @@ class RbTree {
     iterator it = begin();
 
     for (; it != end(); ++it) {
-      if (!(comp(it->first, k))) {
+      if (!(comp(KeyOfValue()(*it), k))) {
         break;
       }
     }
@@ -288,7 +289,7 @@ class RbTree {
     const_iterator it = begin();
 
     for (; it != end(); ++it) {
-      if (!(comp(it->first, k))) {
+      if (!(comp(KeyOfValue()(*it), k))) {
         break;
       }
     }
@@ -299,7 +300,7 @@ class RbTree {
     iterator it = begin();
 
     for (; it != end(); ++it) {
-      if (comp(k, it->first)) {
+      if (comp(k, KeyOfValue()(*it))) {
         break;
       }
     }
@@ -310,7 +311,7 @@ class RbTree {
     const_iterator it = begin();
 
     for (; it != end(); ++it) {
-      if (comp(k, it->first)) {
+      if (comp(k, KeyOfValue()(*it))) {
         break;
       }
     }
@@ -552,18 +553,20 @@ class RbTree {
   }
 
   void fixNilLeftRightInsert(base_ptr node) {
+    Node *nodeNode = reinterpret_cast<Node *>(node);
+    Node *nilLeft = reinterpret_cast<Node *>(nil->left);
+    Node *nilRight = reinterpret_cast<Node *>(nil->right);
+
     if (nil->left != nil &&
-        reinterpret_cast<Node *>(node)->val()->first
-            <= reinterpret_cast<Node *>(nil->left)->val()->first) {
+        (comp(KeyOfValue()(nodeNode->value), KeyOfValue()(nilLeft->value)) || KeyOfValue()(nodeNode->value) == KeyOfValue()(nilLeft->value))) {
       if (!isUnique()) {
         nil->left = RbTreeNodeBase::minimum(root, nil);
       } else {
         nil->left = node;
       }
     }
-    if (nil->right != nil &&
-        reinterpret_cast<Node *>(node)->val()->first
-            >= reinterpret_cast<Node *>(nil->right)->val()->first) {
+    if (nil->left != nil &&
+        (comp(KeyOfValue()(nilRight->value), KeyOfValue()(nodeNode->value)) || KeyOfValue()(nilRight->value) == KeyOfValue()(nodeNode->value))) {
       if (!isUnique()) {
         nil->right = RbTreeNodeBase::maximum(root, nil);
       } else {
@@ -596,7 +599,7 @@ class RbTree {
                   bool isRight,
                   std::string &appendLeft,
                   std::string &appendRight) const {
-    std::string valStr = std::to_string(tree->value.first);
+    std::string valStr = std::to_string(KeyOfValue()(tree->value));
 
     if (isRight) {
       if (tree->parent != nil) {
@@ -641,9 +644,9 @@ class RbTree {
       }
     }
     if (tree->isRed()) {
-      ret += std::string(RED_BG_SET + std::to_string(tree->value.first) + RESET);
+      ret += std::string(RED_BG_SET + std::to_string(KeyOfValue()(tree->value)) + RESET);
     } else {
-      ret += std::string(BLACK_BG_SET + std::to_string(tree->value.first) + RESET);
+      ret += std::string(BLACK_BG_SET + std::to_string(KeyOfValue()(tree->value)) + RESET);
     }
 
     if (tree->left != nil && tree->right != nil) {

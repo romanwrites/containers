@@ -53,7 +53,7 @@ class Map {
     }
   };
 
-  typedef RbTree<key_type, value_type, value_type, Compare, Alloc> Tree;
+  typedef RbTree<key_type, value_type, ft::SelectFirst<value_type>, Compare, Alloc> Tree;
 
  private:
   Tree *tree;
@@ -61,7 +61,7 @@ class Map {
  public:
   explicit Map(const key_compare &comp = key_compare(),
                const allocator_type &alloc = allocator_type()) {
-    this->tree = new RbTree<key_type, value_type, value_type, Compare, Alloc>(UNIQUE, comp, alloc);
+    this->tree = new Tree(UNIQUE, comp, alloc);
   }
 
   template<class InputIterator>
@@ -69,12 +69,12 @@ class Map {
       InputIterator last,
       const key_compare &comp = key_compare(),
       const allocator_type &alloc = allocator_type()) {
-    this->tree = new RbTree<key_type, value_type, value_type, Compare, Alloc>(UNIQUE, comp, alloc);
+    this->tree = new Tree(UNIQUE, comp, alloc);
     insert(first, last);
   }
 
   Map(const Map &x) {
-    this->tree = new RbTree<key_type, value_type, value_type, Compare, Alloc>(UNIQUE);
+    this->tree = new Tree(UNIQUE);
     insert(x.begin(), x.end());
   }
 
@@ -179,7 +179,7 @@ class Map {
 
  public:
   bool empty() const {
-    return tree->empty(); //mock todo implement
+    return tree->empty();
   }
 
   size_type size() const {
