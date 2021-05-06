@@ -10,8 +10,7 @@ add_executable(main
         TestVector.cpp
         TestRunner.cpp
         TestMap.cpp
+        TestMultiMap.cpp
+#        TestSet.cpp
         TestQueue.cpp
         TestStack.cpp)
-
-add_executable(rbtreemain
-        rbtreemain.cpp)
