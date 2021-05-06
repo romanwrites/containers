@@ -21,13 +21,14 @@
 #include "Queue.h"
 #include "TestQueue.h"
 
-#define GREEN(x) ("\033[32m" + x + "\033[0m")
+#define GREEN "\033[32m"
 #define RED_SET "\033[0;31m"
 #define KHAKI_SET "\033[38;2;240;230;140m"
 #define RESET "\033[0m"
 #define PINK_SET "\033[38:5:225m"
 #define SPRING_GREEN_SET "\033[38;2;0;255;127m"
-#define WITH_BG "\033[48;2;0;250;154m\033[38;2;0;0;0m"
+#define SPRING_GREEN_BG "\033[48;2;0;250;154m\033[38;2;0;0;0m"
+#define ORANGE_BG "\033[48;5;202;154m\033[38;2;0;0;0m"
 #define RED_BG_SET "\033[38;5;202m"
 #define BLACK_BG_SET "\033[38;5;33m"
 
@@ -60,7 +61,7 @@ class TestRunner {
 
   void runningWhichTests() const {
     std::cerr << std::endl
-              << WITH_BG << "                      Running "
+              << SPRING_GREEN_BG << "                      Running "
                   + containerName
                   + " Tests                      "
               << RESET << std::endl;
@@ -73,6 +74,16 @@ class TestRunner {
  private:
   std::string containerName;
   int fail_count = 0;
+
+ public:
+  static void printOrange(std::string const &str) {
+    std::cerr << std::endl
+              << ORANGE_BG
+              << "                      "
+              << str
+              << "                      "
+              << RESET << std::endl;
+  }
 };
 
 template<class T, class U>
@@ -87,17 +98,3 @@ void AssertEqual(T const &t, U const &u, std::string const &hint) {
 }
 
 void Assert(bool b, std::string const &hint);
-
-template<class T>
-std::ostream &operator<<(std::ostream &os, std::set<T> const &s) {
-  os << "{";
-  bool first = true;
-  for (auto const &x : s) {
-    if (!first) {
-      os << ", ";
-    }
-    first = false;
-    os << x;
-  }
-  return os << "}";
-}
