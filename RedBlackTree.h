@@ -42,6 +42,7 @@ class RbTree {
   typedef ReverseIterator<const_iterator> const_reverse_iterator;
 
  private:
+  Uniqueness isUniqueTree;
   key_compare comp;
   node_allocator_type nodeAllocator;
   allocator_type allocator;
@@ -49,7 +50,6 @@ class RbTree {
   Node *root;
   Node *nil;
   size_type currentSize;
-  Uniqueness isUniqueTree;
 
   bool isUnique() const {
     return isUniqueTree == UNIQUE;
@@ -60,14 +60,14 @@ class RbTree {
   explicit RbTree(Uniqueness uniqueTree = UNIQUE,
                   const key_compare &comp = key_compare(),
                   const allocator_type &alloc = allocator_type())
-      : comp(comp),
+      : isUniqueTree(uniqueTree),
+        comp(comp),
         nodeAllocator(alloc),
         allocator(alloc),
         baseAllocator(alloc),
         root(NULL),
         nil(NULL), // maybe call static method, but how to pass nodeAllocator
-        currentSize(0),
-        isUniqueTree(uniqueTree) {
+        currentSize(0) {
     nil = createNilNode();
     root = nil;
   }
@@ -80,6 +80,10 @@ class RbTree {
     if (this != &x) {
       clear();
       this->comp = x.comp;
+      this->nodeAllocator = x.nodeAllocator;
+      this->allocator = x.allocator;
+      this->baseAllocator = x.baseAllocator;
+      this->currentSize = 0;
       insert(x.begin(), x.end());
     }
     return *this;
@@ -268,6 +272,8 @@ class RbTree {
   void clear() {
     erase(begin(), end());
     root = nil;
+    nil->left = nil;
+    nil->right = nil;
   }
 
   key_compare key_comp() const {

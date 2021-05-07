@@ -33,8 +33,13 @@ class MultiMap {
   typedef std::ptrdiff_t difference_type;
   typedef size_t size_type;
 
-  typedef RbTreeIterator<value_type> iterator;
-  typedef RbTreeConstIterator<value_type> const_iterator;
+  typedef RbTree<key_type, value_type, ft::SelectFirst<value_type>, Compare, Alloc> Tree;
+
+  typedef typename Tree::iterator iterator;
+  typedef typename Tree::const_iterator const_iterator;
+
+//  typedef RbTreeIterator<value_type> iterator;
+//  typedef RbTreeConstIterator<value_type> const_iterator;
   typedef ReverseIterator<iterator> reverse_iterator;
   typedef ReverseIterator<const_iterator> const_reverse_iterator;
 
@@ -51,8 +56,6 @@ class MultiMap {
       return comp(x.first, y.first);
     }
   };
-
-  typedef RbTree<key_type, value_type, ft::SelectFirst<value_type>, Compare, Alloc> Tree;
 
  private:
   Tree *tree;

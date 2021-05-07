@@ -20,7 +20,7 @@ int main() {
 
   TestRunner::printOrange("BONUSES");
   TestMultiMap::TestAll();
-//  TestSet::TestAll();
+  TestSet::TestAll();
 
   return 0;
 }

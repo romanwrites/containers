@@ -50,14 +50,14 @@ class RbTreeNodeBase {
 
   // Static methods --------------------------------------------------------
   static base_ptr minimum(base_ptr x, const_base_ptr nil) {
-    while (x != nil && x->left != nil) { //todo was just x->left
+    while (x->left != nil) {
       x = x->left;
     }
     return x;
   }
 
   static base_ptr maximum(base_ptr x, const_base_ptr nil) {
-    while (x != nil && x->right != nil) {
+    while (x->right != nil) {
       x = x->right;
     }
     return x;
@@ -175,7 +175,7 @@ class RbTreeNode : public RbTreeNodeBase {
   }
 
   // Constructors --------------------------------------------------------
-  RbTreeNode() : RbTreeNodeBase(), value(NULL) {
+  RbTreeNode() : RbTreeNodeBase() {
   }
 
   RbTreeNode(const value_type &value) : RbTreeNodeBase(), value(value) {

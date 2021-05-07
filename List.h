@@ -90,7 +90,8 @@ class BidirectionalListIt {
 
   BidirectionalListIt(const BidirectionalListIt &p) throw(): ptr(p.ptr) {}
 
-  ~BidirectionalListIt() {}
+  virtual ~BidirectionalListIt() {
+  }
 
   BidirectionalListIt &operator=(const BidirectionalListIt &rhs) {
     ptr = rhs.ptr;
@@ -170,7 +171,7 @@ class BidirectionalConstListIt {
 
   BidirectionalConstListIt(const BidirectionalListIt<Category, Iter> &p) throw(): ptr(p.p()) {}
 
-  ~BidirectionalConstListIt() {}
+  virtual ~BidirectionalConstListIt() {}
 
   BidirectionalConstListIt &operator=(const BidirectionalConstListIt &rhs) {
     ptr = rhs.ptr;
@@ -268,7 +269,7 @@ class List {
     insert(begin(), x.begin(), x.end());
   }
 
-  ~List() {
+  virtual ~List() {
     clear();
     delete shadow;
   }
