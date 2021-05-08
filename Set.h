@@ -36,7 +36,7 @@ class Set {
 //  empty
   explicit Set(const key_compare &comp = key_compare(),
                const allocator_type &alloc = allocator_type())
-               : tree(Tree(UNIQUE, comp, alloc)) {
+      : tree(Tree(UNIQUE, comp, alloc)) {
   }
 
 //  range
@@ -90,6 +90,60 @@ class Set {
   template<class InputIterator>
   void insert(InputIterator first, InputIterator last) {
     tree.insert(first, last);
+  }
+
+  void erase(iterator position) {
+  tree.erase(position);
+  }
+
+  size_type erase(const value_type &val) {
+    return tree.erase(val);
+  }
+
+  void erase(iterator first, iterator last) {
+    tree.erase(first, last);
+  }
+
+  void swap(Set &x) {
+  Set &tmp = x;
+  x = *this;
+  *this = tmp;
+  }
+
+  void clear() {
+tree.clear();
+  }
+
+  key_compare key_comp() const {
+  return tree.key_comp();
+  }
+
+  value_compare value_comp() const {
+    return tree.key_comp();
+  }
+
+  iterator find(const value_type &val) const {
+  return tree.find(val);
+  }
+
+  size_type count(const value_type &val) const {
+    return tree.count(val);
+  }
+
+  iterator lower_bound(const value_type &val) const {
+    return tree.lower_bound(val);
+  }
+
+  iterator upper_bound(const value_type &val) const {
+    return tree.upper_bound(val);
+  }
+
+  std::pair<iterator, iterator> equal_range(const value_type &val) const {
+    return tree.equal_range(val);
+  }
+
+  allocator_type get_allocator() const {
+    return tree.get_allocator();
   }
 
   // ITERATORS ----------------------------------------------------------------------
