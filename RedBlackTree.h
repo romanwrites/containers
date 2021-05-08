@@ -5,6 +5,8 @@
 #include "Compare.h"
 #include "ReverseIterator.h"
 #include "Functional.h"
+#include "Algorithm.h"
+#include "Compare.h"
 
 #define PRINT_INT_TREE 1
 
@@ -168,10 +170,6 @@ class RbTree {
     }
 
     treeToPlace->parent = treeWhereToPlace->parent;
-  }
-
-  Node *find(value_type val) {
-    return find(KeyOfValue()(val));
   }
 
   bool empty() const {
@@ -564,7 +562,8 @@ class RbTree {
     Node *nilRight = reinterpret_cast<Node *>(nil->right);
 
     if (nil->left != nil &&
-        (comp(KeyOfValue()(nodeNode->value), KeyOfValue()(nilLeft->value)) || KeyOfValue()(nodeNode->value) == KeyOfValue()(nilLeft->value))) {
+        (comp(KeyOfValue()(nodeNode->value), KeyOfValue()(nilLeft->value))
+            || KeyOfValue()(nodeNode->value) == KeyOfValue()(nilLeft->value))) {
       if (!isUnique()) {
         nil->left = RbTreeNodeBase::minimum(root, nil);
       } else {
@@ -572,7 +571,8 @@ class RbTree {
       }
     }
     if (nil->left != nil &&
-        (comp(KeyOfValue()(nilRight->value), KeyOfValue()(nodeNode->value)) || KeyOfValue()(nilRight->value) == KeyOfValue()(nodeNode->value))) {
+        (comp(KeyOfValue()(nilRight->value), KeyOfValue()(nodeNode->value))
+            || KeyOfValue()(nilRight->value) == KeyOfValue()(nodeNode->value))) {
       if (!isUnique()) {
         nil->right = RbTreeNodeBase::maximum(root, nil);
       } else {
@@ -597,6 +597,24 @@ class RbTree {
     currentSize++;
     return std::make_pair(iterator(node, nil), true);
   }
+
+  friend bool operator==(const RbTree &x, const RbTree &y) {
+    return x.size() == y.size()
+        && ft::equal<iterator, iterator, ft::equal_to<value_type> >(x.begin(), x.end(), y.begin());
+  }
+
+  friend bool operator<(const RbTree &x, const RbTree &y) {
+    return ft::lexicographical_compare<iterator, Compare>(x.begin(), x.end(),
+                                                          y.begin(), y.end());
+  }
+
+  friend bool operator!=(const RbTree &x, const RbTree &y) { return !(x == y); }
+
+  friend bool operator>(const RbTree &x, const RbTree &y) { return y < x; }
+
+  friend bool operator<=(const RbTree &x, const RbTree &y) { return !(y < x); }
+
+  friend bool operator>=(const RbTree &x, const RbTree &y) { return !(x < y); }
 
 #if PRINT_INT_TREE
 // -------------------------------------------- PRINT INTEGER TREE ------------------------------------

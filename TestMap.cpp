@@ -330,8 +330,6 @@ void TestCount(TestRunner const &tr) {
   Assert(m.count(0) == fm.count(0), tr.hintMessage("count 0"));
   Assert(m.count(199) == fm.count(199), tr.hintMessage("count 199"));
   Assert(m.count(-1) == fm.count(-1), tr.hintMessage("count -1"));
-
-  TestFindConst(m, fm, tr);
 }
 
 void TestLowerBoundConst(std::map<int, int> const &m, ft::Map<int, int> const &fm, TestRunner const &tr) {

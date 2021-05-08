@@ -5,6 +5,7 @@
 #include "Traits.h"
 #include "ReverseIterator.h"
 #include "Compare.h"
+#include "Algorithm.h"
 
 namespace ft {
 
@@ -744,17 +745,6 @@ class List {
 
 };
 
-template<class Iter, class Compare>
-bool lexicographical_compare(Iter first1, Iter last1, Iter first2, Iter last2, Compare comp) {
-  for (; first2 != last2; ++first1, (void) ++first2) {
-    if (first1 == last1 || comp(*first1, *first2))
-      return true;
-    if (comp(*first2, *first1))
-      return false;
-  }
-  return false;
-}
-
 template<class T, class Alloc>
 void swap(List<T, Alloc> &x, List<T, Alloc> &y) {
   x.swap(y);
@@ -791,7 +781,7 @@ bool operator<(ft::List<T, Alloc> const &lhs, ft::List<T, Alloc> const &rhs) {
   typename ft::List<T, Alloc>::const_iterator last1 = lhs.end();
   typename ft::List<T, Alloc>::const_iterator last2 = rhs.end();
 
-  return lexicographical_compare(first1, last1, first2, last2, ft::less<T>());
+  return ft::lexicographical_compare(first1, last1, first2, last2, ft::less<T>());
 }
 
 template<class T, class Alloc>

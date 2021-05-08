@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 
-//#include "TestRunner.h"
 #include "RbTreeNode.h"
 
 #define RED_BG_SET "\033[38;5;202m"
@@ -34,7 +33,6 @@ class RbTreeIterator {
   // Is default-constructible, copy-constructible, copy-assignable and destructible
   RbTreeIterator() : node(NULL), nil(NULL) {}
 
-//  explicit RbTreeIterator(Node *x, Node *nil) : node(x), nil(nil) {}
   explicit RbTreeIterator(base_ptr x, const_base_ptr nil) : node(x), nil(nil) {}
 
   RbTreeIterator(iterator const &p) : node(p.node), nil(p.nil) {}
