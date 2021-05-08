@@ -12,5 +12,6 @@ add_executable(main
         TestMap.cpp
         TestMultiMap.cpp
         TestSet.cpp
+        TestMultiSet.cpp
         TestQueue.cpp
         TestStack.cpp)

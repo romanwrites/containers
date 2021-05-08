@@ -6,6 +6,7 @@
 #include "TestQueue.h"
 #include "TestStack.h"
 #include "TestSet.h"
+#include "TestMultiSet.h"
 
 int main() {
   TestRunner::printOrange("MANDATORY PART");
@@ -21,6 +22,7 @@ int main() {
   TestRunner::printOrange("BONUSES");
   TestMultiMap::TestAll();
   TestSet::TestAll();
+  TestMultiSet::TestAll();
 
   return 0;
 }

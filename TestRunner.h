@@ -18,6 +18,8 @@
 #include "TestMap.h"
 #include "Set.h"
 #include "TestSet.h"
+#include "MultiSet.h"
+#include "TestMultiSet.h"
 #include "MultiMap.h"
 #include "TestMultiMap.h"
 #include "Queue.h"
