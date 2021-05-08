@@ -95,7 +95,6 @@ void TestAssignationOperator(TestRunner const &tr) {
   ft::Set<int> fm2 = fm;
   AssertEqual(fm2, m2, tr.hintMessage("operator="));
 
-
   m = std::set<int>();
   fm = ft::Set<int>();
   AssertEqual(fm, m, tr.hintMessage("operator= empty constructor"));
@@ -201,7 +200,7 @@ void TestInsert(TestRunner const &tr) {
 }
 
 void TestErase(TestRunner const &tr) {
-  (void)tr;
+  (void) tr;
   std::set<int> m;
   ft::Set<int> fm;
 
@@ -254,6 +253,33 @@ void TestSwap(TestRunner const &tr) {
 
   m.swap(m2);
   fm.swap(fm2);
+
+  AssertEqual(m, fm, tr.hintMessage("swap"));
+  AssertEqual(m2, fm2, tr.hintMessage("swap m2"));
+
+}
+
+void TestSwapNonMember(TestRunner const &tr) {
+  std::set<int> m;
+  ft::Set<int> fm;
+
+  for (int i = 0; i < 20; ++i) {
+    int r = rand() % 100 + 1;
+    m.insert(r);
+    fm.insert(r);
+  }
+
+  std::set<int> m2;
+  ft::Set<int> fm2;
+
+  for (int i = 0; i < 50; ++i) {
+    int r = rand() % 100 + 1;
+    m.insert(r);
+    fm.insert(r);
+  }
+
+  std::swap(m, m2);
+  ft::swap(fm, fm2);
 
   AssertEqual(m, fm, tr.hintMessage("swap"));
   AssertEqual(m2, fm2, tr.hintMessage("swap m2"));
@@ -420,6 +446,74 @@ void TestEqualRange(TestRunner const &tr) {
   TestEqualRangeConst(m, fm, tr);
 }
 
+void TestRelationalNonMemberOperatorsConst(std::set<int> const &m1,
+                                           std::set<int> const &m2,
+                                           ft::Set<int> const &fm1,
+                                           ft::Set<int> const &fm2,
+                                           TestRunner const &tr) {
+  AssertEqual(m1 == m2, fm1 == fm2, tr.hintMessage("operator== const"));
+  AssertEqual(m1 != m2, fm1 != fm2, tr.hintMessage("operator!= const"));
+  AssertEqual(m1 < m2, fm1 < fm2, tr.hintMessage("operator< const"));
+  AssertEqual(m1 <= m2, fm1 <= fm2, tr.hintMessage("operator<= const"));
+  AssertEqual(m1 >= m2, fm1 >= fm2, tr.hintMessage("operator>= const"));
+  AssertEqual(m1 > m2, fm1 > fm2, tr.hintMessage("operator> const"));
+}
+
+void TestRelationalNonMemberOperatorsNonConst(std::set<int> &m1,
+                                              std::set<int> &m2,
+                                              ft::Set<int> &fm1,
+                                              ft::Set<int> &fm2,
+                                              TestRunner const &tr) {
+  AssertEqual(m1 == m2, fm1 == fm2, tr.hintMessage("operator=="));
+  AssertEqual(m1 != m2, fm1 != fm2, tr.hintMessage("operator!="));
+  AssertEqual(m1 < m2, fm1 < fm2, tr.hintMessage("operator<"));
+  AssertEqual(m1 <= m2, fm1 <= fm2, tr.hintMessage("operator<="));
+  AssertEqual(m1 >= m2, fm1 >= fm2, tr.hintMessage("operator>="));
+  AssertEqual(m1 > m2, fm1 > fm2, tr.hintMessage("operator>"));
+}
+
+void TestRelationalNonMemberOperators(TestRunner const &tr) {
+  std::set<int> m1;
+  ft::Set<int> fm1;
+  std::set<int> m2;
+  ft::Set<int> fm2;
+
+  for (int i = 0; i < 100; ++i) {
+    if (i % 2 == 0) {
+      m1.insert(i);
+      fm1.insert(i);
+    } else if (i % 3 == 0 || i % 5 == 0) {
+      m2.insert(i);
+      fm2.insert(i);
+    } else {
+      m1.insert(i);
+      fm1.insert(i);
+      m2.insert(i);
+      fm2.insert(i);
+    }
+    TestRelationalNonMemberOperatorsNonConst(m1, m2, fm1, fm2, tr);
+    TestRelationalNonMemberOperatorsConst(m1, m2, fm1, fm2, tr);
+  }
+
+  for (int i = 0; i < 100; ++i) {
+    if (i % 2 == 0) {
+      m1.erase(i);
+      fm1.erase(i);
+    } else if (i % 3 == 0 || i % 5 == 0) {
+      m2.erase(i);
+      fm2.erase(i);
+    } else {
+      m1.erase(i);
+      fm1.erase(i);
+      m2.erase(i);
+      fm2.erase(i);
+    }
+    TestRelationalNonMemberOperatorsNonConst(m1, m2, fm1, fm2, tr);
+    TestRelationalNonMemberOperatorsConst(m1, m2, fm1, fm2, tr);
+  }
+
+}
+
 void TestAll() {
   TestRunner tr("Set");
 
@@ -439,5 +533,7 @@ void TestAll() {
   tr.RunTest(TestLowerBound, "TestLowerBound");
   tr.RunTest(TestUpperBound, "TestUpperBound");
   tr.RunTest(TestEqualRange, "TestEqualRange");
+  tr.RunTest(TestRelationalNonMemberOperators, "TestRelationalNonMemberOperators");
+  tr.RunTest(TestSwapNonMember, "TestSwapNonMember");
 }
 }

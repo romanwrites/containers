@@ -215,7 +215,7 @@ class Set {
 template<class T, class Compare, class Alloc>
 bool operator==(const Set<T, Compare, Alloc> &lhs,
                 const Set<T, Compare, Alloc> &rhs) {
-  return lhs.tree == rhs.tree;
+  return *lhs.tree == *rhs.tree;
 }
 
 template<class T, class Compare, class Alloc>
@@ -227,7 +227,7 @@ bool operator!=(const Set<T, Compare, Alloc> &lhs,
 template<class T, class Compare, class Alloc>
 bool operator<(const Set<T, Compare, Alloc> &lhs,
                const Set<T, Compare, Alloc> &rhs) {
-  return lhs.tree < rhs.tree;
+  return *lhs.tree < *rhs.tree;
 }
 
 template<class T, class Compare, class Alloc>
@@ -246,5 +246,10 @@ template<class T, class Compare, class Alloc>
 bool operator>=(const Set<T, Compare, Alloc> &lhs,
                 const Set<T, Compare, Alloc> &rhs) {
   return !(lhs < rhs);
+}
+
+template<class T, class Compare, class Alloc>
+void swap(Set<T, Compare, Alloc> &x, Set<T, Compare, Alloc> &y) {
+  x.swap(y);
 }
 }

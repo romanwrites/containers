@@ -598,23 +598,9 @@ class RbTree {
     return std::make_pair(iterator(node, nil), true);
   }
 
-  friend bool operator==(const RbTree &x, const RbTree &y) {
-    return x.size() == y.size()
-        && ft::equal<iterator, iterator, ft::equal_to<value_type> >(x.begin(), x.end(), y.begin());
-  }
-
-  friend bool operator<(const RbTree &x, const RbTree &y) {
-    return ft::lexicographical_compare<iterator, Compare>(x.begin(), x.end(),
-                                                          y.begin(), y.end());
-  }
-
-  friend bool operator!=(const RbTree &x, const RbTree &y) { return !(x == y); }
-
-  friend bool operator>(const RbTree &x, const RbTree &y) { return y < x; }
-
-  friend bool operator<=(const RbTree &x, const RbTree &y) { return !(y < x); }
-
-  friend bool operator>=(const RbTree &x, const RbTree &y) { return !(x < y); }
+//  friend bool operator==(const RbTree &lhs, const RbTree &rhs);
+//
+//  friend bool operator<(const RbTree &lhs, const RbTree &rhs);
 
 #if PRINT_INT_TREE
 // -------------------------------------------- PRINT INTEGER TREE ------------------------------------
@@ -696,5 +682,77 @@ class RbTree {
   }
 #endif
 };
+
+template<typename Key, typename Val, typename KeyOfValue, typename Compare, typename Alloc>
+bool operator==(const RbTree<Key, Val, KeyOfValue, Compare, Alloc> &lhs,
+                const RbTree<Key, Val, KeyOfValue, Compare, Alloc> &rhs) {
+
+  if (lhs.size() != rhs.size()) {
+    return false;
+  }
+
+  typename ft::RbTree<Key, Val, KeyOfValue, Compare, Alloc>::const_iterator first1 = lhs.begin();
+  typename ft::RbTree<Key, Val, KeyOfValue, Compare, Alloc>::const_iterator last1 = lhs.end();
+  typename ft::RbTree<Key, Val, KeyOfValue, Compare, Alloc>::const_iterator first2 = rhs.begin();
+
+  while (first1 != last1) {
+    if (*first1 != *first2) {
+      return false;
+    }
+    ++first1;
+    ++first2;
+  }
+  return true;
+}
+
+template<typename Key, typename Val, typename KeyOfValue, typename Compare, typename Alloc>
+bool operator<(const RbTree<Key, Val, KeyOfValue, Compare, Alloc> &lhs,
+               const RbTree<Key, Val, KeyOfValue, Compare, Alloc> &rhs) {
+//  return ft::lexicographical_compare<typename RbTree<Key, Val, KeyOfValue, Compare, Alloc>::iterator, Compare>(lhs.begin(), lhs.end(),
+//                                              rhs.begin(), rhs.end());
+
+  typename ft::RbTree<Key, Val, KeyOfValue, Compare, Alloc>::const_iterator first1 = lhs.begin();
+  typename ft::RbTree<Key, Val, KeyOfValue, Compare, Alloc>::const_iterator last1 = lhs.end();
+  typename ft::RbTree<Key, Val, KeyOfValue, Compare, Alloc>::const_iterator first2 = rhs.begin();
+  typename ft::RbTree<Key, Val, KeyOfValue, Compare, Alloc>::const_iterator last2 = rhs.end();
+
+  Compare comp;
+
+  while (first2 != last2) {
+    if (first1 == last1 || comp(*first1, *first2)) {
+      return true;
+    }
+    if (comp(*first2, *first1)) {
+      return false;
+    }
+    ++first1,
+        (void) ++first2;
+  }
+  return false;
+}
+
+template<typename Key, typename Val, typename KeyOfValue, typename Compare, typename Alloc>
+bool operator!=(const RbTree<Key, Val, KeyOfValue, Compare, Alloc> &lhs,
+                const RbTree<Key, Val, KeyOfValue, Compare, Alloc> &rhs) {
+  return !(lhs == rhs);
+}
+
+template<typename Key, typename Val, typename KeyOfValue, typename Compare, typename Alloc>
+bool operator>(const RbTree<Key, Val, KeyOfValue, Compare, Alloc> &lhs,
+               const RbTree<Key, Val, KeyOfValue, Compare, Alloc> &rhs) {
+  return rhs < lhs;
+}
+
+template<typename Key, typename Val, typename KeyOfValue, typename Compare, typename Alloc>
+bool operator<=(const RbTree<Key, Val, KeyOfValue, Compare, Alloc> &lhs,
+                const RbTree<Key, Val, KeyOfValue, Compare, Alloc> &rhs) {
+  return !(rhs < lhs);
+}
+
+template<typename Key, typename Val, typename KeyOfValue, typename Compare, typename Alloc>
+bool operator>=(const RbTree<Key, Val, KeyOfValue, Compare, Alloc> &lhs,
+                const RbTree<Key, Val, KeyOfValue, Compare, Alloc> &rhs) {
+  return !(lhs < rhs);
+}
 
 }
