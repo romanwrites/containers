@@ -280,6 +280,26 @@ void TestResize(TestRunner const &tr) {
   AssertEqual(ftlst, lst, tr.hintMessage("Test resize() higher bound with default value"));
 }
 
+void TestEqualityAndLessThanConst(std::list<std::string> const &l1,
+                                  std::list<std::string> const &l2,
+                                  ft::List<std::string> const &fl1,
+                                  ft::List<std::string> const &fl2,
+                                  TestRunner const &tr) {
+  Assert(fl1 == fl2 && l1 == l2, tr.hintMessage("operator==() const"));
+  Assert(fl1 <= fl2 && l1 <= l2, tr.hintMessage("operator<=() 1 const"));
+}
+
+void TestOtherRelOpsConst(std::list<std::string> const &l1,
+                                  std::list<std::string> const &l2,
+                                  ft::List<std::string> const &fl1,
+                                  ft::List<std::string> const &fl2,
+                                  TestRunner const &tr) {
+  Assert(fl1 != fl2 && l1 != l2, tr.hintMessage("operator!=() const"));
+  Assert(fl1 > fl2 && l1 > l2, tr.hintMessage("operator>() const"));
+  Assert(fl1 >= fl2 && l1 >= l2, tr.hintMessage("operator>=() 2 const"));
+  Assert(fl2 <= fl1 && l2 <= l1, tr.hintMessage("operator<=() 2 const"));
+}
+
 void TestComparisonOperators(TestRunner const &tr) {
   std::list<std::string> l1{"a", "b"};
   std::list<std::string> l2{"a", "b"};
@@ -290,16 +310,17 @@ void TestComparisonOperators(TestRunner const &tr) {
   fl1.push_back("b");
   fl2.push_back("b");
 
-  Assert(fl1 == fl2 && l1 == l2, tr.hintMessage("Test operator==()"));
-
-  Assert(fl1 <= fl2 && l1 <= l2, tr.hintMessage("Test operator<=() 1"));
+  Assert(fl1 == fl2 && l1 == l2, tr.hintMessage("operator==()"));
+  Assert(fl1 <= fl2 && l1 <= l2, tr.hintMessage("operator<=() 1"));
+  TestEqualityAndLessThanConst(l1, l2, fl1, fl2, tr);
 
   l1.push_back("a");
   fl1.push_back("a");
-  Assert(fl1 != fl2 && l1 != l2, tr.hintMessage("Test operator!=()"));
-  Assert(fl1 > fl2 && l1 > l2, tr.hintMessage("Test operator>()"));
-  Assert(fl1 >= fl2 && l1 >= l2, tr.hintMessage("Test operator>=() 2"));
-  Assert(fl2 <= fl1 && l2 <= l1, tr.hintMessage("Test operator<=() 2"));
+  Assert(fl1 != fl2 && l1 != l2, tr.hintMessage("operator!=()"));
+  Assert(fl1 > fl2 && l1 > l2, tr.hintMessage("operator>()"));
+  Assert(fl1 >= fl2 && l1 >= l2, tr.hintMessage("operator>=() 2"));
+  Assert(fl2 <= fl1 && l2 <= l1, tr.hintMessage("operator<=() 2"));
+  TestOtherRelOpsConst(l1, l2, fl1, fl2, tr);
 }
 
 void TestPop(TestRunner const &tr) {
