@@ -432,6 +432,99 @@ void TestEqualRange(TestRunner const &tr) {
   TestEqualRangeConst(m, fm, tr);
 }
 
+void TestRelationalNonMemberOperatorsConst(std::multimap<int, int> const &m1,
+                                           std::multimap<int, int> const &m2,
+                                           ft::MultiMap<int, int> const &fm1,
+                                           ft::MultiMap<int, int> const &fm2,
+                                           TestRunner const &tr) {
+  AssertEqual(m1 == m2, fm1 == fm2, tr.hintMessage("operator== const"));
+  AssertEqual(m1 != m2, fm1 != fm2, tr.hintMessage("operator!= const"));
+  AssertEqual(m1 < m2, fm1 < fm2, tr.hintMessage("operator< const"));
+  AssertEqual(m1 <= m2, fm1 <= fm2, tr.hintMessage("operator<= const"));
+  AssertEqual(m1 >= m2, fm1 >= fm2, tr.hintMessage("operator>= const"));
+  AssertEqual(m1 > m2, fm1 > fm2, tr.hintMessage("operator> const"));
+}
+
+void TestRelationalNonMemberOperatorsNonConst(std::multimap<int, int> &m1,
+                                              std::multimap<int, int> &m2,
+                                              ft::MultiMap<int, int> &fm1,
+                                              ft::MultiMap<int, int> &fm2,
+                                              TestRunner const &tr) {
+  AssertEqual(m1 == m2, fm1 == fm2, tr.hintMessage("operator=="));
+  AssertEqual(m1 != m2, fm1 != fm2, tr.hintMessage("operator!="));
+  AssertEqual(m1 < m2, fm1 < fm2, tr.hintMessage("operator<"));
+  AssertEqual(m1 <= m2, fm1 <= fm2, tr.hintMessage("operator<="));
+  AssertEqual(m1 >= m2, fm1 >= fm2, tr.hintMessage("operator>="));
+  AssertEqual(m1 > m2, fm1 > fm2, tr.hintMessage("operator>"));
+}
+
+void TestRelationalNonMemberOperators(TestRunner const &tr) {
+  std::multimap<int, int> m1;
+  ft::MultiMap<int, int> fm1;
+  std::multimap<int, int> m2;
+  ft::MultiMap<int, int> fm2;
+
+  for (int i = 0; i < 100; ++i) {
+    if (i % 2 == 0) {
+      m1.insert(std::make_pair(i, i));
+      fm1.insert(std::make_pair(i, i));
+    } else if (i % 3 == 0 || i % 5 == 0) {
+      m2.insert(std::make_pair(i, i));
+      fm2.insert(std::make_pair(i, i));
+    } else {
+      m1.insert(std::make_pair(i, i));
+      fm1.insert(std::make_pair(i, i));
+      m2.insert(std::make_pair(i, i));
+      fm2.insert(std::make_pair(i, i));
+    }
+    TestRelationalNonMemberOperatorsNonConst(m1, m2, fm1, fm2, tr);
+    TestRelationalNonMemberOperatorsConst(m1, m2, fm1, fm2, tr);
+  }
+
+  for (int i = 0; i < 100; ++i) {
+    if (i % 2 == 0) {
+      m1.erase(i);
+      fm1.erase(i);
+    } else if (i % 3 == 0 || i % 5 == 0) {
+      m2.erase(i);
+      fm2.erase(i);
+    } else {
+      m1.erase(i);
+      fm1.erase(i);
+      m2.erase(i);
+      fm2.erase(i);
+    }
+    TestRelationalNonMemberOperatorsNonConst(m1, m2, fm1, fm2, tr);
+    TestRelationalNonMemberOperatorsConst(m1, m2, fm1, fm2, tr);
+  }
+}
+
+void TestSwapNonMember(TestRunner const &tr) {
+  std::multimap<int, int> m;
+  ft::MultiMap<int, int> fm;
+
+  for (int i = 0; i < 20; ++i) {
+    int r = rand() % 100 + 1;
+    m.insert(std::make_pair(r, r));
+    fm.insert(std::make_pair(r, r));
+  }
+
+  std::multimap<int, int> m2;
+  ft::MultiMap<int, int> fm2;
+
+  for (int i = 0; i < 50; ++i) {
+    int r = rand() % 100 + 1;
+    m.insert(std::make_pair(r, r));
+    fm.insert(std::make_pair(r, r));
+  }
+
+  std::swap(m, m2);
+  ft::swap(fm, fm2);
+
+  AssertEqual(m, fm, tr.hintMessage("swap"));
+  AssertEqual(m2, fm2, tr.hintMessage("swap m2"));
+}
+
 void TestAll() {
   TestRunner tr("MultiMap");
 
@@ -451,5 +544,7 @@ void TestAll() {
   tr.RunTest(TestLowerBound, "TestLowerBound");
   tr.RunTest(TestUpperBound, "TestUpperBound");
   tr.RunTest(TestEqualRange, "TestEqualRange");
+  tr.RunTest(TestRelationalNonMemberOperators, "TestRelationalNonMemberOperators");
+  tr.RunTest(TestSwapNonMember, "TestSwapNonMember");
 }
 }

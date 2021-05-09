@@ -221,6 +221,14 @@ class MultiMap {
     return tree->max_size();
   }
 
+  template <class Key_f, class T_f, class Compare_f, class Alloc_f>
+  friend bool operator==(const ft::MultiMap<Key_f, T_f, Compare_f, Alloc_f> &lhs,
+                         const ft::MultiMap<Key_f, T_f, Compare_f, Alloc_f> &rhs);
+
+  template <class Key_f, class T_f, class Compare_f, class Alloc_f>
+  friend bool operator<(const ft::MultiMap<Key_f, T_f, Compare_f, Alloc_f> &lhs,
+                        const ft::MultiMap<Key_f, T_f, Compare_f, Alloc_f> &rhs);
+
 #if PRINT_INT_TREE
   void printIntegerTree() const {
     tree->printIntTree();
@@ -228,5 +236,46 @@ class MultiMap {
 #endif
 
 };
+
+template <class Key, class T, class Compare, class Alloc>
+bool operator==(const ft::MultiMap<Key, T, Compare, Alloc> &lhs,
+                const ft::MultiMap<Key, T, Compare, Alloc> &rhs) {
+  return *lhs.tree == *rhs.tree;
+}
+
+template <class Key, class T, class Compare, class Alloc>
+bool operator!=(const ft::MultiMap<Key, T, Compare, Alloc> &lhs,
+                const ft::MultiMap<Key, T, Compare, Alloc> &rhs) {
+  return !(lhs == rhs);
+}
+
+template <class Key, class T, class Compare, class Alloc>
+bool operator<(const ft::MultiMap<Key, T, Compare, Alloc> &lhs,
+               const ft::MultiMap<Key, T, Compare, Alloc> &rhs) {
+  return *lhs.tree < *rhs.tree;
+}
+
+template <class Key, class T, class Compare, class Alloc>
+bool operator<=(const ft::MultiMap<Key, T, Compare, Alloc> &lhs,
+                const ft::MultiMap<Key, T, Compare, Alloc> &rhs) {
+  return !(rhs < lhs);
+}
+
+template <class Key, class T, class Compare, class Alloc>
+bool operator>(const ft::MultiMap<Key, T, Compare, Alloc> &lhs,
+               const ft::MultiMap<Key, T, Compare, Alloc> &rhs) {
+  return rhs < lhs;
+}
+
+template <class Key, class T, class Compare, class Alloc>
+bool operator>=(const ft::MultiMap<Key, T, Compare, Alloc> &lhs,
+                const ft::MultiMap<Key, T, Compare, Alloc> &rhs) {
+  return !(lhs < rhs);
+}
+
+template <class Key, class T, class Compare, class Alloc>
+void swap(ft::MultiMap<Key, T, Compare, Alloc> &x, ft::MultiMap<Key, T, Compare, Alloc> &y) {
+  x.swap(y);
+}
 
 }

@@ -781,7 +781,7 @@ bool operator<(ft::List<T, Alloc> const &lhs, ft::List<T, Alloc> const &rhs) {
   typename ft::List<T, Alloc>::const_iterator last1 = lhs.end();
   typename ft::List<T, Alloc>::const_iterator last2 = rhs.end();
 
-  return ft::lexicographical_compare(first1, last1, first2, last2, ft::less<T>());
+  return ft::lexicographical_compare_custom(first1, last1, first2, last2, ft::less<T>());
 }
 
 template<class T, class Alloc>

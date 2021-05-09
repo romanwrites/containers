@@ -259,33 +259,6 @@ void TestSwap(TestRunner const &tr) {
 
 }
 
-void TestSwapNonMember(TestRunner const &tr) {
-  std::set<int> m;
-  ft::Set<int> fm;
-
-  for (int i = 0; i < 20; ++i) {
-    int r = rand() % 100 + 1;
-    m.insert(r);
-    fm.insert(r);
-  }
-
-  std::set<int> m2;
-  ft::Set<int> fm2;
-
-  for (int i = 0; i < 50; ++i) {
-    int r = rand() % 100 + 1;
-    m.insert(r);
-    fm.insert(r);
-  }
-
-  std::swap(m, m2);
-  ft::swap(fm, fm2);
-
-  AssertEqual(m, fm, tr.hintMessage("swap"));
-  AssertEqual(m2, fm2, tr.hintMessage("swap m2"));
-
-}
-
 void TestClear(TestRunner const &tr) {
   std::set<int> m;
   ft::Set<int> fm;
@@ -511,7 +484,32 @@ void TestRelationalNonMemberOperators(TestRunner const &tr) {
     TestRelationalNonMemberOperatorsNonConst(m1, m2, fm1, fm2, tr);
     TestRelationalNonMemberOperatorsConst(m1, m2, fm1, fm2, tr);
   }
+}
 
+void TestSwapNonMember(TestRunner const &tr) {
+  std::set<int> m;
+  ft::Set<int> fm;
+
+  for (int i = 0; i < 20; ++i) {
+    int r = rand() % 100 + 1;
+    m.insert(r);
+    fm.insert(r);
+  }
+
+  std::set<int> m2;
+  ft::Set<int> fm2;
+
+  for (int i = 0; i < 50; ++i) {
+    int r = rand() % 100 + 1;
+    m.insert(r);
+    fm.insert(r);
+  }
+
+  std::swap(m, m2);
+  ft::swap(fm, fm2);
+
+  AssertEqual(m, fm, tr.hintMessage("swap"));
+  AssertEqual(m2, fm2, tr.hintMessage("swap m2"));
 }
 
 void TestAll() {

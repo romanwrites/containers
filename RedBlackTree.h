@@ -708,27 +708,9 @@ bool operator==(const RbTree<Key, Val, KeyOfValue, Compare, Alloc> &lhs,
 template<typename Key, typename Val, typename KeyOfValue, typename Compare, typename Alloc>
 bool operator<(const RbTree<Key, Val, KeyOfValue, Compare, Alloc> &lhs,
                const RbTree<Key, Val, KeyOfValue, Compare, Alloc> &rhs) {
-//  return ft::lexicographical_compare<typename RbTree<Key, Val, KeyOfValue, Compare, Alloc>::iterator, Compare>(lhs.begin(), lhs.end(),
-//                                              rhs.begin(), rhs.end());
-
-  typename ft::RbTree<Key, Val, KeyOfValue, Compare, Alloc>::const_iterator first1 = lhs.begin();
-  typename ft::RbTree<Key, Val, KeyOfValue, Compare, Alloc>::const_iterator last1 = lhs.end();
-  typename ft::RbTree<Key, Val, KeyOfValue, Compare, Alloc>::const_iterator first2 = rhs.begin();
-  typename ft::RbTree<Key, Val, KeyOfValue, Compare, Alloc>::const_iterator last2 = rhs.end();
-
-  Compare comp;
-
-  while (first2 != last2) {
-    if (first1 == last1 || comp(*first1, *first2)) {
-      return true;
-    }
-    if (comp(*first2, *first1)) {
-      return false;
-    }
-    ++first1,
-        (void) ++first2;
-  }
-  return false;
+  return ft::lexicographical_compare<typename RbTree<Key, Val, KeyOfValue, Compare, Alloc>::const_iterator,
+                                     typename RbTree<Key, Val, KeyOfValue, Compare, Alloc>::const_iterator>
+                                      (lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 }
 
 template<typename Key, typename Val, typename KeyOfValue, typename Compare, typename Alloc>
