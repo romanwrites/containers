@@ -29,7 +29,7 @@ class Allocator {
   typedef const T *const_pointer;    //	Pointer to constant element
   typedef const T &const_reference;    //  Reference to constant element
   typedef size_t size_type;        //  Quantities of elements
-  typedef ptrdiff_t difference_type;  //  Difference between two pointers
+  typedef std::ptrdiff_t difference_type;  //  Difference between two pointers
 
   // Its member type other is the equivalent allocator type to allocate elements of type Type
   // ::template when take template type from other template type
@@ -58,7 +58,7 @@ class Allocator {
 
   // new throws bad_alloc
   // hint where to allocate memory
-  pointer allocate(size_type n, Allocator<void>::const_pointer hint = nullptr) {
+  pointer allocate(size_type n, Allocator<void>::const_pointer hint = NULL) {
     (void) hint;
 
     if (n > max_size()) {

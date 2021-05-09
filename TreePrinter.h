@@ -15,7 +15,7 @@ class TreePrinter {
     Node() {}
 
 
-    Node(int const value) : value(value), parent(nullptr), left(nullptr), right(nullptr), color(RED) {}
+    Node(int const value) : value(value), parent(NULL), left(NULL), right(NULL), color(RED) {}
   };
 
   Node *root;
@@ -27,7 +27,7 @@ class TreePrinter {
     std::string valStr = std::string(std::to_string(tree->value));
 
     if (isRight) {
-      if (tree->parent != nullptr) {
+      if (tree->parent != NULL) {
         appendLeft += "│" + std::string(valStr.length() - 1, ' ');
       } else {
         appendLeft += std::string(valStr.length(), ' ');
@@ -35,7 +35,7 @@ class TreePrinter {
       appendRight += std::string(valStr.length(), ' ');
     } else {
       appendLeft += std::string(valStr.length(), ' ');
-      if (tree->parent != nullptr) {
+      if (tree->parent != NULL) {
         appendRight += "│" + std::string(valStr.length() - 1, ' ');
       } else {
         appendRight += std::string(valStr.length(), ' ');
@@ -44,10 +44,10 @@ class TreePrinter {
   }
 
   std::string print(Node *tree, std::string space, bool isRight) const {
-    if (tree == nullptr) {
+    if (tree == NULL) {
       return "";
     }
-    if (tree->parent != nullptr && tree->parent->parent != nullptr) {
+    if (tree->parent != NULL && tree->parent->parent != NULL) {
       space += " ";
     }
     std::string ret;
@@ -56,12 +56,12 @@ class TreePrinter {
     std::string appendRight;
     fillAppend(tree, isRight, appendLeft, appendRight);
 
-    if (tree->right != nullptr) {
+    if (tree->right != NULL) {
       ret += print(tree->right, space + appendRight, true);
     }
 
     ret += space;
-    if (tree->parent != nullptr) {
+    if (tree->parent != NULL) {
       if (tree->parent->right == tree) {
         ret += "┌";
       } else {
@@ -74,23 +74,23 @@ class TreePrinter {
       ret += std::string(BLACK_BG_SET + std::to_string(tree->value) + RESET);
     }
 
-    if (tree->left != nullptr && tree->right != nullptr) {
+    if (tree->left != NULL && tree->right != NULL) {
       ret += "┤";
-    } else if (tree->left == nullptr && tree->right != nullptr) {
+    } else if (tree->left == NULL && tree->right != NULL) {
       ret += "┘";
-    } else if (tree->right == nullptr && tree->left != nullptr) {
+    } else if (tree->right == NULL && tree->left != NULL) {
       ret += "┐";
     }
     ret += "\n";
 
-    if (tree->left != nullptr) {
+    if (tree->left != NULL) {
       ret += print(tree->left, space + appendLeft, false);
     }
     return ret;
   }
 
   Node *addRecursive(Node *tree, int value) {
-    if (tree == nullptr) {
+    if (tree == NULL) {
       return new Node(value);
     }
 
@@ -109,7 +109,7 @@ class TreePrinter {
 
  public:
   void printTree() const {
-    if (root != nullptr) {
+    if (root != NULL) {
       std::cout << print(root, "", true);
     }
   }
@@ -118,7 +118,7 @@ class TreePrinter {
     root = addRecursive(root, i);
   }
 
-  TreePrinter() : root(nullptr){}
+  TreePrinter() : root(NULL){}
 
 };
 }

@@ -6,6 +6,7 @@
 #include "List.h"
 #include "ReverseIterator.h"
 #include "VectorIterator.h"
+#include <limits>
 
 namespace ft {
 //	------------------------------------- VECTOR -----------------------------------------
@@ -23,7 +24,7 @@ class Vector {
   typedef ft::ReverseIterator<const_iterator> const_reverse_iterator;
   typedef size_t size_type;
   typedef Alloc allocator_type;
-  typedef ptrdiff_t difference_type;
+  typedef std::ptrdiff_t difference_type;
 
  private:
   T *data;
@@ -34,12 +35,12 @@ class Vector {
 
  public:
   explicit Vector(const allocator_type &alloc = allocator_type())
-      : data(nullptr), currentSize(0), dataCapacity(0), allocator(alloc) {
+      : data(NULL), currentSize(0), dataCapacity(0), allocator(alloc) {
     reserve(2);
   }
 
   explicit Vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type())
-      : data(nullptr), currentSize(0), dataCapacity(0), allocator(alloc) {
+      : data(NULL), currentSize(0), dataCapacity(0), allocator(alloc) {
     reserve(n);
     currentSize = n;
     for (size_t i = 0; i < currentSize; i++) {
@@ -50,7 +51,7 @@ class Vector {
 
   template<class InputIterator>
   Vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type())
-      : data(nullptr), currentSize(0), dataCapacity(0), allocator(alloc) {
+      : data(NULL), currentSize(0), dataCapacity(0), allocator(alloc) {
     reserve(2);
     insert(begin(), first, last);
   }

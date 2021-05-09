@@ -16,7 +16,7 @@ class RbTreeNodeBase {
   RbTreeColor color;
 
   // Constructors and Coplien --------------------------------------------------------
-  RbTreeNodeBase() : parent(nullptr), left(nullptr), right(nullptr), color(BLACK) {
+  RbTreeNodeBase() : parent(NULL), left(NULL), right(NULL), color(BLACK) {
   }
 
   RbTreeNodeBase(const RbTreeNodeBase &o)
@@ -24,7 +24,7 @@ class RbTreeNodeBase {
   }
 //
 //  // Constructors and Coplien --------------------------------------------------------
-//  RbTreeNodeBase() : color(BLACK), parent(nullptr), left(nullptr), right(nullptr) {
+//  RbTreeNodeBase() : color(BLACK), parent(NULL), left(NULL), right(NULL) {
 //  }
 //
 //  RbTreeNodeBase(const RbTreeNodeBase &o)

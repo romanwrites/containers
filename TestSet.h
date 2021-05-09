@@ -4,6 +4,9 @@
 
 namespace TestSet {
 void TestAll();
+#if PRINT_INT_TREE
+void TestPrintSet();
+#endif
 }
 
 // SET OUTPUT

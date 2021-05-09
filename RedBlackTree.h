@@ -7,8 +7,11 @@
 #include "Functional.h"
 #include "Algorithm.h"
 #include "Compare.h"
+#include <cstddef>
 
-#define PRINT_INT_TREE 1
+//#ifndef PRINT_INT_TREE
+//#define PRINT_INT_TREE 0
+//#endif
 
 namespace ft {
 
@@ -106,7 +109,7 @@ class RbTree {
     }
 
     size_type i = 0;
-    for (auto it = begin(); it != end(); ++it) {
+    for (const_iterator it = begin(); it != end(); ++it) {
       if (KeyOfValue()(*it) == k) {
         ++i;
       }

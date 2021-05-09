@@ -10,7 +10,7 @@ class VectorIterator {
   typedef VectorIterator iterator;
 
   VectorIterator() throw() {
-    ptr = nullptr;
+    ptr = NULL;
   }
 
   VectorIterator(pointer p) throw() {
@@ -129,7 +129,7 @@ class VectorConstIterator {
   typedef const T& reference;
   typedef const VectorConstIterator iterator;
 
-  VectorConstIterator() throw() : ptr(nullptr) {
+  VectorConstIterator() throw() : ptr(NULL) {
   }
 
   explicit VectorConstIterator(pointer p) throw() : ptr(p) {

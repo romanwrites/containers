@@ -194,8 +194,12 @@ void TestInsert(TestRunner const &tr) {
 
   std::multiset<int> m2;
   ft::MultiSet<int> fm2;
+//  std::cout << m2 << std::endl;
+//  std::cout << fm2 << std::endl;
   m2.insert(it, m.end());
   fm2.insert(fit, fm.end());
+//  std::cout << m2 << std::endl;
+//  std::cout << fm2 << std::endl;
   AssertEqual(m2, fm2, tr.hintMessage("insert range"));
 }
 
@@ -511,7 +515,6 @@ void TestRelationalNonMemberOperators(TestRunner const &tr) {
     TestRelationalNonMemberOperatorsNonConst(m1, m2, fm1, fm2, tr);
     TestRelationalNonMemberOperatorsConst(m1, m2, fm1, fm2, tr);
   }
-
 }
 
 void TestAll() {

@@ -4,6 +4,9 @@
 
 namespace TestMultiSet {
 void TestAll();
+#if PRINT_INT_TREE
+void TestPrintSet();
+#endif
 }
 
 // MULTISET OUTPUT

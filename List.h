@@ -7,6 +7,10 @@
 #include "Compare.h"
 #include "Algorithm.h"
 
+#ifndef SIZE_MAX
+#define SIZE_MAX ((size_t) -1)
+#endif
+
 namespace ft {
 
 // -------------------------------------- TAGS -------------------------------------
@@ -33,8 +37,8 @@ class NodeList {
   value_type value;
 
  private:
-  NodeList() : next(nullptr), prev(nullptr), value(value_type()) {}
-  NodeList(const value_type &value) : next(nullptr), prev(nullptr), value(value) {}
+  NodeList() : next(NULL), prev(NULL), value(value_type()) {}
+  NodeList(const value_type &value) : next(NULL), prev(NULL), value(value) {}
   friend class List<T>;
   friend class BidirectionalListIt<iterator_category, T>;
 
@@ -85,7 +89,7 @@ class BidirectionalListIt {
   typedef size_t size_type;
   typedef BidirectionalListIt<Category, Iter> iterator;
 
-  explicit BidirectionalListIt() throw(): ptr(nullptr) {}
+  explicit BidirectionalListIt() throw(): ptr(NULL) {}
 
   explicit BidirectionalListIt(NodeList<Iter> *p) throw(): ptr(p) {}
 
@@ -164,7 +168,7 @@ class BidirectionalConstListIt {
   typedef size_t size_type;
   typedef BidirectionalConstListIt<Category, Iter> iterator;
 
-  explicit BidirectionalConstListIt() throw(): ptr(nullptr) {}
+  explicit BidirectionalConstListIt() throw(): ptr(NULL) {}
 
   explicit BidirectionalConstListIt(NodeList<Iter> *p) throw(): ptr(p) {}
 
@@ -229,7 +233,7 @@ class List {
   typedef const T &const_reference;
   typedef T *pointer;
   typedef const T *const_pointer;
-  typedef ptrdiff_t difference_type;
+  typedef std::ptrdiff_t difference_type;
   typedef size_t size_type;
   typedef std::bidirectional_iterator_tag iterator_category;
   typedef BidirectionalListIt<iterator_category, T> iterator;

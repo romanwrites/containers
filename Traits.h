@@ -1,4 +1,5 @@
 #pragma once
+#include <iterator>
 
 namespace ft {
 struct false_type {};
@@ -12,12 +13,6 @@ struct is_primitive_type<bool> : public true_type {};
 
 template<>
 struct is_primitive_type<char> : public true_type {};
-
-template<>
-struct is_primitive_type<char16_t> : public true_type {};
-
-template<>
-struct is_primitive_type<char32_t> : public true_type {};
 
 template<>
 struct is_primitive_type<wchar_t> : public true_type {};
@@ -35,9 +30,6 @@ template<>
 struct is_primitive_type<long int> : public true_type {};
 
 template<>
-struct is_primitive_type<long long int> : public true_type {};
-
-template<>
 struct is_primitive_type<unsigned char> : public true_type {};
 
 template<>
@@ -49,7 +41,17 @@ struct is_primitive_type<unsigned int> : public true_type {};
 template<>
 struct is_primitive_type<unsigned long int> : public true_type {};
 
+#if __cplusplus >= 201103L
 template<>
 struct is_primitive_type<unsigned long long int> : public true_type {};
 
+template<>
+struct is_primitive_type<long long int> : public true_type {};
+
+template<>
+struct is_primitive_type<char16_t> : public true_type {};
+
+template<>
+struct is_primitive_type<char32_t> : public true_type {};
+#endif
 }

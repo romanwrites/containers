@@ -17,7 +17,7 @@ class RbTreeIterator {
   typedef T &reference;
   typedef T *pointer;
   typedef std::bidirectional_iterator_tag iterator_category;
-  typedef ptrdiff_t difference_type;
+  typedef std::ptrdiff_t difference_type;
   typedef RbTreeIterator<T> iterator;
   typedef RbTreeNodeBase::base_ptr base_ptr;
   typedef RbTreeNodeBase::const_base_ptr const_base_ptr;
@@ -86,7 +86,7 @@ class RbTreeConstIterator {
   typedef const T& reference;
   typedef const T* pointer;
   typedef std::bidirectional_iterator_tag iterator_category;
-  typedef ptrdiff_t difference_type;
+  typedef std::ptrdiff_t difference_type;
   typedef RbTreeConstIterator<T> iterator;
   typedef RbTreeNodeBase::const_base_ptr base_ptr;
   typedef RbTreeNodeBase::const_base_ptr const_base_ptr;
