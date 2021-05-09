@@ -129,6 +129,8 @@ int main() {
 
   ft::Set<std::string> ms2(ms.begin(), ms.end());
 
+  std::cout << "everything went great" << std::endl;
+
   return 0;
 }
 #endif
