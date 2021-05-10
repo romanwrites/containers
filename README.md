@@ -20,15 +20,16 @@ MultiSet
 ```
 
 ### 🌳 I also coded this pretty tree print  
-<img src="img/asc_set.png">
 
-As you see `Set` and `MultiSet` act differently with the same input  
-<img src="img/random_set.png">
-<img src="img/random_multiset.png">
+`Set` and `MultiSet` act differently with the same input  
+<img src="img/trees.png">
 
 ### 🧪 Unit Testing
-<img src="img/mandatory_part_tests.png">
-<img src="img/more_tests.png">
+
+[comment]: <> (<img src="img/mandatory_part_tests.png">)
+
+[comment]: <> (<img src="img/more_tests.png">)
+<img src="img/tests.png">
 
 ## 🏁 Ready set go
 Test that all containers are built using c++98 standard features  
