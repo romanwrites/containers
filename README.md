@@ -53,6 +53,6 @@ g++ *.cpp -D PRINT_INT_TREE=1 -std=c++11
 ```
 
 ## Credits
-Author: Roman Kukin (mkristie)
-Adviser: salec
-Cover image: Photo by veeterzy from Pexels
+Author: Roman Kukin (mkristie)  
+Adviser: salec  
+Cover image: Photo by veeterzy from Pexels  
