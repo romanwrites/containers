@@ -5,13 +5,13 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror")
 
 add_executable(main
-        main.cpp
-        TestList.cpp
-        TestVector.cpp
-        TestRunner.cpp
-        TestMap.cpp
-        TestMultiMap.cpp
-        TestSet.cpp
-        TestMultiSet.cpp
-        TestQueue.cpp
-        TestStack.cpp)
+        src/main.cpp
+        src/TestList.cpp
+        src/TestVector.cpp
+        src/TestRunner.cpp
+        src/TestMap.cpp
+        src/TestMultiMap.cpp
+        src/TestSet.cpp
+        src/TestMultiSet.cpp
+        src/TestQueue.cpp
+        src/TestStack.cpp)
